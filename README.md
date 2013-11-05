@@ -18,6 +18,7 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
 		'uploadFolder' => 'files/uploads', // Upload path (destination folder)
 		'uploaderConfig' => 'debug: true', // Custom uploader configuration (JSON)
 		'uploaderTemplate' => 'fineuploader_custom', // Uploader template file
+		'uploaderLimit' => 4, // Maximum files that can be uploaded
 		'extensions' => $GLOBALS['TL_CONFIG']['validImageTypes'], // Allowed extension types
 		'doNotOvewrite' => true // Do not overwrite files in destination folder
 

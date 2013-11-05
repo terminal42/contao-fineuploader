@@ -48,7 +48,8 @@
 				}
 			},
 			validation: {
-				allowedExtensions: config.extensions
+				allowedExtensions: config.extensions,
+				itemLimit: config.limit
 			},
 			callbacks: {
 				onUpload: function() {

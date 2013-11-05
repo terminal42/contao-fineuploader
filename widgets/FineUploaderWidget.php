@@ -472,7 +472,8 @@ class FineUploaderWidget extends \Widget
           field: "'.$this->strId.'",
           request_token: "'.REQUEST_TOKEN.'",
           backend: '.((TL_MODE == 'FE') ? 'false' : 'true').',
-          extensions: '.json_encode($extensions).'
+          extensions: '.json_encode($extensions).',
+          limit: '.(int) $this->arrConfiguration['uploaderLimit'].'
         },
         {'.($this->arrConfiguration['uploaderConfig'] ? $this->arrConfiguration['uploaderConfig'] : "").'});
     });
