@@ -224,6 +224,12 @@ class FineUploaderWidget extends \Widget
 		{
 			$arrValue = array_filter(explode(',', $varInput));
 
+			// Limit the number of uploads
+			if ($this->arrConfiguration['uploaderLimit'] > 0)
+			{
+				$arrValue = array_slice($arrValue, 0, $this->arrConfiguration['uploaderLimit']);
+			}
+
 			foreach ($arrValue as $k => $v)
 			{
 				if (!\Validator::isUuid($v))
@@ -464,6 +470,7 @@ class FineUploaderWidget extends \Widget
 		{
 			$return = '<div><div>' . $return . '</div>';
 			$extensions = trimsplit(',', $this->arrConfiguration['extensions']);
+			$limit = $this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0;
 
 			$return .= '<div id="'.$this->strId.'_fineuploader" class="upload_container"></div>
   <script>

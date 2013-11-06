@@ -57,6 +57,12 @@
 				itemLimit: config.limit
 			},
 			callbacks: {
+				onValidateBatch: function() {
+					if (this._options.validation.itemLimit <= current_value.split(',').length) {
+			            this._batchError(this._options.messages.tooManyItemsError.replace(/\s\(\{netItems\}\)/g, '').replace(/\{itemLimit\}/g, this._options.validation.itemLimit));
+						return false;
+					}
+				},
 				onUpload: function() {
 					if (config.backend) {
 						AjaxRequest.displayBox(Contao.lang.loading + ' …')
