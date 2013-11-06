@@ -1,3 +1,13 @@
+.selector_container .delete {
+	display: inline-block;
+	width: 16px;
+	height: 16px;
+	background: #ffffff url("../../../themes/default/images/delete.gif") no-repeat;
+	margin-right: -4px;
+	position: relative;
+	top: 2px;
+}
+
 .qq-hide {
 	display: none;
 }

@@ -451,7 +451,7 @@ class FineUploaderWidget extends \Widget
 		foreach ($arrValues as $k=>$v)
 		{
 			$return .= '<li data-id="'.(in_array($k, $arrTemp) ? $k : \String::binToUuid($k)).'">
-<a href="#" class="delete" onclick="ContaoFineUploader.deleteItem(this, \''.$this->strId.'\');return false;">X</a>
+<a href="#" class="delete" onclick="ContaoFineUploader.deleteItem(this, \''.$this->strId.'\');return false;"></a>
 '.$v.'
 </li>';
 		}
