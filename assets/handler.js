@@ -47,6 +47,11 @@
 					REQUEST_TOKEN: config.request_token
 				}
 			},
+		    failedUploadTextDisplay: {
+		        mode: 'custom',
+		        maxChars: 50,
+		        responseProperty: 'error'
+		    },
 			validation: {
 				allowedExtensions: config.extensions,
 				itemLimit: config.limit
