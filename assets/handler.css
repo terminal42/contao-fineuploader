@@ -20,6 +20,12 @@
 	border-left: none;
 	border-right: none;
 	background-color: #f7f7f7;
+	/** IE FIXES **/
+	width: 100%;
+    position: relative;
+    top: 0;
+    left: 0;
+    z-index: 2;
 }
 
 .qq-upload-drop-area span {
