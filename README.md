@@ -20,6 +20,7 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
 		'uploaderTemplate' => 'fineuploader_custom', // Uploader template file
 		'uploaderLimit' => 4, // Maximum files that can be uploaded
 		'extensions' => $GLOBALS['TL_CONFIG']['validImageTypes'], // Allowed extension types
+		'maxlength' => 2048000, // Maximum file size
 		'doNotOvewrite' => true // Do not overwrite files in destination folder
 
 		// You can also use the default features of fileTree widget such as:

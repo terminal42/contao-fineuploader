@@ -166,6 +166,14 @@ class FineUploaderWidget extends \Widget
 		}
 
 		$varInput = '';
+		$maxlength = null;
+
+        // Override the default maxlength value
+        if (isset($this->arrConfiguration['maxlength']))
+        {
+            $maxlength = $GLOBALS['TL_CONFIG']['maxFileSize'];
+            $GLOBALS['TL_CONFIG']['maxFileSize'] = $this->arrConfiguration['maxlength'];
+        }
 
 		try
 		{
@@ -175,6 +183,12 @@ class FineUploaderWidget extends \Widget
 		catch (\Exception $e)
 		{
 			$this->addError($e->getMessage());
+		}
+
+		// Restore the default maxlength value
+		if ($maxlength !== null)
+		{
+    		$GLOBALS['TL_CONFIG']['maxFileSize'] = $maxlength;
 		}
 
 		if (!is_array($varInput) || empty($varInput))
