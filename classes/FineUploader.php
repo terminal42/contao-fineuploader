@@ -49,7 +49,7 @@ class FineUploader extends \Controller
 
 				if ($objWidget->hasErrors())
 				{
-					$arrResponse = array('success'=>false, 'error'=>$objWidget->getErrorsAsString(), 'preventRetry'=>true);
+					$arrResponse = array('success'=>false, 'error'=>$objWidget->getErrorAsString(), 'preventRetry'=>true);
 				}
 				else
 				{
@@ -176,7 +176,7 @@ class FineUploader extends \Controller
 
 				if ($objWidget->hasErrors())
 				{
-					$arrResponse = array('success'=>false, 'error'=>$objWidget->getErrorsAsString(), 'preventRetry'=>true);
+					$arrResponse = array('success'=>false, 'error'=>$objWidget->getErrorAsString(), 'preventRetry'=>true);
 				}
 				else
 				{

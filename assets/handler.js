@@ -49,7 +49,7 @@
 			},
 		    failedUploadTextDisplay: {
 		        mode: 'custom',
-		        maxChars: 50,
+		        maxChars: 1000,
 		        responseProperty: 'error'
 		    },
 			validation: {
