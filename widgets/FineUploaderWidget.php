@@ -141,6 +141,8 @@ class FineUploaderWidget extends \Widget
      */
     public function validateUpload()
     {
+        \Message::reset();
+
         $objUploader = new \FileUpload();
         $objUploader->setName($this->strName);
 
@@ -178,6 +180,28 @@ class FineUploaderWidget extends \Widget
         try
         {
             $varInput = $objUploader->uploadTo('system/tmp');
+
+            if ($objUploader->hasError()) {
+                foreach ($_SESSION['TL_ERROR'] as $strError) {
+                    $this->addError($strError);
+                }
+            }
+
+            if (TL_MODE == 'FE') {
+                if (($arrImageSize = @getimagesize(TL_ROOT . '/' . $varInput[0])) != false) {
+
+                    // Image exceeds maximum image width
+                    if ($arrImageSize[0] > $GLOBALS['TL_CONFIG']['imageWidth']) {
+                        $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], '', $GLOBALS['TL_CONFIG']['imageWidth']));
+                    }
+
+                    // Image exceeds maximum image height
+                    if ($arrImageSize[1] > $GLOBALS['TL_CONFIG']['imageHeight']) {
+                        $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], '', $GLOBALS['TL_CONFIG']['imageHeight']));
+                    }
+                }
+            }
+
             \Message::reset();
         }
         catch (\Exception $e)
