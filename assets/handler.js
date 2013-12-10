@@ -40,7 +40,7 @@
 			element: document.id(el),
 			request: {
 				endpoint: window.location.href,
-				inputName: config.field,
+				inputName: config.field + '_tmp',
 				params: {
 					action: 'fineuploader_upload',
 					name: config.field,
