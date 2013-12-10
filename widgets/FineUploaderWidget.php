@@ -142,7 +142,7 @@ class FineUploaderWidget extends \Widget
 	public function validateUpload()
 	{
         \Message::reset();
-	    $strTempName = $this->strName . '_tmp';
+	    $strTempName = $this->strName . '_fineuploader';
 		$objUploader = new \FileUpload();
 		$objUploader->setName($this->strName);
 
@@ -487,7 +487,7 @@ class FineUploaderWidget extends \Widget
 		$strSet = implode(',', $arrSet);
 		$strOrder = $blnHasOrder ? implode(',', array_map('String::binToUuid', $this->{$this->strOrderField})) : '';
 
-		$return = '<input type="hidden" name="'.$this->strName.'_tmp" id="ctrl_'.$this->strId.'_tmp" value="">
+		$return = '<input type="hidden" name="'.$this->strName.'_fineuploader" id="ctrl_'.$this->strId.'_fineuploader" value="">
   <input type="hidden" name="'.$this->strName.'" id="ctrl_'.$this->strId.'" value="'.$strSet.'">' . ($blnHasOrder ? '
   <input type="hidden" name="'.$this->strOrderName.'" id="ctrl_'.$this->strOrderId.'" value="'.$strOrder.'">' : '') . '
   <div class="selector_container">' . (($blnHasOrder && count($arrValues)) ? '
