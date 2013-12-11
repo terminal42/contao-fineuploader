@@ -131,7 +131,7 @@ class FineUploader extends \Controller
 
 					foreach ($varValue as $k => $v)
 					{
-						if (\Validator::isUuid($v))
+						if (\Validator::isUuid($v) && !is_file(TL_ROOT . '/' . $v))
 						{
 							$varValue[$k] = \String::uuidToBin($v);
 						}

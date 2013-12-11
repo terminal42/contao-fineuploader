@@ -249,7 +249,7 @@ class FineUploaderWidget extends \Widget
 		}
 		elseif (strpos($varInput, ',') === false)
 		{
-			if (!\Validator::isUuid($varInput))
+			if (is_file(TL_ROOT . '/' . $varInput))
 			{
 				$strUuid = $this->moveTemporaryFile($varInput, $strDestination);
 				$arrMapper[$varInput] = $strUuid;
@@ -271,7 +271,7 @@ class FineUploaderWidget extends \Widget
 
 			foreach ($arrValue as $k => $v)
 			{
-				if (!\Validator::isUuid($v))
+				if (is_file(TL_ROOT . '/' . $v))
 				{
 					$arrValue[$k] = $this->moveTemporaryFile($v, $strDestination);
 					$arrMapper[$v] = $arrValue[$k];
@@ -288,7 +288,7 @@ class FineUploaderWidget extends \Widget
 
 			foreach ($arrNew as $k => $v)
 			{
-				if (!\Validator::isUuid($v))
+				if (isset($arrMapper[$v]))
 				{
 					$arrNew[$k] = $arrMapper[$v];
 				}
@@ -401,7 +401,7 @@ class FineUploaderWidget extends \Widget
 
 			foreach ($this->varValue as $varFile)
 			{
-				if (\Validator::isUuid($varFile))
+				if (\Validator::isUuid($varFile) && !is_file(TL_ROOT . '/' . $varFile))
 				{
 					$arrUuids[] = $varFile;
 				}
