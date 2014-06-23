@@ -401,7 +401,10 @@ class FineUploaderWidget extends \Widget
 
 			foreach ($this->varValue as $varFile)
 			{
-				if (\Validator::isUuid($varFile) && !is_file(TL_ROOT . '/' . $varFile))
+				$file = \FilesModel::findByUuid($varFile);
+                            	$filePath = $file->path;
+                            
+				if (\Validator::isUuid($varFile) && !is_file($filePath))
 				{
 					$arrUuids[] = $varFile;
 				}
