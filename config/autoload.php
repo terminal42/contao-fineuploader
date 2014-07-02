@@ -27,5 +27,6 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
-    'fineuploader_default' => 'system/modules/fineuploader/templates/fineuploader'
+    'fineuploader_backend'  => 'system/modules/fineuploader/templates/fineuploader',
+    'fineuploader_frontend' => 'system/modules/fineuploader/templates/fineuploader',
 ));

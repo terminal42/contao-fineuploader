@@ -115,7 +115,7 @@ class FineUploaderAjax extends Controller
 				// Convert the selected values
 				if ($varValue != '')
 				{
-					$varValue = trimsplit(",", $varValue);
+					$varValue = trimsplit(',', $varValue);
 
 					foreach ($varValue as $k => $v)
 					{
@@ -139,7 +139,7 @@ class FineUploaderAjax extends Controller
 				$arrAttribs['activeRecord'] = $dc->activeRecord;
 
 				$objWidget = new $GLOBALS['BE_FFL']['fineUploader']($arrAttribs);
-				echo $objWidget->generate();
+				echo $objWidget->parse();
 				exit; break;
 		}
 	}

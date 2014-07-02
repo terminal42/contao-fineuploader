@@ -160,15 +160,15 @@ abstract class FineUploaderBase extends \Widget
             // Use the user's home directory
             if ($this->arrConfiguration['useHomeDir'] && FE_USER_LOGGED_IN)
             {
-                $this->import('FrontendUser', 'User');
+                $objUser = FrontendUser::getInstance();
 
-                if ($this->User->assignDir && $this->User->homeDir)
+                if ($objUser->assignDir && $objUser->homeDir)
                 {
-                    $varFolder = $this->User->homeDir;
+                    $varFolder = $objUser->homeDir;
                 }
             }
 
-            if (\Validator::isBinaryUuid($varFolder) || \Validator::isStringUuid($varFolder))
+            if (\Validator::isUuid($varFolder))
             {
                 $objFolder = \FilesModel::findByUuid($varFolder);
 

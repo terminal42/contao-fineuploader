@@ -27,7 +27,7 @@ class FormFineUploader extends FineUploaderBase
      * Template
      * @var string
      */
-    protected $strTemplate = 'form_widget';
+    protected $strTemplate = 'fineuploader_frontend';
 
     /**
      * Multiple flag
@@ -133,9 +133,10 @@ class FormFineUploader extends FineUploaderBase
 
     /**
      * Generate the widget and return it as string
+     * @param array
      * @return string
      */
-    public function generate()
+    public function parse($arrAttributes=null)
     {
         $arrSet = array();
         $arrValues = array();
@@ -169,7 +170,12 @@ class FormFineUploader extends FineUploaderBase
 
                     if (strlen($chunk))
                     {
-                        $arrValues[$objFiles->uuid] = $chunk;
+                        $arrValues[$objFiles->uuid] = array
+                        (
+                            'id' => (in_array($objFiles->uuid, $arrTemp) ? $objFiles->uuid : \String::binToUuid($objFiles->uuid)),
+                            'value' => $chunk
+                        );
+
                         $arrSet[] = $objFiles->uuid;
                     }
                 }
@@ -182,7 +188,12 @@ class FormFineUploader extends FineUploaderBase
 
                 if (strlen($chunk))
                 {
-                    $arrValues[$varFile] = $chunk;
+                    $arrValues[$varFile] = array
+                    (
+                        'id' => (in_array($varFile, $arrTemp) ? $varFile : \String::binToUuid($varFile)),
+                        'value' => $chunk
+                    );
+
                     $arrSet[] = $varFile;
                 }
             }
@@ -201,38 +212,30 @@ class FormFineUploader extends FineUploaderBase
             }
         }
 
-        $strSet = implode(',', $arrSet);
+        $this->set = implode(',', $arrSet);
+        $this->values = $arrValues;
+        $this->deleteTitle = specialchars($GLOBALS['TL_LANG']['MSC']['delete']);
+        $this->extensions = json_encode(trimsplit(',', $this->arrConfiguration['extensions']));
+        $this->limit = $this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0;
+        $this->sizeLimit = $this->arrConfiguration['maxlength'] ? $this->arrConfiguration['maxlength'] : 0;
+        $this->config = $this->arrConfiguration['uploaderConfig'];
+        $this->labels = array
+        (
+            'drop' => $GLOBALS['TL_LANG']['MSC']['fineuploader_drop'],
+            'upload' => $GLOBALS['TL_LANG']['MSC']['fineuploader_upload'],
+            'processing' => $GLOBALS['TL_LANG']['MSC']['fineuploader_processing'],
+        );
 
-        $return = '<div><div>
-  <input type="hidden" name="'.$this->strName.'_fineuploader" id="ctrl_'.$this->strId.'_fineuploader" value="">
-  <input type="hidden" name="'.$this->strName.'" id="ctrl_'.$this->strId.'" value="'.$strSet.'">
-  <div class="selector_container">
-    <ul id="sort_'.$this->strId.'"'.($this->blnIsGallery ? ' class="sgallery"' : '').'>';
+        return parent::parse($arrAttributes);
+    }
 
-        foreach ($arrValues as $k=>$v)
-        {
-            $return .= '<li data-id="'.(in_array($k, $arrTemp) ? $k : \String::binToUuid($k)).'">
-<a href="#" class="delete" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['delete']).'" onclick="ContaoFineUploader.deleteItem(this, \''.$this->strId.'\');return false;"></a>
-'.$v.'
-</li>';
-        }
 
-        $objTemplate = new \FrontendTemplate($this->arrConfiguration['uploaderTemplate'] ? $this->arrConfiguration['uploaderTemplate'] : 'fineuploader_default');
-
-        $return .= '</div>' . $objTemplate->parse() . '
-  <div id="'.$this->strId.'_fineuploader" class="upload_container"></div>
-  <script>
-  ContaoFineUploader.init(document.getElementById("'.$this->strId.'_fineuploader"), {
-      field: "'.$this->strId.'",
-      request_token: "'.REQUEST_TOKEN.'",
-      backend: false,
-      extensions: '.json_encode(trimsplit(',', $this->arrConfiguration['extensions'])).',
-      limit: '.($this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0).',
-      sizeLimit: '.($this->arrConfiguration['maxlength'] ? $this->arrConfiguration['maxlength'] : 0).'
-    },
-    {'.($this->arrConfiguration['uploaderConfig'] ? $this->arrConfiguration['uploaderConfig'] : "").'});
-  </script>';
-
-        return $return . '</div>';
+    /**
+     * Use the parse() method instead
+     * @throw \BadMethodCallException
+     */
+    public function generate()
+    {
+        throw new \BadMethodCallException('Please use the parse() method instead!');
     }
 }
