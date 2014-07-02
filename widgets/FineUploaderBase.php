@@ -135,7 +135,7 @@ abstract class FineUploaderBase extends \Widget
 
         if (!is_array($varInput) || empty($varInput))
         {
-            $this->addError('Unknown error occured.');
+            $this->addError($GLOBALS['TL_LANG']['MSC']['fineuploader_error']);
         }
 
         return $varInput[0];

@@ -13,6 +13,7 @@
 /**
  * Miscellaneous
  */
-$GLOBALS['TL_LANG']['MSC']['fineuploader_drop'] = 'Drop files here to upload';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_upload'] = 'Upload a file';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_error']      = 'Unknown error occured.';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_drop']       = 'Drop files here to upload';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_upload']     = 'Upload a file';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_processing'] = 'Processing dropped files...';
