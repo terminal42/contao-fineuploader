@@ -19,6 +19,7 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
 		'uploaderConfig' => 'debug: true', // Custom uploader configuration (JSON)
 		'uploaderTemplate' => 'fineuploader_custom', // Uploader template file
 		'uploaderLimit' => 4, // Maximum files that can be uploaded
+		'addToDbafs' => true, // Add files to the database assisted file system
 		'extensions' => $GLOBALS['TL_CONFIG']['validImageTypes'], // Allowed extension types
 		'maxlength' => 2048000, // Maximum file size
 		'doNotOvewrite' => true // Do not overwrite files in destination folder

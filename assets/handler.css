@@ -1,11 +1,22 @@
+.selector_container ul li {
+    position: relative;
+}
+
 .selector_container .delete {
-	display: inline-block;
+	position: absolute;
+	bottom: 2px;
+	right: 6px;
 	width: 16px;
 	height: 16px;
-	background: #ffffff url("../../../themes/default/images/delete.gif") no-repeat;
+	background: #ffffff url("../../../themes/default/images/delete_.gif") no-repeat center center;
 	margin-right: -4px;
-	position: relative;
-	top: 2px;
+	border: 1px solid #eaeaea;
+	opacity: 0.5;
+}
+
+.selector_container .delete:hover {
+    background-image: url("../../../themes/default/images/delete.gif");
+	opacity: 1;
 }
 
 .qq-hide {

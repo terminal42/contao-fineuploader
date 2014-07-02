@@ -1,165 +1,158 @@
 /**
- * Contao Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
+ * fineuploader extension for Contao Open Source CMS
  *
- * Formerly known as TYPOlight Open Source CMS.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- *
- * PHP version 5
- * @copyright  terminal42 gmbh 2009-2013
- * @author     Andreas Schempp <andreas.schempp@terminal42.ch>
- * @author     Kamil Kuźmiński <kamil.kuzminski@codefog.pl>
- * @license    LGPL
+ * @copyright  Copyright (c) 2008-2014, terminal42 gmbh
+ * @author     terminal42 gmbh <info@terminal42.ch>
+ * @license    http://opensource.org/licenses/lgpl-3.0.html LGPL
+ * @link       http://github.com/terminal42/contao-fineuploader
  */
 
 ;var ContaoFineUploader = {};
 
 (function() {
-	"use strict";
+    "use strict";
 
-	/**
-	 * Current value
-	 */
-	var current_value = '';
+    /**
+     * Current value
+     */
+    var current_value = '';
 
-	/**
-	 * Initialize the uploader
-	 * @param object
-	 * @param object
-	 * @param object
-	 * @return object
-	 */
-	ContaoFineUploader.init = function(el, config, options) {
-		current_value = document.id('ctrl_' + config.field).get('value');
+    /**
+     * Initialize the uploader
+     * @param object
+     * @param object
+     * @param object
+     * @return object
+     */
+    ContaoFineUploader.init = function(el, config, options) {
+        current_value = document.getElementById('ctrl_' + config.field).value;
 
-		var params = {
-			element: document.id(el),
-			request: {
-				endpoint: window.location.href,
-				inputName: config.field + '_fineuploader',
-				params: {
-					action: 'fineuploader_upload',
-					name: config.field,
-					REQUEST_TOKEN: config.request_token
-				}
-			},
-		    failedUploadTextDisplay: {
-		        mode: 'custom',
-		        maxChars: 1000,
-		        responseProperty: 'error'
-		    },
-			validation: {
-				allowedExtensions: config.extensions,
-				itemLimit: config.limit
-			},
-			callbacks: {
-				onValidateBatch: function() {
-					if (this._options.validation.itemLimit <= current_value.split(',').length) {
-			            this._batchError(this._options.messages.tooManyItemsError.replace(/\s\(\{netItems\}\)/g, '').replace(/\{itemLimit\}/g, this._options.validation.itemLimit));
-						return false;
-					}
-				},
-				onUpload: function() {
-					if (config.backend) {
-						AjaxRequest.displayBox(Contao.lang.loading + ' …')
-					}
-				},
-				onComplete: function(id, name, result) {
-					if (!result.success) {
-						if (config.backend) {
-							AjaxRequest.hideBox();
-						}
+        var params = {
+            element: el,
+            debug: true,
+            request: {
+                endpoint: window.location.href,
+                inputName: config.field + '_fineuploader',
+                params: {
+                    action: 'fineuploader_upload',
+                    name: config.field,
+                    REQUEST_TOKEN: config.request_token
+                }
+            },
+            failedUploadTextDisplay: {
+                mode: 'custom',
+                maxChars: 1000,
+                responseProperty: 'error'
+            },
+            validation: {
+                allowedExtensions: config.extensions,
+                sizeLimit: config.sizeLimit
+            },
+            callbacks: {
+                onValidateBatch: function(files) {
+                    var count = (current_value == '') ? 0 : current_value.split(',').length;
 
-						return;
-					}
+                    if (config.limit > 0 && config.limit < (count + files.length)) {
+                        this._batchError(this._options.messages.tooManyItemsError.replace(/\{netItems\}/g, count + files.length).replace(/\{itemLimit\}/g, config.limit));
+                        return false;
+                    }
+                },
+                onUpload: function() {
+                    if (config.backend) {
+                        AjaxRequest.displayBox(Contao.lang.loading + ' …')
+                    }
+                },
+                onComplete: function(id, name, result) {
+                    if (!result.success) {
+                        if (config.backend) {
+                            AjaxRequest.hideBox();
+                        }
 
-					// Add the uploaded file to value
-					if (result.file) {
-						current_value = (current_value.length ? (current_value + ',') : '') + result.file;
-					}
+                        return;
+                    }
 
-					if (this.getInProgress() > 0) {
-						return;
-					}
+                    // Add the uploaded file to value
+                    if (result.file) {
+                        current_value = (current_value.length ? (current_value + ',') : '') + result.file;
+                    }
 
-					new Request.Contao({
-						field: document.id('ctrl_' + config.field),
-						evalScripts: false,
-						onSuccess: function(txt, json) {
-							document.id('ctrl_' + config.field).getParent('div').set('html', json.content);
-							json.javascript && Browser.exec(json.javascript);
+                    if (this.getInProgress() > 0) {
+                        return;
+                    }
 
-							// Hide the loading box
-							if (config.backend) {
-								AjaxRequest.hideBox();
-							}
+                    if (config.backend) {
+                        new Request.Contao({
+                            field: document.getElementById('ctrl_' + config.field),
+                            evalScripts: false,
+                            onSuccess: function(txt, json) {
+                                document.getElementById('ctrl_' + config.field).getParent('div').set('html', json.content);
+                                json.javascript && Browser.exec(json.javascript);
+                                AjaxRequest.hideBox();
+                                window.fireEvent('ajax_change');
+                            }
+                        }).post({'action':'fineuploader_reload', 'name':config.field, 'value':current_value, 'REQUEST_TOKEN':config.request_token});
+                    } else {
+                        document.getElementById('ctrl_' + config.field).value = current_value;
+                    }
+                }
+            }
+        };
 
-							window.fireEvent('ajax_change');
-						}
-					}).post({'action':'fineuploader_reload', 'name':config.field, 'value':current_value, 'REQUEST_TOKEN':config.request_token});
-				}
-			}
-		};
+        Object.append(params, options);
+        return new qq.FineUploader(params);
+    };
 
-		Object.append(params, options);
-		return new qq.FineUploader(params);
-	};
+    /**
+     * Delete the item
+     * @param object
+     * @param string
+     */
+    ContaoFineUploader.deleteItem = function(el, field) {
+        var item = el.parentNode;
+        var value = item.getAttribute('data-id');
+        removeValueFromField(document.getElementById('ctrl_' + field), value);
+        item.parentNode.removeChild(item);
+    };
 
-	/**
-	 * Delete the item
-	 * @param object
-	 * @param string
-	 */
-	ContaoFineUploader.deleteItem = function(el, field) {
-		var item = document.id(el).getParent();
-		var value = item.get('data-id');
-		removeValueFromField(document.id('ctrl_' + field), value);
-		item.dispose();
-	};
-
-	/**
+    /**
      * Make items sortable
      * @param string
      * @param string
      */
     ContaoFineUploader.makeSortable = function(id, oid) {
-    	var i;
-        var list = new Sortables(document.id(id), {
+        var i;
+        var list = new Sortables(document.getElementById(id), {
             contstrain: true,
             opacity: 0.6
         }).addEvent('complete', function() {
             var els = [],
-            	lis = document.id(id).getChildren('li');
+                lis = document.getElementById(id).getChildren('li');
             for (i=0; i<lis.length; i++) {
                 els.push(lis[i].get('data-id'));
             }
-            document.id(oid).value = els.join(',');
+            document.getElementById(oid).value = els.join(',');
         });
 
         list.fireEvent("complete"); // Initial sorting
-	};
+    };
 
-	/**
-	 * Remove the value from field
-	 * @param object
-	 * @param string
-	 */
-	var removeValueFromField = function(el, value) {
-		var current = el.get('value').split(',');
-		var i;
+    /**
+     * Remove the value from field
+     * @param object
+     * @param string
+     */
+    var removeValueFromField = function(el, value) {
+        var current = el.value.split(',');
+        var i;
 
-		for (i=0; i<current.length; i++) {
-			if (current[i] == value) {
-				current.splice(i, 1);
-				break;
-			}
-		}
+        for (i=0; i<current.length; i++) {
+            if (current[i] == value) {
+                current.splice(i, 1);
+                break;
+            }
+        }
 
-		current_value = current.join(',');
-		el.set('value', current_value);
-	};
+        current_value = current.join(',');
+        el.value = current_value;
+    };
 })();

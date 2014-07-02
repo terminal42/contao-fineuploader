@@ -1,590 +1,293 @@
 <?php
 
 /**
- * Contao Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
+ * fineuploader extension for Contao Open Source CMS
  *
- * Formerly known as TYPOlight Open Source CMS.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- *
- * PHP version 5
- * @copyright  terminal42 gmbh 2009-2013
- * @author     Andreas Schempp <andreas.schempp@terminal42.ch>
- * @author     Kamil Kuźmiński <kamil.kuzminski@codefog.pl>
- * @license    LGPL
+ * @copyright  Copyright (c) 2008-2014, terminal42 gmbh
+ * @author     terminal42 gmbh <info@terminal42.ch>
+ * @license    http://opensource.org/licenses/lgpl-3.0.html LGPL
+ * @link       http://github.com/terminal42/contao-fineuploader
  */
 
-namespace Contao;
-
+namespace FineUploader;
 
 /**
  * Class FineUploaderWidget
  *
  * Provide methods to handle input field "fine uploader".
  */
-class FineUploaderWidget extends \Widget
+class FineUploaderWidget extends FineUploaderBase
 {
 
-	/**
-	 * Submit user input
-	 * @var boolean
-	 */
-	protected $blnSubmitInput = true;
+    /**
+     * Submit user input
+     * @var boolean
+     */
+    protected $blnSubmitInput = true;
 
-	/**
-	 * Template
-	 * @var string
-	 */
-	protected $strTemplate = 'be_widget';
+    /**
+     * Template
+     * @var string
+     */
+    protected $strTemplate = 'be_widget';
 
-	/**
-	 * Order ID
-	 * @var string
-	 */
-	protected $strOrderId;
+    /**
+     * Order ID
+     * @var string
+     */
+    protected $strOrderId;
 
-	/**
-	 * Order name
-	 * @var string
-	 */
-	protected $strOrderName;
+    /**
+     * Order name
+     * @var string
+     */
+    protected $strOrderName;
 
-	/**
-	 * Order field
-	 * @var string
-	 */
-	protected $strOrderField;
+    /**
+     * Order field
+     * @var string
+     */
+    protected $strOrderField;
 
-	/**
-	 * Show files
-	 * @var boolean
-	 */
-	protected $blnIsDownloads = false;
+    /**
+     * Show files
+     * @var boolean
+     */
+    protected $blnIsDownloads = false;
 
-	/**
-	 * Gallery flag
-	 * @var boolean
-	 */
-	protected $blnIsGallery = false;
+    /**
+     * Gallery flag
+     * @var boolean
+     */
+    protected $blnIsGallery = false;
 
-	/**
-	 * Multiple flag
-	 * @var boolean
-	 */
-	protected $blnIsMultiple = false;
-
-
-	/**
-	 * Load the database object
-	 * @param array
-	 */
-	public function __construct($arrAttributes=null)
-	{
-		if (TL_MODE == 'FE')
-		{
-			$this->strTemplate = 'form_widget';
-
-			// Execute the AJAX actions in front end
-			if (\Environment::get('isAjaxRequest') && \Input::get('no_ajax') != 1)
-			{
-				$objHandler = new \FineUploader();
-				$objHandler->executeAjaxActions($this->arrConfiguration);
-				return;
-			}
-		}
-
-		parent::__construct($arrAttributes);
-		$this->strOrderField = $this->arrConfiguration['orderField'];
-		$this->blnIsMultiple = $this->arrConfiguration['multiple'];
-
-		// Prepare the order field
-		if (TL_MODE == 'BE' && $this->strOrderField != '')
-		{
-			$this->strOrderId = $this->strOrderField . str_replace($this->strField, '', $this->strId);
-			$this->strOrderName = $this->strOrderField . str_replace($this->strField, '', $this->strName);
-
-			// Retrieve the order value
-			$objRow = \Database::getInstance()->prepare("SELECT {$this->strOrderField} FROM {$this->strTable} WHERE id=?")
-											  ->limit(1)
-											  ->execute($this->activeRecord->id);
-
-			$tmp = deserialize($objRow->{$this->strOrderField});
-			$this->{$this->strOrderField} = (!empty($tmp) && is_array($tmp)) ? array_filter($tmp) : array();
-		}
-
-		$this->blnIsGallery = $this->arrConfiguration['isGallery'];
-		$this->blnIsDownloads = $this->arrConfiguration['isDownloads'];
-
-		// Include the assets
-		$GLOBALS['TL_JAVASCRIPT']['fineuploader'] = 'system/modules/fineuploader/assets/fineuploader/fineuploader-4.0.1.min.js';
-		$GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.js';
-
-		if (TL_MODE == 'FE')
-		{
-			$GLOBALS['TL_JAVASCRIPT']['mootao'] = 'assets/mootools/mootao/Mootao.js';
-		}
-
-		if (TL_MODE == 'BE')
-		{
-			$GLOBALS['TL_CSS']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.css';
-		}
-	}
+    /**
+     * Multiple flag
+     * @var boolean
+     */
+    protected $blnIsMultiple = false;
 
 
-	/**
-	 * Validate the upload
-	 * @return string
-	 */
-	public function validateUpload()
-	{
-        \Message::reset();
-	    $strTempName = $this->strName . '_fineuploader';
-		$objUploader = new \FileUpload();
-		$objUploader->setName($this->strName);
+    /**
+     * Load the database object
+     * @param array
+     */
+    public function __construct($arrAttributes=null)
+    {
+        parent::__construct($arrAttributes);
+        $this->strOrderField = $this->arrConfiguration['orderField'];
+        $this->blnIsMultiple = $this->arrConfiguration['multiple'];
 
-		// Convert the $_FILES array to Contao format
-		if (!empty($_FILES[$strTempName]))
-		{
-			$arrFile = array
-			(
-				'name' => array($_FILES[$strTempName]['name']),
-				'type' => array($_FILES[$strTempName]['type']),
-				'tmp_name' => array($_FILES[$strTempName]['tmp_name']),
-				'error' => array($_FILES[$strTempName]['error']),
-				'size' => array($_FILES[$strTempName]['size']),
-			);
-
-			// Check if the file exists
-			if (file_exists(TL_ROOT . '/system/tmp/' . $arrFile['name'][0]))
-			{
-				$arrFile['name'][0] = $this->getFileName($arrFile['name'][0], 'system/tmp');
-			}
-
-			$_FILES[$this->strName] = $arrFile;
-			unset($_FILES[$strTempName]); // Unset the temporary file
-		}
-
-		$varInput = '';
-		$maxlength = null;
-
-        // Override the default maxlength value
-        if (isset($this->arrConfiguration['maxlength']))
+        // Prepare the order field
+        if ($this->strOrderField != '')
         {
-            $maxlength = $GLOBALS['TL_CONFIG']['maxFileSize'];
-            $GLOBALS['TL_CONFIG']['maxFileSize'] = $this->arrConfiguration['maxlength'];
+            $this->strOrderId = $this->strOrderField . str_replace($this->strField, '', $this->strId);
+            $this->strOrderName = $this->strOrderField . str_replace($this->strField, '', $this->strName);
+
+            // Retrieve the order value
+            $objRow = \Database::getInstance()->prepare("SELECT {$this->strOrderField} FROM {$this->strTable} WHERE id=?")
+                                              ->limit(1)
+                                              ->execute($this->activeRecord->id);
+
+            $tmp = deserialize($objRow->{$this->strOrderField});
+            $this->{$this->strOrderField} = (!empty($tmp) && is_array($tmp)) ? array_filter($tmp) : array();
         }
 
-		try
-		{
-			$varInput = $objUploader->uploadTo('system/tmp');
+        $this->blnIsGallery = $this->arrConfiguration['isGallery'];
+        $this->blnIsDownloads = $this->arrConfiguration['isDownloads'];
 
-			if ($objUploader->hasError()) {
-                foreach ($_SESSION['TL_ERROR'] as $strError) {
-                    $this->addError($strError);
+        // Include the assets
+        $GLOBALS['TL_JAVASCRIPT']['fineuploader'] = 'system/modules/fineuploader/assets/fineuploader/fineuploader-5.0.2.min.js';
+        $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.js';
+        $GLOBALS['TL_CSS']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.css';
+    }
+
+
+    /**
+     * Return an array if the "multiple" attribute is set
+     * @param mixed
+     * @return mixed
+     */
+    protected function validator($varInput)
+    {
+        $varReturn = parent::validator($varInput);
+
+        // Store the order value
+        if ($this->strOrderField != '')
+        {
+            $arrNew = explode(',', \Input::post($this->strOrderName));
+
+            // Map the files
+            foreach ($arrNew as $k => $v)
+            {
+                if (isset($this->arrFilesMapper[$v]))
+                {
+                    $arrNew[$k] = $this->arrFilesMapper[$v];
                 }
             }
 
-            if (TL_MODE == 'FE') {
-                if (($arrImageSize = @getimagesize(TL_ROOT . '/' . $varInput[0])) != false) {
+            // Only proceed if the value has changed
+            if ($arrNew !== $this->{$this->strOrderField})
+            {
+                $objVersions = new \Versions($this->strTable, \Input::get('id'));
+                $objVersions->initialize();
 
-                    // Image exceeds maximum image width
-                    if ($arrImageSize[0] > $GLOBALS['TL_CONFIG']['imageWidth']) {
-                        $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], '', $GLOBALS['TL_CONFIG']['imageWidth']));
-                    }
+                \Database::getInstance()->prepare("UPDATE {$this->strTable} SET tstamp=?, {$this->strOrderField}=? WHERE id=?")
+                                        ->execute(time(), serialize($arrNew), \Input::get('id'));
 
-                    // Image exceeds maximum image height
-                    if ($arrImageSize[1] > $GLOBALS['TL_CONFIG']['imageHeight']) {
-                        $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], '', $GLOBALS['TL_CONFIG']['imageHeight']));
+                $objVersions->create(); // see #6285
+            }
+        }
+
+        return $varReturn;
+    }
+
+
+    /**
+     * Generate the widget and return it as string
+     * @return string
+     */
+    public function generate()
+    {
+        $arrSet = array();
+        $arrValues = array();
+        $blnHasOrder = ($this->strOrderField != '' && is_array($this->{$this->strOrderField}) && TL_MODE == 'BE');
+
+        if (!empty($this->varValue)) // Can be an array
+        {
+            $arrUuids = array();
+            $arrTemp = array();
+            $this->varValue = (array) $this->varValue;
+
+            foreach ($this->varValue as $varFile)
+            {
+                if (\Validator::isBinaryUuid($varFile))
+                {
+                    $arrUuids[] = $varFile;
+                }
+                else
+                {
+                    $arrTemp[] = $varFile;
+                }
+            }
+
+            $objFiles = \FilesModel::findMultipleByUuids($arrUuids);
+
+            // Get the database files
+            if ($objFiles !== null)
+            {
+                while ($objFiles->next())
+                {
+                    $chunk = $this->generateFileItem($objFiles->path);
+
+                    if (strlen($chunk))
+                    {
+                        $arrValues[$objFiles->uuid] = $chunk;
+                        $arrSet[] = $objFiles->uuid;
                     }
                 }
             }
 
-			\Message::reset();
-		}
-		catch (\Exception $e)
-		{
-			$this->addError($e->getMessage());
-		}
+            // Get the temporary files
+            foreach ($arrTemp as $varFile)
+            {
+                $chunk = $this->generateFileItem($varFile);
 
-		// Restore the default maxlength value
-		if ($maxlength !== null)
-		{
-    		$GLOBALS['TL_CONFIG']['maxFileSize'] = $maxlength;
-		}
+                if (strlen($chunk))
+                {
+                    $arrValues[$varFile] = $chunk;
+                    $arrSet[] = $varFile;
+                }
+            }
 
-		if (!is_array($varInput) || empty($varInput))
-		{
-			$this->addError('Unknown error occured.');
-		}
+            // Apply a custom sort order
+            if ($blnHasOrder)
+            {
+                $arrNew = array();
 
-		return $varInput[0];
-	}
+                foreach ($this->{$this->strOrderField} as $i)
+                {
+                    if (isset($arrValues[$i]))
+                    {
+                        $arrNew[$i] = $arrValues[$i];
+                        unset($arrValues[$i]);
+                    }
+                }
 
+                if (!empty($arrValues))
+                {
+                    foreach ($arrValues as $k=>$v)
+                    {
+                        $arrNew[$k] = $v;
+                    }
+                }
 
-	/**
-	 * Return an array if the "multiple" attribute is set
-	 * @param mixed
-	 * @return mixed
-	 */
-	protected function validator($varInput)
-	{
-		$arrMapper = array();
-		$varReturn = $this->blnIsMultiple ? '' : 0;
-		$strDestination = $GLOBALS['TL_CONFIG']['uploadPath'];
+                $arrValues = $arrNew;
+                unset($arrNew);
+            }
+        }
 
-		// Specify the target folder in the DCA (eval)
-		if (isset($this->arrConfiguration['uploadFolder']))
-		{
-			$strDestination = $this->arrConfiguration['uploadFolder'];
-		}
+        // Load the fonts for the drag hint (see #4838)
+        $GLOBALS['TL_CONFIG']['loadGoogleFonts'] = true;
 
-		// Return the value as usual
-		if ($varInput == '' && $this->mandatory)
-		{
-			$this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
-		}
-		elseif (strpos($varInput, ',') === false)
-		{
-			if (is_file(TL_ROOT . '/' . $varInput))
-			{
-				$strUuid = $this->moveTemporaryFile($varInput, $strDestination);
-				$arrMapper[$varInput] = $strUuid;
-				$varInput = $strUuid;
-			}
+        // Parse the set array
+        foreach ($arrSet as $k=>$v)
+        {
+            if (in_array($v, $arrTemp))
+            {
+                $strSet[$k] = $v;
+            }
+            else
+            {
+                $arrSet[$k] = \String::binToUuid($v);
+            }
+        }
 
-			$varInput = \String::uuidToBin($varInput);
-			$varReturn = $this->blnIsMultiple ? array($varInput) : $varInput;
-		}
-		else
-		{
-			$arrValue = array_filter(explode(',', $varInput));
+        // Convert the binary UUIDs
+        $strSet = implode(',', $arrSet);
+        $strOrder = $blnHasOrder ? implode(',', array_map('String::binToUuid', $this->{$this->strOrderField})) : '';
 
-			// Limit the number of uploads
-			if ($this->arrConfiguration['uploaderLimit'] > 0)
-			{
-				$arrValue = array_slice($arrValue, 0, $this->arrConfiguration['uploaderLimit']);
-			}
-
-			foreach ($arrValue as $k => $v)
-			{
-				if (is_file(TL_ROOT . '/' . $v))
-				{
-					$arrValue[$k] = $this->moveTemporaryFile($v, $strDestination);
-					$arrMapper[$v] = $arrValue[$k];
-				}
-			}
-
-			$varReturn = $this->blnIsMultiple ? array_map('String::uuidToBin', $arrValue) : \String::uuidToBin($arrValue[0]);
-		}
-
-		// Store the order value
-		if (TL_MODE == 'BE' && $this->strOrderField != '')
-		{
-			$arrNew = explode(',', \Input::post($this->strOrderName));
-
-			foreach ($arrNew as $k => $v)
-			{
-				if (isset($arrMapper[$v]))
-				{
-					$arrNew[$k] = $arrMapper[$v];
-				}
-			}
-
-			$arrNew = array_map('String::uuidToBin', $arrNew);
-
-			// Only proceed if the value has changed
-			if ($arrNew !== $this->{$this->strOrderField})
-			{
-				$objVersions = new Versions($this->strTable, \Input::get('id'));
-				$objVersions->initialize();
-
-				\Database::getInstance()->prepare("UPDATE {$this->strTable} SET tstamp=?, {$this->strOrderField}=? WHERE id=?")
-										->execute(time(), serialize($arrNew), \Input::get('id'));
-
-				$objVersions->create(); // see #6285
-			}
-		}
-
-		return $varReturn;
-	}
-
-
-	/**
-	 * Move the temporary file to its destination and return the UUID
-	 * @param string
-	 * @param string
-	 * @return string
-	 */
-	protected function moveTemporaryFile($strFile, $strDestination)
-	{
-		if (!is_file(TL_ROOT . '/' . $strFile))
-		{
-			return '';
-		}
-
-		$strNew = $strDestination . '/' . basename($strFile);
-
-		// Do not overwrite existing files
-		if ($this->arrConfiguration['doNotOverwrite'])
-		{
-			$strNew = $strDestination . '/' . $this->getFileName(basename($strFile), $strDestination);
-		}
-
-		if (\Files::getInstance()->rename($strFile, $strNew))
-		{
-			$objModel = \Dbafs::addResource($strNew);
-
-			if (!$objModel !== null)
-			{
-				return \String::binToUuid($objModel->uuid);
-			}
-		}
-
-		return '';
-	}
-
-
-	/**
-	 * Get the new file name if it already exists in the folder
-	 * @param string
-	 * @param string
-	 * @return string
-	 */
-	protected function getFileName($strFile, $strFolder)
-	{
-		if (!file_exists(TL_ROOT . '/' . $strFolder . '/' . $strFile))
-		{
-			return $strFile;
-		}
-
-		$offset = 1;
-		$pathinfo = pathinfo($strFile);
-		$name = $pathinfo['filename'];
-
-		$arrAll = scan(TL_ROOT . '/' . $strFolder);
-		$arrFiles = preg_grep('/^' . preg_quote($name, '/') . '.*\.' . preg_quote($pathinfo['extension'], '/') . '/', $arrAll);
-
-		foreach ($arrFiles as $file)
-		{
-			if (preg_match('/__[0-9]+\.' . preg_quote($pathinfo['extension'], '/') . '$/', $file))
-			{
-				$file = str_replace('.' . $pathinfo['extension'], '', $file);
-				$intValue = intval(substr($file, (strrpos($file, '_') + 1)));
-
-				$offset = max($offset, $intValue);
-			}
-		}
-
-		return str_replace($name, $name . '__' . ++$offset, $strFile);
-	}
-
-
-	/**
-	 * Generate the widget and return it as string
-	 * @return string
-	 */
-	public function generate()
-	{
-		$arrSet = array();
-		$arrValues = array();
-		$blnHasOrder = ($this->strOrderField != '' && is_array($this->{$this->strOrderField}) && TL_MODE == 'BE');
-
-		if (!empty($this->varValue)) // Can be an array
-		{
-			$arrUuids = array();
-			$arrTemp = array();
-			$this->varValue = (array) $this->varValue;
-
-			foreach ($this->varValue as $varFile)
-			{
-				if (\Validator::isUuid($varFile) && !is_file(TL_ROOT . '/' . $varFile))
-				{
-					$arrUuids[] = $varFile;
-				}
-				else
-				{
-					$arrTemp[] = $varFile;
-				}
-			}
-
-			$objFiles = \FilesModel::findMultipleByUuids($arrUuids);
-
-			// Get the database files
-			if ($objFiles !== null)
-			{
-				while ($objFiles->next())
-				{
-					$chunk = $this->generateFileItem($objFiles->path);
-
-					if (strlen($chunk))
-					{
-						$arrValues[$objFiles->uuid] = $chunk;
-						$arrSet[] = $objFiles->uuid;
-					}
-				}
-			}
-
-			// Get the temporary files
-			foreach ($arrTemp as $varFile)
-			{
-				$chunk = $this->generateFileItem($varFile);
-
-				if (strlen($chunk))
-				{
-					$arrValues[$varFile] = $chunk;
-					$arrSet[] = $varFile;
-				}
-			}
-
-			// Apply a custom sort order
-			if ($blnHasOrder)
-			{
-				$arrNew = array();
-
-				foreach ($this->{$this->strOrderField} as $i)
-				{
-					if (isset($arrValues[$i]))
-					{
-						$arrNew[$i] = $arrValues[$i];
-						unset($arrValues[$i]);
-					}
-				}
-
-				if (!empty($arrValues))
-				{
-					foreach ($arrValues as $k=>$v)
-					{
-						$arrNew[$k] = $v;
-					}
-				}
-
-				$arrValues = $arrNew;
-				unset($arrNew);
-			}
-		}
-
-		// Load the fonts for the drag hint (see #4838)
-		$GLOBALS['TL_CONFIG']['loadGoogleFonts'] = true;
-
-		// Parse the set array
-		foreach ($arrSet as $k=>$v)
-		{
-			if (in_array($v, $arrTemp))
-			{
-				$strSet[$k] = $v;
-			}
-			else
-			{
-				$arrSet[$k] = \String::binToUuid($v);
-			}
-		}
-
-		// Convert the binary UUIDs
-		$strSet = implode(',', $arrSet);
-		$strOrder = $blnHasOrder ? implode(',', array_map('String::binToUuid', $this->{$this->strOrderField})) : '';
-
-		$return = '<input type="hidden" name="'.$this->strName.'_fineuploader" id="ctrl_'.$this->strId.'_fineuploader" value="">
+        $return = '<input type="hidden" name="'.$this->strName.'_fineuploader" id="ctrl_'.$this->strId.'_fineuploader" value="">
   <input type="hidden" name="'.$this->strName.'" id="ctrl_'.$this->strId.'" value="'.$strSet.'">' . ($blnHasOrder ? '
   <input type="hidden" name="'.$this->strOrderName.'" id="ctrl_'.$this->strOrderId.'" value="'.$strOrder.'">' : '') . '
   <div class="selector_container">' . (($blnHasOrder && count($arrValues)) ? '
     <p class="sort_hint">' . $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] . '</p>' : '') . '
     <ul id="sort_'.$this->strId.'" class="'.trim(($blnHasOrder ? 'sortable ' : '').($this->blnIsGallery ? 'sgallery' : '')).'">';
 
-		foreach ($arrValues as $k=>$v)
-		{
-			$return .= '<li data-id="'.(in_array($k, $arrTemp) ? $k : \String::binToUuid($k)).'">
-<a href="#" class="delete" onclick="ContaoFineUploader.deleteItem(this, \''.$this->strId.'\');return false;"></a>
+        foreach ($arrValues as $k=>$v)
+        {
+            $return .= '<li data-id="'.(in_array($k, $arrTemp) ? $k : \String::binToUuid($k)).'">
+<a href="#" class="delete" title="'.specialchars($GLOBALS['TL_LANG']['MSC']['delete']).'" onclick="ContaoFineUploader.deleteItem(this, \''.$this->strId.'\');return false;"></a>
 '.$v.'
 </li>';
-		}
+        }
 
-		$return .= '</ul>' . ($blnHasOrder ? '
+        $return .= '</ul>' . ($blnHasOrder ? '
     <script>ContaoFineUploader.makeSortable("sort_'.$this->strId.'", "ctrl_'.$this->strOrderId.'")</script>' : '') . '
   </div>';
 
-		if (!\Environment::get('isAjaxRequest'))
-		{
-			$return = '<div><div>' . $return . '</div>';
-			$extensions = trimsplit(',', $this->arrConfiguration['extensions']);
-			$limit = $this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0;
+        if (!\Environment::get('isAjaxRequest'))
+        {
+            $objTemplate = new \BackendTemplate($this->arrConfiguration['uploaderTemplate'] ? $this->arrConfiguration['uploaderTemplate'] : 'fineuploader_default');
 
-			$return .= '<div id="'.$this->strId.'_fineuploader" class="upload_container"></div>
+            $return = '<div><div>' . $return . '</div>';
+            $return .= '<div id="'.$this->strId.'_fineuploader" class="upload_container"></div>' . $objTemplate->parse() . '
   <script>
     window.addEvent("domready", function() {
       ContaoFineUploader.init($("'.$this->strId.'_fineuploader"), {
           field: "'.$this->strId.'",
           request_token: "'.REQUEST_TOKEN.'",
-          backend: '.((TL_MODE == 'FE') ? 'false' : 'true').',
-          extensions: '.json_encode($extensions).',
-          limit: '.(int) $this->arrConfiguration['uploaderLimit'].'
+          backend: true,
+          extensions: '.json_encode(trimsplit(',', $this->arrConfiguration['extensions'])).',
+          limit: '.($this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0).',
+          sizeLimit: '.($this->arrConfiguration['maxlength'] ? $this->arrConfiguration['maxlength'] : 0).'
         },
         {'.($this->arrConfiguration['uploaderConfig'] ? $this->arrConfiguration['uploaderConfig'] : "").'});
     });
-  </script>';
+  </script>
+  </div>';
+        }
 
-	  		$objTemplate = new \BackendTemplate($this->arrConfiguration['uploaderTemplate'] ? $this->arrConfiguration['uploaderTemplate'] : 'fineuploader_default');
-	  		$return .= $objTemplate->parse() . '</div>';
-		}
-
-		return $return;
-	}
-
-
-	/**
-	 * Generate a file item and return it as HTML string
-	 * @param string
-	 * @return string
-	 */
-	protected function generateFileItem($strPath)
-	{
-		if (!is_file(TL_ROOT . '/' . $strPath))
-		{
-			return '';
-		}
-
-		$objFile = new \File($strPath, true);
-		$strInfo = $strPath . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isGdImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
-		$allowedDownload = trimsplit(',', strtolower($GLOBALS['TL_CONFIG']['allowedDownload']));
-		$strReturn = '';
-
-		// Show files and folders
-		if (!$this->blnIsGallery && !$this->blnIsDownloads)
-		{
-			if ($objFile->isGdImage)
-			{
-				$strReturn = \Image::getHtml(\Image::get($strPath, 80, 60, 'center_center'), '', 'class="gimage" title="' . specialchars($strInfo) . '"');
-			}
-			else
-			{
-				$strReturn = \Image::getHtml($objFile->icon) . ' ' . $strInfo;
-			}
-		}
-
-		// Show a sortable list of files only
-		else
-		{
-			if ($this->blnIsGallery)
-			{
-				// Only show images
-				if ($objFile->isGdImage)
-				{
-					$strReturn = \Image::getHtml(\Image::get($strPath, 80, 60, 'center_center'), '', 'class="gimage" title="' . specialchars($strInfo) . '"');
-				}
-			}
-			else
-			{
-				// Only show allowed download types
-				if (in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
-				{
-					$strReturn = \Image::getHtml($objFile->icon) . ' ' . $strPath;
-				}
-			}
-		}
-
-		return $strReturn;
-	}
+        return $return;
+    }
 }

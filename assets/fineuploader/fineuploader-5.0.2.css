@@ -3,7 +3,7 @@
 *
 * Copyright 2013, Widen Enterprises, Inc. info@fineuploader.com
 *
-* Version: 4.0.1
+* Version: 5.0.2
 *
 * Homepage: http://fineuploader.com
 *
@@ -74,7 +74,9 @@
     font-size: 16px;
     background-color: #FFF0BD;
 }
-.qq-upload-file, .qq-upload-spinner, .qq-upload-size, .qq-upload-cancel, .qq-upload-retry, .qq-upload-failed-text, .qq-upload-delete {
+.qq-upload-file, .qq-upload-spinner, .qq-upload-size,
+.qq-upload-cancel, .qq-upload-retry, .qq-upload-failed-text,
+.qq-upload-delete, .qq-upload-pause, .qq-upload-continue {
     margin-right: 12px;
     display: inline;
 }
@@ -98,18 +100,17 @@
     vertical-align: text-bottom;
 }
 
-.qq-upload-delete {
+.qq-upload-delete, .qq-upload-pause, .qq-upload-continue {
     display: inline;
 }
 
-.qq-upload-retry, .qq-upload-delete, .qq-upload-cancel {
+.qq-upload-retry, .qq-upload-delete, .qq-upload-cancel,
+.qq-upload-pause, .qq-upload-continue {
     color: #000000;
 }
 
-.qq-upload-retryable .qq-upload-retry {
-    display: inline;
-}
-.qq-upload-size, .qq-upload-cancel, .qq-upload-retry, .qq-upload-delete {
+.qq-upload-size, .qq-upload-cancel, .qq-upload-retry,
+.qq-upload-delete, .qq-upload-pause, .qq-upload-continue {
     font-size: 12px;
     font-weight: normal;
 }
@@ -151,6 +152,15 @@
     height: 15px;
     border-radius: 6px;
     margin-bottom: 3px;
+}
+
+.qq-total-progress-bar {
+    height: 25px;
+    border-radius: 9px;
+}
+
+.qq-total-progress-bar-container {
+    margin: 9px;
 }
 
 INPUT.qq-edit-filename {
@@ -198,4 +208,4 @@ INPUT.qq-edit-filename.qq-editing ~ .qq-upload-cancel {
     display: none;
 }
 
-/*! 2013-10-28 */
+/*! 2014-06-27 */

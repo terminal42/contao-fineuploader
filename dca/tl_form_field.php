@@ -11,8 +11,6 @@
 
 
 /**
- * Miscellaneous
+ * Add palettes to tl_form_field
  */
-$GLOBALS['TL_LANG']['MSC']['fineuploader_drop'] = 'Drop files here to upload';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_upload'] = 'Upload a file';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_processing'] = 'Processing dropped files...';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,extensions,maxlength,multiple;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,tabindex,fSize';

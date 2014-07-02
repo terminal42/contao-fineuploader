@@ -1,22 +1,19 @@
 <?php
 
 /**
- * Contao Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
+ * fineuploader extension for Contao Open Source CMS
  *
- * Formerly known as TYPOlight Open Source CMS.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- *
- * PHP version 5
- * @copyright  terminal42 gmbh 2009-2013
- * @author     Andreas Schempp <andreas.schempp@terminal42.ch>
- * @author     Kamil Kuźmiński <kamil.kuzminski@codefog.pl>
- * @license    LGPL
+ * @copyright  Copyright (c) 2008-2014, terminal42 gmbh
+ * @author     terminal42 gmbh <info@terminal42.ch>
+ * @license    http://opensource.org/licenses/lgpl-3.0.html LGPL
+ * @link       http://github.com/terminal42/contao-fineuploader
  */
+
+
+/**
+ * Register the namespace
+ */
+ClassLoader::addNamespace('FineUploader');
 
 
 /**
@@ -24,8 +21,10 @@
  */
 ClassLoader::addClasses(array
 (
-	'Contao\FineUploader' => 'system/modules/fineuploader/classes/FineUploader.php',
-	'Contao\FineUploaderWidget' => 'system/modules/fineuploader/widgets/FineUploaderWidget.php',
+    'FineUploader\FineUploaderAjax'   => 'system/modules/fineuploader/classes/FineUploaderAjax.php',
+    'FineUploader\FineUploaderBase'   => 'system/modules/fineuploader/widgets/FineUploaderBase.php',
+    'FineUploader\FineUploaderWidget' => 'system/modules/fineuploader/widgets/FineUploaderWidget.php',
+    'FineUploader\FormFineUploader'   => 'system/modules/fineuploader/form/FormFineUploader.php',
 ));
 
 
@@ -34,5 +33,5 @@ ClassLoader::addClasses(array
  */
 TemplateLoader::addFiles(array
 (
-	'fineuploader_default' => 'system/modules/fineuploader/templates/fineuploader'
+    'fineuploader_default' => 'system/modules/fineuploader/templates/fineuploader'
 ));

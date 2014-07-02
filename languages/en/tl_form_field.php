@@ -11,8 +11,6 @@
 
 
 /**
- * Miscellaneous
+ * Form fields
  */
-$GLOBALS['TL_LANG']['MSC']['fineuploader_drop'] = 'Drop files here to upload';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_upload'] = 'Upload a file';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_processing'] = 'Processing dropped files...';
+$GLOBALS['TL_LANG']['FFL']['fineUploader'] = array('Fine uploader', 'Drag and drop file uploader based on FineUploader by Widen.');

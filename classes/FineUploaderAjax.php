@@ -1,32 +1,22 @@
 <?php
 
 /**
- * Contao Open Source CMS
- * Copyright (C) 2005-2010 Leo Feyer
+ * fineuploader extension for Contao Open Source CMS
  *
- * Formerly known as TYPOlight Open Source CMS.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- *
- * PHP version 5
- * @copyright  terminal42 gmbh 2009-2013
- * @author     Andreas Schempp <andreas.schempp@terminal42.ch>
- * @author     Kamil Kuźmiński <kamil.kuzminski@codefog.pl>
- * @license    LGPL
+ * @copyright  Copyright (c) 2008-2014, terminal42 gmbh
+ * @author     terminal42 gmbh <info@terminal42.ch>
+ * @license    http://opensource.org/licenses/lgpl-3.0.html LGPL
+ * @link       http://github.com/terminal42/contao-fineuploader
  */
 
-namespace Contao;
-
+namespace FineUploader;
 
 /**
- * Class FineUploader
+ * Class FineUploaderAjax
  *
- * Provide methods to handle fine uploader actions.
+ * Provide methods to handle fine uploader ajax actions.
  */
-class FineUploader extends \Controller
+class FineUploaderAjax extends \Controller
 {
 
 	/**
@@ -184,36 +174,6 @@ class FineUploader extends \Controller
 				}
 
 				echo json_encode($arrResponse);
-				exit; break;
-
-			// Reload the widget
-			case 'fineuploader_reload':
-				$strField = \Input::post('name');
-				$varValue = \Input::post('value', true);
-
-				// Convert the selected values
-				if ($varValue != '')
-				{
-					$varValue = trimsplit(",", $varValue);
-
-					foreach ($varValue as $k => $v)
-					{
-						if (\Validator::isUuid($v))
-						{
-							$varValue[$k] = \String::uuidToBin($v);
-						}
-					}
-
-					$varValue = serialize($varValue);
-				}
-
-				$arrData['id'] = $strField;
-				$arrData['name'] = $strField;
-				$arrData['value'] = $varValue;
-				$arrData['strField'] = $strField;
-
-				$objWidget = new $GLOBALS['TL_FFL']['fineUploader']($arrData);
-				echo $objWidget->generate();
 				exit; break;
 		}
 	}
