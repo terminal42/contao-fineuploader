@@ -9,14 +9,12 @@
  * @link       http://github.com/terminal42/contao-fineuploader
  */
 
-namespace FineUploader;
-
 /**
  * Class FineUploaderAjax
  *
  * Provide methods to handle fine uploader ajax actions.
  */
-class FineUploaderAjax extends \Controller
+class FineUploaderAjax extends Controller
 {
 
 	/**

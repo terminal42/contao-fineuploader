@@ -11,20 +11,14 @@
 
 
 /**
- * Register the namespace
- */
-ClassLoader::addNamespace('FineUploader');
-
-
-/**
  * Register the classes
  */
 ClassLoader::addClasses(array
 (
-    'FineUploader\FineUploaderAjax'   => 'system/modules/fineuploader/classes/FineUploaderAjax.php',
-    'FineUploader\FineUploaderBase'   => 'system/modules/fineuploader/widgets/FineUploaderBase.php',
-    'FineUploader\FineUploaderWidget' => 'system/modules/fineuploader/widgets/FineUploaderWidget.php',
-    'FineUploader\FormFineUploader'   => 'system/modules/fineuploader/form/FormFineUploader.php',
+    'FineUploaderAjax'   => 'system/modules/fineuploader/classes/FineUploaderAjax.php',
+    'FineUploaderBase'   => 'system/modules/fineuploader/widgets/FineUploaderBase.php',
+    'FineUploaderWidget' => 'system/modules/fineuploader/widgets/FineUploaderWidget.php',
+    'FormFineUploader'   => 'system/modules/fineuploader/form/FormFineUploader.php',
 ));
 
 

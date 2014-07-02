@@ -9,8 +9,6 @@
  * @link       http://github.com/terminal42/contao-fineuploader
  */
 
-namespace FineUploader;
-
 /**
  * Class FormFineUploader
  *

@@ -13,16 +13,16 @@
 /**
  * Back end form fields
  */
-$GLOBALS['BE_FFL']['fineUploader'] = 'FineUploader\FineUploaderWidget';
+$GLOBALS['BE_FFL']['fineUploader'] = 'FineUploaderWidget';
 
 
 /**
  * Front end form fields
  */
-$GLOBALS['TL_FFL']['fineUploader'] = 'FineUploader\FormFineUploader';
+$GLOBALS['TL_FFL']['fineUploader'] = 'FormFineUploader';
 
 
 /**
  * Hooks
  */
-$GLOBALS['TL_HOOKS']['executePostActions'][] = array('FineUploader\FineUploaderAjax', 'dispatchAjaxRequest');
+$GLOBALS['TL_HOOKS']['executePostActions'][] = array('FineUploaderAjax', 'dispatchAjaxRequest');
