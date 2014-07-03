@@ -191,24 +191,8 @@ abstract class FineUploaderBase extends \Widget
         // Single file
         elseif (strpos($varInput, ',') === false)
         {
-            $old = $varInput;
-
-            // Move the temporary file
-            if (!\Validator::isStringUuid($varInput) && is_file(TL_ROOT . '/' . $varInput))
-            {
-                $varInput = $this->moveTemporaryFile($varInput, $strDestination);
-            }
-
-            // Convert uuid to binary format
-            if (\Validator::isStringUuid($varInput))
-            {
-                $varInput = \String::uuidToBin($varInput);
-            }
-
+            $varInput = $this->validatorSingle($varInput, $strDestination);
             $varReturn = $this->blnIsMultiple ? array($varInput) : $varInput;
-
-            // Store in the mapper
-            $this->arrFilesMapper[$old] = $varInput;
         }
         // Multiple files
         else
@@ -223,30 +207,42 @@ abstract class FineUploaderBase extends \Widget
 
             foreach ($arrValues as $k => $v)
             {
-                $old = $v;
-
-                // Move the temporary file
-                if (!\Validator::isStringUuid($v) && is_file(TL_ROOT . '/' . $v))
-                {
-                    $v = $this->moveTemporaryFile($v, $strDestination);
-                }
-
-                // Convert uuid to binary format
-                if (\Validator::isStringUuid($v))
-                {
-                    $v = \String::uuidToBin($v);
-                }
-
-                $arrValues[$k] = $v;
-
-                // Store in the mapper
-                $this->arrFilesMapper[$old] = $v;
+                $arrValues[$k] = $this->validatorSingle($v, $strDestination);
             }
 
             $varReturn = $this->blnIsMultiple ? $arrValues : $arrValues[0];
         }
 
         return $varReturn;
+    }
+
+
+    /**
+     * Validate the single file
+     * @param mixed
+     * @param string
+     * @return mixed
+     */
+    protected function validatorSingle($varFile, $strDestination)
+    {
+        $varOld = $varFile;
+
+        // Move the temporary file
+        if (!\Validator::isStringUuid($varFile) && is_file(TL_ROOT . '/' . $varFile))
+        {
+            $varFile = $this->moveTemporaryFile($varFile, $strDestination);
+        }
+
+        // Convert uuid to binary format
+        if (\Validator::isStringUuid($varFile))
+        {
+            $varFile = \String::uuidToBin($varFile);
+        }
+
+        // Store in the mapper
+        $this->arrFilesMapper[$varOld] = $varFile;
+
+        return $varFile;
     }
 
 
