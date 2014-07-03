@@ -9,7 +9,6 @@
  * @link       http://github.com/terminal42/contao-fineuploader
  */
 
-
 /**
  * Add palettes to tl_form_field
  */

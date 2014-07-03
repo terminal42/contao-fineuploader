@@ -9,7 +9,6 @@
  * @link       http://github.com/terminal42/contao-fineuploader
  */
 
-
 /**
  * Register the classes
  */
@@ -20,7 +19,6 @@ ClassLoader::addClasses(array
     'FineUploaderWidget' => 'system/modules/fineuploader/widgets/FineUploaderWidget.php',
     'FormFineUploader'   => 'system/modules/fineuploader/form/FormFineUploader.php',
 ));
-
 
 /**
  * Register the templates

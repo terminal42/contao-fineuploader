@@ -9,18 +9,15 @@
  * @link       http://github.com/terminal42/contao-fineuploader
  */
 
-
 /**
  * Back end form fields
  */
 $GLOBALS['BE_FFL']['fineUploader'] = 'FineUploaderWidget';
 
-
 /**
  * Front end form fields
  */
 $GLOBALS['TL_FFL']['fineUploader'] = 'FormFineUploader';
-
 
 /**
  * Hooks

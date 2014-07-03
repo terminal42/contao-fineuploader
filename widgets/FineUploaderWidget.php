@@ -65,7 +65,6 @@ class FineUploaderWidget extends FineUploaderBase
      */
     protected $blnIsMultiple = false;
 
-
     /**
      * Load the database object
      * @param array
@@ -77,8 +76,7 @@ class FineUploaderWidget extends FineUploaderBase
         $this->blnIsMultiple = $this->arrConfiguration['multiple'];
 
         // Prepare the order field
-        if ($this->strOrderField != '')
-        {
+        if ($this->strOrderField != '') {
             $this->strOrderId = $this->strOrderField . str_replace($this->strField, '', $this->strId);
             $this->strOrderName = $this->strOrderField . str_replace($this->strField, '', $this->strName);
 
@@ -100,7 +98,6 @@ class FineUploaderWidget extends FineUploaderBase
         $GLOBALS['TL_CSS']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.css';
     }
 
-
     /**
      * Return an array if the "multiple" attribute is set
      * @param mixed
@@ -111,22 +108,18 @@ class FineUploaderWidget extends FineUploaderBase
         $varReturn = parent::validator($varInput);
 
         // Store the order value
-        if ($this->strOrderField != '')
-        {
+        if ($this->strOrderField != '') {
             $arrNew = explode(',', \Input::post($this->strOrderName));
 
             // Map the files
-            foreach ($arrNew as $k => $v)
-            {
-                if (isset($this->arrFilesMapper[$v]))
-                {
+            foreach ($arrNew as $k => $v) {
+                if (isset($this->arrFilesMapper[$v])) {
                     $arrNew[$k] = $this->arrFilesMapper[$v];
                 }
             }
 
             // Only proceed if the value has changed
-            if ($arrNew !== $this->{$this->strOrderField})
-            {
+            if ($arrNew !== $this->{$this->strOrderField}) {
                 $objVersions = new \Versions($this->strTable, \Input::get('id'));
                 $objVersions->initialize();
 
@@ -140,7 +133,6 @@ class FineUploaderWidget extends FineUploaderBase
         return $varReturn;
     }
 
-
     /**
      * Generate the widget and return it as string
      * @param array
@@ -152,20 +144,15 @@ class FineUploaderWidget extends FineUploaderBase
         $arrValues = array();
         $blnHasOrder = ($this->strOrderField != '' && is_array($this->{$this->strOrderField}));
 
-        if (!empty($this->varValue)) // Can be an array
-        {
+        if (!empty($this->varValue)) { // Can be an array
             $arrUuids = array();
             $arrTemp = array();
             $this->varValue = (array) $this->varValue;
 
-            foreach ($this->varValue as $varFile)
-            {
-                if (\Validator::isBinaryUuid($varFile))
-                {
+            foreach ($this->varValue as $varFile) {
+                if (\Validator::isBinaryUuid($varFile)) {
                     $arrUuids[] = $varFile;
-                }
-                else
-                {
+                } else {
                     $arrTemp[] = $varFile;
                 }
             }
@@ -173,14 +160,11 @@ class FineUploaderWidget extends FineUploaderBase
             $objFiles = \FilesModel::findMultipleByUuids($arrUuids);
 
             // Get the database files
-            if ($objFiles !== null)
-            {
-                while ($objFiles->next())
-                {
+            if ($objFiles !== null) {
+                while ($objFiles->next()) {
                     $chunk = $this->generateFileItem($objFiles->path);
 
-                    if (strlen($chunk))
-                    {
+                    if (strlen($chunk)) {
                         $arrValues[$objFiles->uuid] = array
                         (
                             'id' => (in_array($objFiles->uuid, $arrTemp) ? $objFiles->uuid : \String::binToUuid($objFiles->uuid)),
@@ -193,12 +177,10 @@ class FineUploaderWidget extends FineUploaderBase
             }
 
             // Get the temporary files
-            foreach ($arrTemp as $varFile)
-            {
+            foreach ($arrTemp as $varFile) {
                 $chunk = $this->generateFileItem($varFile);
 
-                if (strlen($chunk))
-                {
+                if (strlen($chunk)) {
                     $arrValues[$varFile] = array
                     (
                         'id' => (in_array($varFile, $arrTemp) ? $varFile : \String::binToUuid($varFile)),
@@ -210,23 +192,18 @@ class FineUploaderWidget extends FineUploaderBase
             }
 
             // Apply a custom sort order
-            if ($blnHasOrder)
-            {
+            if ($blnHasOrder) {
                 $arrNew = array();
 
-                foreach ($this->{$this->strOrderField} as $i)
-                {
-                    if (isset($arrValues[$i]))
-                    {
+                foreach ($this->{$this->strOrderField} as $i) {
+                    if (isset($arrValues[$i])) {
                         $arrNew[$i] = $arrValues[$i];
                         unset($arrValues[$i]);
                     }
                 }
 
-                if (!empty($arrValues))
-                {
-                    foreach ($arrValues as $k=>$v)
-                    {
+                if (!empty($arrValues)) {
+                    foreach ($arrValues as $k=>$v) {
                         $arrNew[$k] = $v;
                     }
                 }
@@ -240,14 +217,10 @@ class FineUploaderWidget extends FineUploaderBase
         $GLOBALS['TL_CONFIG']['loadGoogleFonts'] = true;
 
         // Parse the set array
-        foreach ($arrSet as $k=>$v)
-        {
-            if (in_array($v, $arrTemp))
-            {
+        foreach ($arrSet as $k=>$v) {
+            if (in_array($v, $arrTemp)) {
                 $strSet[$k] = $v;
-            }
-            else
-            {
+            } else {
                 $arrSet[$k] = \String::binToUuid($v);
             }
         }
@@ -272,7 +245,6 @@ class FineUploaderWidget extends FineUploaderBase
 
         return parent::parse($arrAttributes);
     }
-
 
     /**
      * Use the parse() method instead

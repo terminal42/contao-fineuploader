@@ -35,7 +35,6 @@ class FormFineUploader extends FineUploaderBase
      */
     protected $blnIsMultiple = false;
 
-
     /**
      * Load the database object
      * @param array
@@ -43,10 +42,10 @@ class FormFineUploader extends FineUploaderBase
     public function __construct($arrAttributes=null)
     {
         // Execute the AJAX actions in front end
-        if (\Environment::get('isAjaxRequest') && \Input::get('no_ajax') != 1)
-        {
+        if (\Environment::get('isAjaxRequest') && \Input::get('no_ajax') != 1) {
             $objHandler = new FineUploaderAjax();
             $objHandler->executeAjaxActions($this->arrConfiguration);
+
             return;
         }
 
@@ -60,7 +59,6 @@ class FormFineUploader extends FineUploaderBase
         $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.js';
         $GLOBALS['TL_CSS']['fineuploader'] = 'system/modules/fineuploader/assets/fineuploader/fineuploader-5.0.2.min.css';
     }
-
 
     /**
      * Validate the upload
@@ -87,7 +85,6 @@ class FormFineUploader extends FineUploaderBase
         return $varInput;
     }
 
-
     /**
      * Store the file information in the session
      * @param mixed
@@ -98,15 +95,12 @@ class FormFineUploader extends FineUploaderBase
         $varReturn = parent::validator($varInput);
         $intCount = 0;
 
-        foreach ((array) $varReturn as $varFile)
-        {
+        foreach ((array) $varReturn as $varFile) {
             // Get the file model
-            if (\Validator::isBinaryUuid($varFile))
-            {
+            if (\Validator::isBinaryUuid($varFile)) {
                 $objModel = \FilesModel::findByUuid($varFile);
 
-                if ($objModel === null)
-                {
+                if ($objModel === null) {
                     continue;
                 }
 
@@ -130,7 +124,6 @@ class FormFineUploader extends FineUploaderBase
         return $varReturn;
     }
 
-
     /**
      * Generate the widget and return it as string
      * @param array
@@ -141,20 +134,15 @@ class FormFineUploader extends FineUploaderBase
         $arrSet = array();
         $arrValues = array();
 
-        if (!empty($this->varValue)) // Can be an array
-        {
+        if (!empty($this->varValue)) { // Can be an array
             $arrUuids = array();
             $arrTemp = array();
             $this->varValue = (array) $this->varValue;
 
-            foreach ($this->varValue as $varFile)
-            {
-                if (\Validator::isBinaryUuid($varFile))
-                {
+            foreach ($this->varValue as $varFile) {
+                if (\Validator::isBinaryUuid($varFile)) {
                     $arrUuids[] = $varFile;
-                }
-                else
-                {
+                } else {
                     $arrTemp[] = $varFile;
                 }
             }
@@ -162,14 +150,11 @@ class FormFineUploader extends FineUploaderBase
             $objFiles = \FilesModel::findMultipleByUuids($arrUuids);
 
             // Get the database files
-            if ($objFiles !== null)
-            {
-                while ($objFiles->next())
-                {
+            if ($objFiles !== null) {
+                while ($objFiles->next()) {
                     $chunk = $this->generateFileItem($objFiles->path);
 
-                    if (strlen($chunk))
-                    {
+                    if (strlen($chunk)) {
                         $arrValues[$objFiles->uuid] = array
                         (
                             'id' => (in_array($objFiles->uuid, $arrTemp) ? $objFiles->uuid : \String::binToUuid($objFiles->uuid)),
@@ -182,12 +167,10 @@ class FormFineUploader extends FineUploaderBase
             }
 
             // Get the temporary files
-            foreach ($arrTemp as $varFile)
-            {
+            foreach ($arrTemp as $varFile) {
                 $chunk = $this->generateFileItem($varFile);
 
-                if (strlen($chunk))
-                {
+                if (strlen($chunk)) {
                     $arrValues[$varFile] = array
                     (
                         'id' => (in_array($varFile, $arrTemp) ? $varFile : \String::binToUuid($varFile)),
@@ -200,14 +183,10 @@ class FormFineUploader extends FineUploaderBase
         }
 
         // Parse the set array
-        foreach ($arrSet as $k=>$v)
-        {
-            if (in_array($v, $arrTemp))
-            {
+        foreach ($arrSet as $k=>$v) {
+            if (in_array($v, $arrTemp)) {
                 $strSet[$k] = $v;
-            }
-            else
-            {
+            } else {
                 $arrSet[$k] = \String::binToUuid($v);
             }
         }
@@ -228,7 +207,6 @@ class FormFineUploader extends FineUploaderBase
 
         return parent::parse($arrAttributes);
     }
-
 
     /**
      * Use the parse() method instead

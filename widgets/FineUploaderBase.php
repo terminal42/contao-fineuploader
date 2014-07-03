@@ -29,7 +29,6 @@ abstract class FineUploaderBase extends \Widget
      */
     protected $arrFilesMapper = array();
 
-
     /**
      * Add specific attributes
      * @param string
@@ -37,8 +36,7 @@ abstract class FineUploaderBase extends \Widget
      */
     public function __set($strKey, $varValue)
     {
-        switch ($strKey)
-        {
+        switch ($strKey) {
             case 'maxlength':
                 // Do not add as attribute (see #3094)
                 $this->arrConfiguration['maxlength'] = $varValue;
@@ -49,12 +47,9 @@ abstract class FineUploaderBase extends \Widget
                 break;
 
             case 'mandatory':
-                if ($varValue)
-                {
+                if ($varValue) {
                     $this->arrAttributes['required'] = 'required';
-                }
-                else
-                {
+                } else {
                     unset($this->arrAttributes['required']);
                 }
                 parent::__set($strKey, $varValue);
@@ -65,7 +60,6 @@ abstract class FineUploaderBase extends \Widget
                 break;
         }
     }
-
 
     /**
      * Validate the upload
@@ -79,8 +73,7 @@ abstract class FineUploaderBase extends \Widget
         $objUploader->setName($this->strName);
 
         // Convert the $_FILES array to Contao format
-        if (!empty($_FILES[$strTempName]))
-        {
+        if (!empty($_FILES[$strTempName])) {
             $arrFile = array
             (
                 'name' => array($_FILES[$strTempName]['name']),
@@ -91,8 +84,7 @@ abstract class FineUploaderBase extends \Widget
             );
 
             // Check if the file exists
-            if (file_exists(TL_ROOT . '/' . $this->strTemporaryPath . '/' . $arrFile['name'][0]))
-            {
+            if (file_exists(TL_ROOT . '/' . $this->strTemporaryPath . '/' . $arrFile['name'][0])) {
                 $arrFile['name'][0] = $this->getFileName($arrFile['name'][0], $this->strTemporaryPath);
             }
 
@@ -104,14 +96,12 @@ abstract class FineUploaderBase extends \Widget
         $maxlength = null;
 
         // Override the default maxlength value
-        if (isset($this->arrConfiguration['maxlength']))
-        {
+        if (isset($this->arrConfiguration['maxlength'])) {
             $maxlength = $GLOBALS['TL_CONFIG']['maxFileSize'];
             $GLOBALS['TL_CONFIG']['maxFileSize'] = $this->arrConfiguration['maxlength'];
         }
 
-        try
-        {
+        try {
             $varInput = $objUploader->uploadTo($this->strTemporaryPath);
 
             if ($objUploader->hasError()) {
@@ -121,26 +111,21 @@ abstract class FineUploaderBase extends \Widget
             }
 
             \Message::reset();
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->addError($e->getMessage());
         }
 
         // Restore the default maxlength value
-        if ($maxlength !== null)
-        {
+        if ($maxlength !== null) {
             $GLOBALS['TL_CONFIG']['maxFileSize'] = $maxlength;
         }
 
-        if (!is_array($varInput) || empty($varInput))
-        {
+        if (!is_array($varInput) || empty($varInput)) {
             $this->addError($GLOBALS['TL_LANG']['MSC']['fineuploader_error']);
         }
 
         return $varInput[0];
     }
-
 
     /**
      * Return an array if the "multiple" attribute is set
@@ -153,60 +138,48 @@ abstract class FineUploaderBase extends \Widget
         $strDestination = $GLOBALS['TL_CONFIG']['uploadPath'];
 
         // Specify the target folder in the DCA (eval)
-        if (isset($this->arrConfiguration['uploadFolder']))
-        {
+        if (isset($this->arrConfiguration['uploadFolder'])) {
             $varFolder = $this->arrConfiguration['uploadFolder'];
 
             // Use the user's home directory
-            if ($this->arrConfiguration['useHomeDir'] && FE_USER_LOGGED_IN)
-            {
+            if ($this->arrConfiguration['useHomeDir'] && FE_USER_LOGGED_IN) {
                 $objUser = FrontendUser::getInstance();
 
-                if ($objUser->assignDir && $objUser->homeDir)
-                {
+                if ($objUser->assignDir && $objUser->homeDir) {
                     $varFolder = $objUser->homeDir;
                 }
             }
 
-            if (\Validator::isUuid($varFolder))
-            {
+            if (\Validator::isUuid($varFolder)) {
                 $objFolder = \FilesModel::findByUuid($varFolder);
 
-                if ($objFolder !== null)
-                {
+                if ($objFolder !== null) {
                     $strDestination = $objFolder->path;
                 }
-            }
-            else
-            {
+            } else {
                 $strDestination = $varFolder;
             }
         }
 
         // Check the mandatoriness
-        if ($varInput == '' && $this->mandatory)
-        {
+        if ($varInput == '' && $this->mandatory) {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
         }
         // Single file
-        elseif (strpos($varInput, ',') === false)
-        {
+        elseif (strpos($varInput, ',') === false) {
             $varInput = $this->validatorSingle($varInput, $strDestination);
             $varReturn = $this->blnIsMultiple ? array($varInput) : $varInput;
         }
         // Multiple files
-        else
-        {
+        else {
             $arrValues = array_filter(explode(',', $varInput));
 
             // Limit the number of uploads
-            if ($this->arrConfiguration['uploaderLimit'] > 0)
-            {
+            if ($this->arrConfiguration['uploaderLimit'] > 0) {
                 $arrValues = array_slice($arrValues, 0, $this->arrConfiguration['uploaderLimit']);
             }
 
-            foreach ($arrValues as $k => $v)
-            {
+            foreach ($arrValues as $k => $v) {
                 $arrValues[$k] = $this->validatorSingle($v, $strDestination);
             }
 
@@ -228,14 +201,12 @@ abstract class FineUploaderBase extends \Widget
         $varOld = $varFile;
 
         // Move the temporary file
-        if (!\Validator::isStringUuid($varFile) && is_file(TL_ROOT . '/' . $varFile))
-        {
+        if (!\Validator::isStringUuid($varFile) && is_file(TL_ROOT . '/' . $varFile)) {
             $varFile = $this->moveTemporaryFile($varFile, $strDestination);
         }
 
         // Convert uuid to binary format
-        if (\Validator::isStringUuid($varFile))
-        {
+        if (\Validator::isStringUuid($varFile)) {
             $varFile = \String::uuidToBin($varFile);
         }
 
@@ -254,40 +225,34 @@ abstract class FineUploaderBase extends \Widget
      */
     protected function moveTemporaryFile($strFile, $strDestination)
     {
-        if (!is_file(TL_ROOT . '/' . $strFile))
-        {
+        if (!is_file(TL_ROOT . '/' . $strFile)) {
             return '';
         }
 
         // Do not store the file
-        if (!$this->arrConfiguration['storeFile'])
-        {
+        if (!$this->arrConfiguration['storeFile']) {
             return $strFile;
         }
 
         // The file is not temporary
-        if (stripos($strFile, $this->strTemporaryPath) === false)
-        {
+        if (stripos($strFile, $this->strTemporaryPath) === false) {
             return $strFile;
         }
 
         $strNew = $strDestination . '/' . basename($strFile);
 
         // Do not overwrite existing files
-        if ($this->arrConfiguration['doNotOverwrite'])
-        {
+        if ($this->arrConfiguration['doNotOverwrite']) {
             $strNew = $strDestination . '/' . $this->getFileName(basename($strFile), $strDestination);
         }
 
         $blnRename = \Files::getInstance()->rename($strFile, $strNew);
 
         // Add the file to Dbafs
-        if ($this->arrConfiguration['addToDbafs'] && $blnRename)
-        {
+        if ($this->arrConfiguration['addToDbafs'] && $blnRename) {
             $objModel = \Dbafs::addResource($strNew);
 
-            if ($objModel !== null)
-            {
+            if ($objModel !== null) {
                 $strNew = $objModel->uuid;
             }
         }
@@ -304,8 +269,7 @@ abstract class FineUploaderBase extends \Widget
      */
     protected function getFileName($strFile, $strFolder)
     {
-        if (!file_exists(TL_ROOT . '/' . $strFolder . '/' . $strFile))
-        {
+        if (!file_exists(TL_ROOT . '/' . $strFolder . '/' . $strFile)) {
             return $strFile;
         }
 
@@ -316,10 +280,8 @@ abstract class FineUploaderBase extends \Widget
         $arrAll = scan(TL_ROOT . '/' . $strFolder);
         $arrFiles = preg_grep('/^' . preg_quote($name, '/') . '.*\.' . preg_quote($pathinfo['extension'], '/') . '/', $arrAll);
 
-        foreach ($arrFiles as $file)
-        {
-            if (preg_match('/__[0-9]+\.' . preg_quote($pathinfo['extension'], '/') . '$/', $file))
-            {
+        foreach ($arrFiles as $file) {
+            if (preg_match('/__[0-9]+\.' . preg_quote($pathinfo['extension'], '/') . '$/', $file)) {
                 $file = str_replace('.' . $pathinfo['extension'], '', $file);
                 $intValue = intval(substr($file, (strrpos($file, '_') + 1)));
 
@@ -338,8 +300,7 @@ abstract class FineUploaderBase extends \Widget
      */
     protected function generateFileItem($strPath)
     {
-        if (!is_file(TL_ROOT . '/' . $strPath))
-        {
+        if (!is_file(TL_ROOT . '/' . $strPath)) {
             return '';
         }
 
@@ -349,34 +310,24 @@ abstract class FineUploaderBase extends \Widget
         $strReturn = '';
 
         // Show files and folders
-        if (!$this->blnIsGallery && !$this->blnIsDownloads)
-        {
-            if ($objFile->isGdImage)
-            {
+        if (!$this->blnIsGallery && !$this->blnIsDownloads) {
+            if ($objFile->isGdImage) {
                 $strReturn = \Image::getHtml(\Image::get($strPath, 80, 60, 'center_center'), '', 'class="gimage" title="' . specialchars($strInfo) . '"');
-            }
-            else
-            {
+            } else {
                 $strReturn = \Image::getHtml($objFile->icon) . ' ' . $strInfo;
             }
         }
 
         // Show a sortable list of files only
-        else
-        {
-            if ($this->blnIsGallery)
-            {
+        else {
+            if ($this->blnIsGallery) {
                 // Only show images
-                if ($objFile->isGdImage)
-                {
+                if ($objFile->isGdImage) {
                     $strReturn = \Image::getHtml(\Image::get($strPath, 80, 60, 'center_center'), '', 'class="gimage" title="' . specialchars($strInfo) . '"');
                 }
-            }
-            else
-            {
+            } else {
                 // Only show allowed download types
-                if (in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename))
-                {
+                if (in_array($objFile->extension, $allowedDownload) && !preg_match('/^meta(_[a-z]{2})?\.txt$/', $objFile->basename)) {
                     $strReturn = \Image::getHtml($objFile->icon) . ' ' . $strPath;
                 }
             }
