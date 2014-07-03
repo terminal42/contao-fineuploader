@@ -98,7 +98,11 @@
             }
         };
 
-        Object.append(params, options);
+        // Merge the params
+        for (var i in options) {
+            params[i] = options[i];
+        }
+
         return new qq.FineUploader(params);
     };
 
