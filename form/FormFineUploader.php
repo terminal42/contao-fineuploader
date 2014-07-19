@@ -99,9 +99,10 @@ class FormFineUploader extends FineUploaderBase
     protected function validator($varInput)
     {
         $varReturn = parent::validator($varInput);
+        $arrReturn = array_filter((array) $varReturn);
         $intCount = 0;
 
-        foreach ((array) $varReturn as $varFile) {
+        foreach ($arrReturn as $varFile) {
             // Get the file model
             if (\Validator::isBinaryUuid($varFile)) {
                 $objModel = \FilesModel::findByUuid($varFile);
