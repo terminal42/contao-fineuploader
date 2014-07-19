@@ -16,6 +16,7 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
 	'eval'                    => array
 	(
 	    'storeFile' => true, // Mandatory to store the file on the server
+	    'multiple' => true, // Allow multiple files to be uploaded
 		'uploadFolder' => 'files/uploads', // Upload path (destination folder)
 		'uploaderConfig' => 'debug: true', // Custom uploader configuration (JSON)
 		'uploaderLimit' => 4, // Maximum files that can be uploaded
@@ -25,7 +26,7 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
 		'doNotOvewrite' => true // Do not overwrite files in destination folder
 
 		// You can also use the default features of fileTree widget such as:
-		// multiple, orderField, isGallery, isDownloads
+		// orderField, isGallery, isDownloads
 	),
 	'sql'                     => "blob NULL"
 );
