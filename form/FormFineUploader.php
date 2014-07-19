@@ -36,6 +36,12 @@ class FormFineUploader extends FineUploaderBase
     protected $blnIsMultiple = false;
 
     /**
+     * Values are already prepared
+     * @var boolean
+     */
+    protected $blnValuesPrepared = false;
+
+    /**
      * Load the database object
      * @param array
      */
@@ -131,79 +137,83 @@ class FormFineUploader extends FineUploaderBase
      */
     public function parse($arrAttributes=null)
     {
-        $arrSet = array();
-        $arrValues = array();
+        if (!$this->blnValuesPrepared) {
+            $arrSet = array();
+            $arrValues = array();
 
-        if (!empty($this->varValue)) { // Can be an array
-            $arrUuids = array();
-            $arrTemp = array();
-            $this->varValue = (array) $this->varValue;
+            if (!empty($this->varValue)) { // Can be an array
+                $arrUuids = array();
+                $arrTemp = array();
+                $this->varValue = (array) $this->varValue;
 
-            foreach ($this->varValue as $varFile) {
-                if (\Validator::isBinaryUuid($varFile)) {
-                    $arrUuids[] = $varFile;
-                } else {
-                    $arrTemp[] = $varFile;
+                foreach ($this->varValue as $varFile) {
+                    if (\Validator::isBinaryUuid($varFile)) {
+                        $arrUuids[] = $varFile;
+                    } else {
+                        $arrTemp[] = $varFile;
+                    }
                 }
-            }
 
-            $objFiles = \FilesModel::findMultipleByUuids($arrUuids);
+                $objFiles = \FilesModel::findMultipleByUuids($arrUuids);
 
-            // Get the database files
-            if ($objFiles !== null) {
-                while ($objFiles->next()) {
-                    $chunk = $this->generateFileItem($objFiles->path);
+                // Get the database files
+                if ($objFiles !== null) {
+                    while ($objFiles->next()) {
+                        $chunk = $this->generateFileItem($objFiles->path);
+
+                        if (strlen($chunk)) {
+                            $arrValues[$objFiles->uuid] = array
+                            (
+                                'id' => (in_array($objFiles->uuid, $arrTemp) ? $objFiles->uuid : \String::binToUuid($objFiles->uuid)),
+                                'value' => $chunk
+                            );
+
+                            $arrSet[] = $objFiles->uuid;
+                        }
+                    }
+                }
+
+                // Get the temporary files
+                foreach ($arrTemp as $varFile) {
+                    $chunk = $this->generateFileItem($varFile);
 
                     if (strlen($chunk)) {
-                        $arrValues[$objFiles->uuid] = array
+                        $arrValues[$varFile] = array
                         (
-                            'id' => (in_array($objFiles->uuid, $arrTemp) ? $objFiles->uuid : \String::binToUuid($objFiles->uuid)),
+                            'id' => (in_array($varFile, $arrTemp) ? $varFile : \String::binToUuid($varFile)),
                             'value' => $chunk
                         );
 
-                        $arrSet[] = $objFiles->uuid;
+                        $arrSet[] = $varFile;
                     }
                 }
             }
 
-            // Get the temporary files
-            foreach ($arrTemp as $varFile) {
-                $chunk = $this->generateFileItem($varFile);
-
-                if (strlen($chunk)) {
-                    $arrValues[$varFile] = array
-                    (
-                        'id' => (in_array($varFile, $arrTemp) ? $varFile : \String::binToUuid($varFile)),
-                        'value' => $chunk
-                    );
-
-                    $arrSet[] = $varFile;
+            // Parse the set array
+            foreach ($arrSet as $k=>$v) {
+                if (in_array($v, $arrTemp)) {
+                    $strSet[$k] = $v;
+                } else {
+                    $arrSet[$k] = \String::binToUuid($v);
                 }
             }
-        }
 
-        // Parse the set array
-        foreach ($arrSet as $k=>$v) {
-            if (in_array($v, $arrTemp)) {
-                $strSet[$k] = $v;
-            } else {
-                $arrSet[$k] = \String::binToUuid($v);
-            }
-        }
+            $this->set = implode(',', $arrSet);
+            $this->values = $arrValues;
+            $this->deleteTitle = specialchars($GLOBALS['TL_LANG']['MSC']['delete']);
+            $this->extensions = json_encode(trimsplit(',', $this->arrConfiguration['extensions']));
+            $this->limit = $this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0;
+            $this->sizeLimit = $this->arrConfiguration['maxlength'] ? $this->arrConfiguration['maxlength'] : 0;
+            $this->config = $this->arrConfiguration['uploaderConfig'];
+            $this->labels = array
+            (
+                'drop' => $GLOBALS['TL_LANG']['MSC']['fineuploader_drop'],
+                'upload' => $GLOBALS['TL_LANG']['MSC']['fineuploader_upload'],
+                'processing' => $GLOBALS['TL_LANG']['MSC']['fineuploader_processing'],
+            );
 
-        $this->set = implode(',', $arrSet);
-        $this->values = $arrValues;
-        $this->deleteTitle = specialchars($GLOBALS['TL_LANG']['MSC']['delete']);
-        $this->extensions = json_encode(trimsplit(',', $this->arrConfiguration['extensions']));
-        $this->limit = $this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0;
-        $this->sizeLimit = $this->arrConfiguration['maxlength'] ? $this->arrConfiguration['maxlength'] : 0;
-        $this->config = $this->arrConfiguration['uploaderConfig'];
-        $this->labels = array
-        (
-            'drop' => $GLOBALS['TL_LANG']['MSC']['fineuploader_drop'],
-            'upload' => $GLOBALS['TL_LANG']['MSC']['fineuploader_upload'],
-            'processing' => $GLOBALS['TL_LANG']['MSC']['fineuploader_processing'],
-        );
+            $this->blnValuesPrepared = true;
+        }
 
         return parent::parse($arrAttributes);
     }
