@@ -15,6 +15,7 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
 	'inputType'               => 'fineUploader',
 	'eval'                    => array
 	(
+	    'storeFile' => true, // Mandatory to store the file on the server
 		'uploadFolder' => 'files/uploads', // Upload path (destination folder)
 		'uploaderConfig' => 'debug: true', // Custom uploader configuration (JSON)
 		'uploaderLimit' => 4, // Maximum files that can be uploaded
