@@ -10,25 +10,25 @@ Usage
 ```php
 $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
 (
-	'label'                   => &$GLOBALS['TL_LANG']['tl_table']['myupload'],
-	'exclude'                 => true,
-	'inputType'               => 'fineUploader',
-	'eval'                    => array
-	(
-	    'storeFile' => true, // Mandatory to store the file on the server
-	    'multiple' => true, // Allow multiple files to be uploaded
-		'uploadFolder' => 'files/uploads', // Upload path (destination folder)
-		'uploaderConfig' => 'debug: true', // Custom uploader configuration (JSON)
-		'uploaderLimit' => 4, // Maximum files that can be uploaded
-		'addToDbafs' => true, // Add files to the database assisted file system
-		'extensions' => $GLOBALS['TL_CONFIG']['validImageTypes'], // Allowed extension types
-		'maxlength' => 2048000, // Maximum file size
-		'doNotOvewrite' => true // Do not overwrite files in destination folder
+    'label'                   => &$GLOBALS['TL_LANG']['tl_table']['myupload'],
+    'exclude'                 => true,
+    'inputType'               => 'fineUploader',
+    'eval'                    => array
+    (
+        'storeFile' => true, // Mandatory to store the file on the server
+        'multiple' => true, // Allow multiple files to be uploaded
+        'uploadFolder' => 'files/uploads', // Upload path (destination folder)
+        'uploaderConfig' => 'debug: true', // Custom uploader configuration (JSON)
+        'uploaderLimit' => 4, // Maximum files that can be uploaded
+        'addToDbafs' => true, // Add files to the database assisted file system
+        'extensions' => $GLOBALS['TL_CONFIG']['validImageTypes'], // Allowed extension types
+        'maxlength' => 2048000, // Maximum file size
+        'doNotOvewrite' => true // Do not overwrite files in destination folder
 
-		// You can also use the default features of fileTree widget such as:
-		// orderField, isGallery, isDownloads
-	),
-	'sql'                     => "blob NULL"
+        // You can also use the default features of fileTree widget such as:
+        // orderField, isGallery, isDownloads
+    ),
+    'sql'                     => "blob NULL"
 );
 ```
 
