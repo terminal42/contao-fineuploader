@@ -10,14 +10,11 @@
 <?php endif; ?>
         <input type="hidden" name="<?php echo $this->strName; ?>_fineuploader" id="ctrl_<?php echo $this->strId; ?>_fineuploader" value="">
         <input type="hidden" name="<?php echo $this->strName; ?>" id="ctrl_<?php echo $this->strId; ?>" value="<?php echo $this->set; ?>">
-        <?php if ($this->hasOrder): ?>
-        <input type="hidden" name="<?php echo $this->strOrderName; ?>" id="ctrl_<?php echo $this->strOrderId; ?>" value="<?php echo $this->order; ?>">
-        <?php endif; ?>
         <div class="selector_container">
-            <?php if ($this->hasOrder && $this->values): ?>
+            <?php if ($this->sortable): ?>
             <p class="sort_hint"><?php echo $this->orderHint; ?></p>
             <?php endif; ?>
-            <ul id="sort_<?php echo $this->strId; ?>"<?php if ($this->hasOrder || $this->blnIsGallery): ?> class="<?php echo trim(($this->hasOrder ? 'sortable ' : '') . ($this->blnIsGallery ? 'sgallery' : '')); ?>"<?php endif; ?>>
+            <ul id="sort_<?php echo $this->strId; ?>" <?php if ($this->sortable || $this->blnIsGallery): ?>class="<?php echo trim(($this->sortable ? 'sortable' : '') . ($this->blnIsGallery ? ' sgallery' : '')); ?>"<?php endif; ?>>
                 <?php foreach ($this->values as $value): ?>
                 <li data-id="<?php echo $value['id']; ?>">
                     <a href="#" class="delete" title="<?php echo $this->deleteTitle; ?>" onclick="ContaoFineUploader.deleteItem(this, '<?php echo $this->strId; ?>');return false;"></a>
@@ -25,8 +22,8 @@
                 </li>
                 <?php endforeach; ?>
             </ul>
-            <?php if ($this->hasOrder): ?>
-            <script>ContaoFineUploader.makeSortable('sort_<?php echo $this->strId; ?>', 'ctrl_<?php echo $this->strOrderId; ?>')</script>
+            <?php if ($this->sortable): ?>
+            <script>ContaoFineUploader.makeSortable('sort_<?php echo $this->strId; ?>', 'ctrl_<?php echo $this->strId; ?>')</script>
             <?php endif; ?>
         </div>
     <?php if (!$this->ajax): ?>

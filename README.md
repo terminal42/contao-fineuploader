@@ -26,7 +26,9 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
         'doNotOvewrite' => true // Do not overwrite files in destination folder
 
         // You can also use the default features of fileTree widget such as:
-        // orderField, isGallery, isDownloads
+        // isGallery, isDownloads
+
+        // The "orderField" attribute is not valid (see #9)
     ),
     'sql'                     => "blob NULL"
 );

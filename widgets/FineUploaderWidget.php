@@ -30,24 +30,6 @@ class FineUploaderWidget extends FineUploaderBase
     protected $strTemplate = 'fineuploader_backend';
 
     /**
-     * Order ID
-     * @var string
-     */
-    protected $strOrderId;
-
-    /**
-     * Order name
-     * @var string
-     */
-    protected $strOrderName;
-
-    /**
-     * Order field
-     * @var string
-     */
-    protected $strOrderField;
-
-    /**
      * Show files
      * @var boolean
      */
@@ -72,23 +54,8 @@ class FineUploaderWidget extends FineUploaderBase
     public function __construct($arrAttributes=null)
     {
         parent::__construct($arrAttributes);
-        $this->strOrderField = $this->arrConfiguration['orderField'];
+
         $this->blnIsMultiple = $this->arrConfiguration['multiple'];
-
-        // Prepare the order field
-        if ($this->strOrderField != '') {
-            $this->strOrderId = $this->strOrderField . str_replace($this->strField, '', $this->strId);
-            $this->strOrderName = $this->strOrderField . str_replace($this->strField, '', $this->strName);
-
-            // Retrieve the order value
-            $objRow = \Database::getInstance()->prepare("SELECT {$this->strOrderField} FROM {$this->strTable} WHERE id=?")
-                                              ->limit(1)
-                                              ->execute($this->activeRecord->id);
-
-            $tmp = deserialize($objRow->{$this->strOrderField});
-            $this->{$this->strOrderField} = (!empty($tmp) && is_array($tmp)) ? array_filter($tmp) : array();
-        }
-
         $this->blnIsGallery = $this->arrConfiguration['isGallery'];
         $this->blnIsDownloads = $this->arrConfiguration['isDownloads'];
 
@@ -96,41 +63,6 @@ class FineUploaderWidget extends FineUploaderBase
         $GLOBALS['TL_JAVASCRIPT']['fineuploader'] = 'system/modules/fineuploader/assets/fineuploader/fineuploader-5.0.2.min.js';
         $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.js';
         $GLOBALS['TL_CSS']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.css';
-    }
-
-    /**
-     * Return an array if the "multiple" attribute is set
-     * @param mixed
-     * @return mixed
-     */
-    protected function validator($varInput)
-    {
-        $varReturn = parent::validator($varInput);
-
-        // Store the order value
-        if ($this->strOrderField != '') {
-            $arrNew = explode(',', \Input::post($this->strOrderName));
-
-            // Map the files
-            foreach ($arrNew as $k => $v) {
-                if (isset($this->arrFilesMapper[$v])) {
-                    $arrNew[$k] = $this->arrFilesMapper[$v];
-                }
-            }
-
-            // Only proceed if the value has changed
-            if ($arrNew !== $this->{$this->strOrderField}) {
-                $objVersions = new \Versions($this->strTable, \Input::get('id'));
-                $objVersions->initialize();
-
-                \Database::getInstance()->prepare("UPDATE {$this->strTable} SET tstamp=?, {$this->strOrderField}=? WHERE id=?")
-                                        ->execute(time(), serialize($arrNew), \Input::get('id'));
-
-                $objVersions->create(); // see #6285
-            }
-        }
-
-        return $varReturn;
     }
 
     /**
@@ -142,7 +74,6 @@ class FineUploaderWidget extends FineUploaderBase
     {
         $arrSet = array();
         $arrValues = array();
-        $blnHasOrder = ($this->strOrderField != '' && is_array($this->{$this->strOrderField}));
 
         if (!empty($this->varValue)) { // Can be an array
             $arrUuids = array();
@@ -190,27 +121,6 @@ class FineUploaderWidget extends FineUploaderBase
                     $arrSet[] = $varFile;
                 }
             }
-
-            // Apply a custom sort order
-            if ($blnHasOrder) {
-                $arrNew = array();
-
-                foreach ($this->{$this->strOrderField} as $i) {
-                    if (isset($arrValues[$i])) {
-                        $arrNew[$i] = $arrValues[$i];
-                        unset($arrValues[$i]);
-                    }
-                }
-
-                if (!empty($arrValues)) {
-                    foreach ($arrValues as $k=>$v) {
-                        $arrNew[$k] = $v;
-                    }
-                }
-
-                $arrValues = $arrNew;
-                unset($arrNew);
-            }
         }
 
         // Load the fonts for the drag hint (see #4838)
@@ -226,8 +136,7 @@ class FineUploaderWidget extends FineUploaderBase
         }
 
         $this->set = implode(',', $arrSet);
-        $this->hasOrder = $blnHasOrder;
-        $this->order = $blnHasOrder ? implode(',', array_map('String::binToUuid', $this->{$this->strOrderField})) : '';
+        $this->sortable = count($arrValues) > 1;
         $this->orderHint = $GLOBALS['TL_LANG']['MSC']['dragItemsHint'];
         $this->values = $arrValues;
         $this->ajax = \Environment::get('isAjaxRequest');
