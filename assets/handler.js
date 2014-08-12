@@ -29,7 +29,7 @@
 
         var params = {
             element: el,
-            debug: true,
+            debug: false,
             request: {
                 endpoint: window.location.href,
                 inputName: config.field + '_fineuploader',
