@@ -48,6 +48,27 @@
                 allowedExtensions: config.extensions,
                 sizeLimit: config.sizeLimit
             },
+            text: {
+                formatProgress: config.labels.text.formatProgress,
+                failUpload: config.labels.text.failUpload,
+                waitingForResponse: config.labels.text.waitingForResponse,
+                paused: config.labels.text.paused,
+            },
+            messages: {
+                tooManyFilesError: config.labels.messages.tooManyFilesError,
+                unsupportedBrowser: config.labels.messages.unsupportedBrowser,
+            },
+            retry: {
+                autoRetryNote: config.labels.retry.autoRetryNote,
+            },
+            deleteFile: {
+                confirmMessage: config.labels.deleteFile.confirmMessage,
+                deletingStatusText: config.labels.deleteFile.deletingStatusText,
+                deletingFailedText: config.labels.deleteFile.deletingFailedText,
+            },
+            paste: {
+                namePromptMessage: config.labels.paste.namePromptMessage,
+            },
             callbacks: {
                 onValidateBatch: function(files) {
                     var count = (current_value == '') ? 0 : current_value.split(',').length;

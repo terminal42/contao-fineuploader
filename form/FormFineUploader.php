@@ -206,6 +206,37 @@ class FormFineUploader extends FineUploaderBase
             $this->limit = $this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0;
             $this->sizeLimit = $this->arrConfiguration['maxlength'] ? $this->arrConfiguration['maxlength'] : 0;
             $this->config = $this->arrConfiguration['uploaderConfig'];
+
+            $this->texts = json_encode(array
+            (
+                'text' => array
+                (
+                    'formatProgress' => $GLOBALS['TL_LANG']['MSC']['fineuploader_formatProgress'],
+                    'failUpload' => $GLOBALS['TL_LANG']['MSC']['fineuploader_failUpload'],
+                    'waitingForResponse' => $GLOBALS['TL_LANG']['MSC']['fineuploader_waitingForResponse'],
+                    'paused' => $GLOBALS['TL_LANG']['MSC']['fineuploader_paused'],
+                ),
+                'messages' => array
+                (
+                    'tooManyFilesError' => $GLOBALS['TL_LANG']['MSC']['fineuploader_tooManyFilesError'],
+                    'unsupportedBrowser' => $GLOBALS['TL_LANG']['MSC']['fineuploader_unsupportedBrowser'],
+                ),
+                'retry' => array
+                (
+                    'autoRetryNote' => $GLOBALS['TL_LANG']['MSC']['fineuploader_autoRetryNote'],
+                ),
+                'deleteFile' => array
+                (
+                    'confirmMessage' => $GLOBALS['TL_LANG']['MSC']['fineuploader_confirmMessage'],
+                    'deletingStatusText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingStatusText'],
+                    'deletingFailedText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingFailedText'],
+                ),
+                'paste' => array
+                (
+                    'namePromptMessage' => $GLOBALS['TL_LANG']['MSC']['fineuploader_namePromptMessage'],
+                ),
+            ));
+
             $this->labels = array
             (
                 'drop' => $GLOBALS['TL_LANG']['MSC']['fineuploader_drop'],

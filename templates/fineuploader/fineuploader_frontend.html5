@@ -64,7 +64,8 @@
         backend: false,
         extensions: <?php echo $this->extensions; ?>,
         limit: <?php echo $this->limit; ?>,
-        sizeLimit: <?php echo $this->sizeLimit; ?>
+        sizeLimit: <?php echo $this->sizeLimit; ?>,
+        labels: <?php echo $this->texts; ?>
     }, {<?php echo $this->config; ?>});
     </script>
 </div>
