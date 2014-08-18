@@ -65,6 +65,10 @@
         extensions: <?php echo $this->extensions; ?>,
         limit: <?php echo $this->limit; ?>,
         sizeLimit: <?php echo $this->sizeLimit; ?>,
+        <?php if ($this->chunking): ?>
+        chunking: true,
+        chunkSize: <?php echo $this->chunkSize; ?>,
+        <?php endif; ?>
         labels: <?php echo $this->texts; ?>
     }, {<?php echo $this->config; ?>});
     </script>

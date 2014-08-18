@@ -30,6 +30,20 @@ abstract class FineUploaderBase extends \Widget
     protected $arrFilesMapper = array();
 
     /**
+     * Initialize the object
+     * @param array
+     */
+    public function __construct($arrAttributes=null)
+    {
+        parent::__construct($arrAttributes);
+
+        // Clean the chunks session when the widget is initialized
+        if (!\Environment::get('isAjaxRequest')) {
+            unset($_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS']);
+        }
+    }
+
+    /**
      * Add specific attributes
      * @param string
      * @param mixed
@@ -71,6 +85,7 @@ abstract class FineUploaderBase extends \Widget
         $strTempName = $this->strName . '_fineuploader';
         $objUploader = new \FileUpload();
         $objUploader->setName($this->strName);
+        $blnIsChunk = isset($_POST['qqpartindex']);
 
         // Convert the $_FILES array to Contao format
         if (!empty($_FILES[$strTempName])) {
@@ -83,6 +98,11 @@ abstract class FineUploaderBase extends \Widget
                 'size' => array($_FILES[$strTempName]['size']),
             );
 
+            // Set the UUID as the filename
+            if ($blnIsChunk) {
+                $arrFile['name'][0] = \Input::post('qquuid') . '.chunk';
+            }
+
             // Check if the file exists
             if (file_exists(TL_ROOT . '/' . $this->strTemporaryPath . '/' . $arrFile['name'][0])) {
                 $arrFile['name'][0] = $this->getFileName($arrFile['name'][0], $this->strTemporaryPath);
@@ -93,7 +113,14 @@ abstract class FineUploaderBase extends \Widget
         }
 
         $varInput = '';
+        $extensions = null;
         $maxlength = null;
+
+        // Add the "chunk" extension to upload types
+        if ($blnIsChunk) {
+            $extensions = $GLOBALS['TL_CONFIG']['uploadTypes'];
+            $GLOBALS['TL_CONFIG']['uploadTypes'] .= ',chunk';
+        }
 
         // Override the default maxlength value
         if (isset($this->arrConfiguration['maxlength'])) {
@@ -120,11 +147,46 @@ abstract class FineUploaderBase extends \Widget
             $GLOBALS['TL_CONFIG']['maxFileSize'] = $maxlength;
         }
 
+        // Restore the default extensions value
+        if ($extensions !== null) {
+            $GLOBALS['TL_CONFIG']['uploadTypes'] = $extensions;
+        }
+
         if (!is_array($varInput) || empty($varInput)) {
             $this->addError($GLOBALS['TL_LANG']['MSC']['fineuploader_error']);
         }
 
-        return $varInput[0];
+        $varInput = $varInput[0];
+
+        // Store the chunk in the session for further merge
+        if ($blnIsChunk) {
+            $_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][\Input::post('qqfilename')][] = $varInput;
+
+            // This is the last chunking request, merge the chunks and create the final file
+            if (\Input::post('qqpartindex') == \Input::post('qqtotalparts') - 1) {
+                $strFileName = \Input::post('qqfilename');
+
+                // Get the new file name
+                if (file_exists(TL_ROOT . '/' . $this->strTemporaryPath . '/' . $strFileName)) {
+                    $strFileName = $this->getFileName($strFileName, $this->strTemporaryPath);
+                }
+
+                $objFile = new \File($this->strTemporaryPath . '/' . $strFileName);
+
+                // Merge the chunks
+                foreach ($_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][\Input::post('qqfilename')] as $strChunk) {
+                    @fwrite($objFile->handle, file_get_contents(TL_ROOT . '/' . $strChunk));
+
+                    // Delete the file
+                    \Files::getInstance()->delete($strChunk);
+                }
+
+                $objFile->close();
+                $varInput = $objFile->path;
+            }
+        }
+
+        return $varInput;
     }
 
     /**

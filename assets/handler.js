@@ -39,6 +39,10 @@
                     REQUEST_TOKEN: config.request_token
                 }
             },
+            chunking: {
+                enabled: config.chunking ? true : false,
+                partSize: config.chunkSize
+            },
             failedUploadTextDisplay: {
                 mode: 'custom',
                 maxChars: 1000,
