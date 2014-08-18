@@ -175,7 +175,7 @@ abstract class FineUploaderBase extends \Widget
 
                 // Merge the chunks
                 foreach ($_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][\Input::post('qqfilename')] as $strChunk) {
-                    @fwrite($objFile->handle, file_get_contents(TL_ROOT . '/' . $strChunk));
+                    $objFile->append(file_get_contents(TL_ROOT . '/' . $strChunk), '');
 
                     // Delete the file
                     \Files::getInstance()->delete($strChunk);
