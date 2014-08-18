@@ -3,7 +3,7 @@ fineuploader Contao extension
 
 Provides the Fine Uploader to the Contao. The uploader initially uploads the files to ```system/tmp``` and moves them to the destination after the form is being submitted. The extension works also in the front end, but only with MooTools!
 
-Includes the [Fine Uplodaer](http://fineuploader.com/) by Widen.
+Includes the [Fine Uploader](http://fineuploader.com/) by Widen.
 
 Usage
 -------------------
@@ -21,7 +21,7 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
         'uploaderConfig' => 'debug: true', // Custom uploader configuration (JSON)
         'uploaderLimit' => 4, // Maximum files that can be uploaded
         'addToDbafs' => true, // Add files to the database assisted file system
-        'extensions' => $GLOBALS['TL_CONFIG']['validImageTypes'], // Allowed extension types
+        'extensions' => $GLOBALS['TL_CONFIG']['uploadTypes'], // Allowed extension types
         'maxlength' => 2048000, // Maximum file size
         'doNotOvewrite' => true, // Do not overwrite files in destination folder
 
@@ -36,9 +36,3 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
     'sql'                     => "blob NULL"
 );
 ```
-
-Contributors
--------------------
-
-* Andreas Schempp <andreas.schempp@terminal42.ch>
-* Kamil Kuzminski <kamil.kuzminski@codefog.pl>
