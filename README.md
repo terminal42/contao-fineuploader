@@ -25,8 +25,8 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
         'maxlength' => 2048000, // Maximum file size
         'doNotOvewrite' => true, // Do not overwrite files in destination folder
 
-		'chunking' => true, // Enable chunking
-		'chunkSize' => 2000000, // Chunk size in bytes
+        'chunking' => true, // Enable chunking
+        'chunkSize' => 2000000, // Chunk size in bytes
 
         // You can also use the default features of fileTree widget such as:
         // isGallery, isDownloads
