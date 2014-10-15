@@ -21,7 +21,7 @@ abstract class FineUploaderBase extends \Widget
      * Temporary upload path
      * @var string
      */
-    protected $strTemporaryPath = 'system/tmp';
+    protected $strTemporaryPath = 'files/tmp';
 
     /**
      * Files mapper
@@ -86,6 +86,7 @@ abstract class FineUploaderBase extends \Widget
         $objUploader = new \FileUpload();
         $objUploader->setName($this->strName);
         $blnIsChunk = isset($_POST['qqpartindex']);
+        $post_filename=\Input::post('qqfilename');
 
         // Convert the $_FILES array to Contao format
         if (!empty($_FILES[$strTempName])) {
@@ -100,7 +101,7 @@ abstract class FineUploaderBase extends \Widget
 
             // Set the UUID as the filename
             if ($blnIsChunk) {
-                $arrFile['name'][0] = \Input::post('qquuid') . '.chunk';
+                $arrFile['name'][0] = \Input::post('qquuid')."_".\Input::post('qqpartindex')."_". '.chunk';
             }
 
             // Check if the file exists
@@ -127,12 +128,13 @@ abstract class FineUploaderBase extends \Widget
                         and FineUploaderBase.php");
                 }
                 $arrFile['name'][0]=$prefix.$arrFile['name'][0];
+                $post_filename=$prefix.\Input::post('qqfilename');
             }
 
-            ($arrFile['name'][0]);
             $_FILES[$this->strName] = $arrFile;
             unset($_FILES[$strTempName]); // Unset the temporary file
         }
+
 
         $varInput = '';
         $extensions = null;
@@ -182,29 +184,28 @@ abstract class FineUploaderBase extends \Widget
 
         // Store the chunk in the session for further merge
         if ($blnIsChunk) {
-            $_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][\Input::post('qqfilename')][] = $varInput;
-
-            // This is the last chunking request, merge the chunks and create the final file
+            $_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][$post_filename][\Input::post('qqpartindex')] = $varInput;
+                // This is the last chunking request, merge the chunks and create the final file
             if (\Input::post('qqpartindex') == \Input::post('qqtotalparts') - 1) {
-                $strFileName = \Input::post('qqfilename');
+                $strFileName = $post_filename;
 
                 // Get the new file name
-                if (file_exists(TL_ROOT . '/' . $this->strTemporaryPath . '/' . $strFileName)) {
-                    $strFileName = $this->getFileName($strFileName, $this->strTemporaryPath);
-                }
+                $strFileName = $this->getFileName($strFileName, $this->strTemporaryPath);
 
                 $objFile = new \File($this->strTemporaryPath . '/' . $strFileName);
-
                 // Merge the chunks
-                foreach ($_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][\Input::post('qqfilename')] as $strChunk) {
-                    $objFile->append(file_get_contents(TL_ROOT . '/' . $strChunk), '');
 
+                foreach ($_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][$post_filename] as $key=>$strChunk) {
+                    $objFile->append(file_get_contents(TL_ROOT . '/' . $strChunk), '');
                     // Delete the file
                     \Files::getInstance()->delete($strChunk);
-                }
+                    unset($_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][$post_filename][$key]);
 
+                }
                 $objFile->close();
                 $varInput = $objFile->path;
+                unset($_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][$post_filename]);
+
             }
         }
 
@@ -218,6 +219,7 @@ abstract class FineUploaderBase extends \Widget
      */
     protected function validator($varInput)
     {
+
         $varReturn = $this->blnIsMultiple ? array() : '';
         $strDestination = $GLOBALS['TL_CONFIG']['uploadPath'];
 
@@ -244,7 +246,7 @@ abstract class FineUploaderBase extends \Widget
                 $strDestination = $varFolder;
             }
         }
-
+        //var_dump($strDestination);
         // Check the mandatoriness
         if ($varInput == '' && $this->mandatory) {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));

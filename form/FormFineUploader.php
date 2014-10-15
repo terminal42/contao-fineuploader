@@ -62,7 +62,7 @@ class FormFineUploader extends FineUploaderBase
 
         // Include the assets
         $GLOBALS['TL_JAVASCRIPT']['fineuploader'] = 'system/modules/fineuploader/assets/fineuploader/fineuploader-5.0.2.min.js';
-        $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.js';
+        $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.js';
         $GLOBALS['TL_CSS']['fineuploader'] = 'system/modules/fineuploader/assets/fineuploader/fineuploader-5.0.2.min.css';
     }
 
@@ -115,19 +115,19 @@ class FormFineUploader extends FineUploaderBase
             }
 
             $objFile = new \File($varFile, true);
-
-            $_SESSION['FILES'][$this->strName . '_' . $intCount++] = array
-            (
-                'name'     => $objFile->path,
-                'type'     => $objFile->mime,
-                'tmp_name' => TL_ROOT . '/' . $objFile->path,
-                'error'    => 0,
-                'size'     => $objFile->size,
-                'uploaded' => true,
-                'uuid'     => ($objModel !== null) ? \String::binToUuid($objFile->uuid) : ''
-            );
+            if ($objModel!== null) {//not shure about this ... but without there is a fault becaus file get validated 2 times
+                $_SESSION['FILES'][$this->strName . '_' . $intCount++] = array
+                (
+                    'name' => $objFile->path,
+                    'type' => $objFile->mime,
+                    'tmp_name' => TL_ROOT . '/' . $objFile->path,
+                    'error' => 0,
+                    'size' => $objFile->size,
+                    'uploaded' => true,
+                    'uuid' => ($objModel !== null) ? \String::binToUuid($objFile->uuid) : ''
+                );
+            }
         }
-
         return $varReturn;
     }
 

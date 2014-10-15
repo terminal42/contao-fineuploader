@@ -61,7 +61,7 @@ class FineUploaderWidget extends FineUploaderBase
 
         // Include the assets
         $GLOBALS['TL_JAVASCRIPT']['fineuploader'] = 'system/modules/fineuploader/assets/fineuploader/fineuploader-5.0.2.min.js';
-        $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.js';
+        $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.js';
         $GLOBALS['TL_CSS']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.css';
     }
 
