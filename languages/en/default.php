@@ -31,3 +31,4 @@ $GLOBALS['TL_LANG']['MSC']['fineuploader_confirmMessage']        = 'Are you sure
 $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingStatusText']    = 'Deleting...';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingFailedText']    = 'Delete failed';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_namePromptMessage']     = 'Please name this image';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_prefixFieldError']    = 'Please fill in the {prefixField} field';

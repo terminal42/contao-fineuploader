@@ -131,13 +131,14 @@ class FineUploaderAjax extends Controller
      * @param array
      */
     public function executeAjaxActions($arrData)
-    {
-        \Input::setGet('no_ajax', 1); // Avoid circular reference
+    { \Input::setGet('no_ajax', 1); // Avoid circular reference
 
         switch (\Input::post('action')) {
             // Upload the file
             case 'fineuploader_upload':
                 $arrData['name'] = \Input::post('name');
+                if(isset($_POST['prefix']))
+                    $arrData['prefix'] = \Input::post('prefix');
 
                 $objWidget = new $GLOBALS['TL_FFL']['fineUploader']($arrData);
                 $strFile = $objWidget->validateUpload();

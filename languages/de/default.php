@@ -25,6 +25,7 @@ $GLOBALS['TL_LANG']['MSC']['fineuploader_waitingForResponse']    = 'wird bearbei
 $GLOBALS['TL_LANG']['MSC']['fineuploader_paused']                = 'pausiert';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_tooManyFilesError']     = 'Sie können nur eine Datei einfügen';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_unsupportedBrowser']    = 'Fehler - Ihr Browser unterstützt keine Art von Dateiupload.';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_prefixFieldError']    = 'Bitte füllen sie erst das Feld {prefixField} aus';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_autoRetryNote']         = 'Wiederhole {retryNum}/{maxAuto}...';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_confirmMessage']        = 'Sind Sie sicher dass Sie {filename} löschen möchten?';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingStatusText']    = 'Löschen...';

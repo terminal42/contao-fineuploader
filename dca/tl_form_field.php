@@ -12,7 +12,7 @@
 /**
  * Add palettes to tl_form_field
  */
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,extensions,maxlength,chunking,chunkSize,multiple;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,tabindex,fSize';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,extensions,maxlength,chunking,chunkSize,multiple,prefix;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,tabindex,fSize';
 
 /**
  * Add fields to tl_form_field
@@ -34,4 +34,14 @@ $GLOBALS['TL_DCA']['tl_form_field']['fields']['chunkSize'] = array
     'inputType'               => 'text',
     'eval'                    => array('rgxp'=>'digit', 'tl_class'=>'w50'),
     'sql'                     => "varchar(16) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['prefix'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['prefix'],
+    'default'                 => "",
+    'exclude'                 => true,
+    'inputType'               => 'text',
+    'eval'                    => array('maxlength'=>200, 'tl_class'=>'w50'),
+    'sql'                     => "varchar(255) NOT NULL default ''"
 );

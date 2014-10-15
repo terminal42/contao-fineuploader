@@ -26,18 +26,24 @@
      */
     ContaoFineUploader.init = function(el, config, options) {
         current_value = document.getElementById('ctrl_' + config.field).value;
+        var prefixField="";
+        if (config.prefix) {
+            prefixField=getPrefixField(config.prefix);
+        }
 
         var params = {
             element: el,
-            debug: false,
+            debug: config.debug ? true : false,
+            multiple: config.multiple ? true : false,
             request: {
                 endpoint: window.location.href,
                 inputName: config.field + '_fineuploader',
                 params: {
                     action: 'fineuploader_upload',
                     name: config.field,
-                    REQUEST_TOKEN: config.request_token
-                }
+                    REQUEST_TOKEN: config.request_token,
+                    prefix: config.prefix
+                    }
             },
             chunking: {
                 enabled: config.chunking ? true : false,
@@ -56,22 +62,23 @@
                 formatProgress: config.labels.text.formatProgress,
                 failUpload: config.labels.text.failUpload,
                 waitingForResponse: config.labels.text.waitingForResponse,
-                paused: config.labels.text.paused,
+                paused: config.labels.text.paused
             },
             messages: {
                 tooManyFilesError: config.labels.messages.tooManyFilesError,
                 unsupportedBrowser: config.labels.messages.unsupportedBrowser,
+                prefixFieldError: config.labels.messages.prefixFieldError
             },
             retry: {
-                autoRetryNote: config.labels.retry.autoRetryNote,
+                autoRetryNote: config.labels.retry.autoRetryNote
             },
             deleteFile: {
                 confirmMessage: config.labels.deleteFile.confirmMessage,
                 deletingStatusText: config.labels.deleteFile.deletingStatusText,
-                deletingFailedText: config.labels.deleteFile.deletingFailedText,
+                deletingFailedText: config.labels.deleteFile.deletingFailedText
             },
             paste: {
-                namePromptMessage: config.labels.paste.namePromptMessage,
+                namePromptMessage: config.labels.paste.namePromptMessage
             },
             callbacks: {
                 onValidateBatch: function(files) {
@@ -85,6 +92,16 @@
                 onUpload: function() {
                     if (config.backend) {
                         AjaxRequest.displayBox(Contao.lang.loading + ' …')
+                    }
+                },
+                onSubmit: function(id, name){
+                    if(prefixField==undefined || prefixField.value==undefined || prefixField.value==""){
+                        this._batchError(this._options.messages.prefixFieldError.replace(/\{prefixField\}/g, prefixField.name));
+                        return false;
+                    }
+                else{
+                        this._options.request.params.prefix=prefixField.value+getPrefixTail(config.prefix);
+                        return true;
                     }
                 },
                 onComplete: function(id, name, result) {
@@ -184,4 +201,19 @@
         current_value = current.join(',');
         el.value = current_value;
     };
+    var getPrefixField = function(prefix) {
+        if(prefix.indexOf("###")!=-1)
+            prefix=prefix.substring(
+                prefix.indexOf("###")+3,
+                (prefix.substring(prefix.indexOf("###")+3,prefix.length)).indexOf("###")+prefix.indexOf("###")+3);
+
+        return document.getElementsByName(prefix)[0];
+    };
+    var getPrefixTail = function(prefix) {
+        if(prefix.indexOf("###")!=-1)
+            var prefixTail=prefix.substring(
+                prefix.lastIndexOf("###")+3,prefix.length);
+       return prefixTail;
+    };
+
 })();

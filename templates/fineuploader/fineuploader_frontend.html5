@@ -14,6 +14,7 @@
     <div>
         <input type="hidden" name="<?php echo $this->strName; ?>_fineuploader" id="ctrl_<?php echo $this->strId; ?>_fineuploader" value="">
         <input type="hidden" name="<?php echo $this->strName; ?>" id="ctrl_<?php echo $this->strId; ?>" value="<?php echo $this->set; ?>">
+<!--        <input type="hidden" value="--><?//echo($this->prefix!=""?html_entity_decode($this->prefix):"");?><!--" name="prefix_--><?//echo($this->strId)?><!--">-->
         <div class="selector_container">
             <ul id="sort_<?php echo $this->strId; ?>"<?php if ($this->blnIsGallery): ?> class="sgallery"<?php endif; ?>>
                 <?php foreach ($this->values as $value): ?>
@@ -40,7 +41,7 @@
         </span>
         <ul class="qq-upload-list-selector qq-upload-list">
             <li>
-                <div class="qq-progress-bar-container-selector">
+                <div class="qq-progress-bar-container-selector">)
                     <div class="qq-progress-bar-selector qq-progress-bar"></div>
                 </div>
                 <span class="qq-upload-spinner-selector qq-upload-spinner"></span>
@@ -56,18 +57,22 @@
     </script>
 
     <div id="<?php echo $this->strId; ?>_fineuploader" class="upload_container"></div>
-
     <script>
     ContaoFineUploader.init(document.getElementById('<?php echo $this->strId; ?>_fineuploader'), {
         field: '<?php echo $this->strId; ?>',
         request_token: '<?php echo REQUEST_TOKEN; ?>',
         backend: false,
+        debug: <?php if(isset($this->debug))echo ($this->debug==1)?"true":"false"; else echo"false";?>,
+        multiple: <?php if(isset($this->multiple))echo ($this->multiple==1)?"true":"false"; else echo"false";?>,
         extensions: <?php echo $this->extensions; ?>,
         limit: <?php echo $this->limit; ?>,
         sizeLimit: <?php echo $this->sizeLimit; ?>,
         <?php if ($this->chunking): ?>
         chunking: true,
         chunkSize: <?php echo $this->chunkSize; ?>,
+        <?php endif; ?>
+        <?php if ($this->prefix): ?>
+        <?echo($this->prefix!=""?"prefix: '".html_entity_decode($this->prefix)."' ,":"");?>
         <?php endif; ?>
         labels: <?php echo $this->texts; ?>
     }, {<?php echo $this->config; ?>});

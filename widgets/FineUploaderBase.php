@@ -108,6 +108,28 @@ abstract class FineUploaderBase extends \Widget
                 $arrFile['name'][0] = $this->getFileName($arrFile['name'][0], $this->strTemporaryPath);
             }
 
+            if(isset($_POST['prefix']) && \Input::post('prefix')!=""){
+                $prefix=html_entity_decode(\Input::post('prefix'));
+                $prefix= preg_replace('/[^a-z0-9]/ui', '_', $prefix);//sanatize for filename
+                if(strpos($prefix,"###")!=-1){
+                    if($_POST['prefixedField']) {
+                        $i = 0;
+                        foreach (explode("###", $prefix) as $namePart) {
+                            if (!empty($namePart))
+                                if ($i == 0 || $i == 1)
+                                    $prefix .= \Input::post('prefixedField');
+                                else
+                                    $prefix .= $namePart;
+                            $i++;
+                        }
+                    }else
+                        error_log("PrefixField was not replaced in Extension Fineuploader, handler.js
+                        and FineUploaderBase.php");
+                }
+                $arrFile['name'][0]=$prefix.$arrFile['name'][0];
+            }
+
+            ($arrFile['name'][0]);
             $_FILES[$this->strName] = $arrFile;
             unset($_FILES[$strTempName]); // Unset the temporary file
         }
@@ -331,6 +353,7 @@ abstract class FineUploaderBase extends \Widget
      */
     protected function getFileName($strFile, $strFolder)
     {
+
         if (!file_exists(TL_ROOT . '/' . $strFolder . '/' . $strFile)) {
             return $strFile;
         }
