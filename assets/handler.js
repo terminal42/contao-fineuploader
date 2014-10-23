@@ -13,9 +13,9 @@
     "use strict";
 
     /**
-     * Current value
+     * Current values
      */
-    var current_value = '';
+    var current_values = {};
 
     /**
      * Initialize the uploader
@@ -25,7 +25,7 @@
      * @return object
      */
     ContaoFineUploader.init = function(el, config, options) {
-        current_value = document.getElementById('ctrl_' + config.field).value;
+        current_values[config.field] = document.getElementById('ctrl_' + config.field).value;
 
         var params = {
             element: el,
@@ -75,7 +75,7 @@
             },
             callbacks: {
                 onValidateBatch: function(files) {
-                    var count = (current_value == '') ? 0 : current_value.split(',').length;
+                    var count = (current_values[config.field] == '') ? 0 : current_values[config.field].split(',').length;
 
                     if (config.limit > 0 && config.limit < (count + files.length)) {
                         this._batchError(this._options.messages.tooManyItemsError.replace(/\{netItems\}/g, count + files.length).replace(/\{itemLimit\}/g, config.limit));
@@ -98,7 +98,7 @@
 
                     // Add the uploaded file to value
                     if (result.file) {
-                        current_value = (current_value.length ? (current_value + ',') : '') + result.file;
+                        current_values[config.field] = (current_values[config.field].length ? (current_values[config.field] + ',') : '') + result.file;
                     }
 
                     if (this.getInProgress() > 0) {
@@ -115,9 +115,9 @@
                                 AjaxRequest.hideBox();
                                 window.fireEvent('ajax_change');
                             }
-                        }).post({'action':'fineuploader_reload', 'name':config.field, 'value':current_value, 'REQUEST_TOKEN':config.request_token});
+                        }).post({'action':'fineuploader_reload', 'name':config.field, 'value':current_values[config.field], 'REQUEST_TOKEN':config.request_token});
                     } else {
-                        document.getElementById('ctrl_' + config.field).value = current_value;
+                        document.getElementById('ctrl_' + config.field).value = current_values[config.field];
                     }
                 }
             }
@@ -181,7 +181,7 @@
             }
         }
 
-        current_value = current.join(',');
-        el.value = current_value;
+        current_values[el.id] = current.join(',');
+        el.value = current_values[el.id];
     };
 })();
