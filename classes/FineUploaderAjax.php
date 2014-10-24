@@ -150,6 +150,7 @@ class FineUploaderAjax extends Controller
                 }
 
                 echo json_encode($arrResponse);
+
                 exit; break;
         }
     }

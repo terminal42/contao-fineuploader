@@ -115,7 +115,10 @@ class FormFineUploader extends FineUploaderBase
             }
 
             $objFile = new \File($varFile, true);
-            if ($objModel!== null) {//not shure about this ... but without there is a fault becaus file get validated 2 times
+
+            if ($objModel!== null) {
+            //not shure about this ... but without there is a fault becaus file get validated 2 times
+
                 $_SESSION['FILES'][$this->strName . '_' . $intCount++] = array
                 (
                     'name' => $objFile->path,
@@ -231,7 +234,7 @@ class FormFineUploader extends FineUploaderBase
                 (
                     'confirmMessage' => $GLOBALS['TL_LANG']['MSC']['fineuploader_confirmMessage'],
                     'deletingStatusText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingStatusText'],
-                    'deletingFailedText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingFailedText'],
+                    'deletingFailedText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingFailedText']
                 ),
                 'paste' => array
                 (

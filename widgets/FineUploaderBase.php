@@ -21,7 +21,7 @@ abstract class FineUploaderBase extends \Widget
      * Temporary upload path
      * @var string
      */
-    protected $strTemporaryPath = 'files/tmp';
+    protected $strTemporaryPath = 'system/tmp';
 
     /**
      * Files mapper
@@ -111,24 +111,13 @@ abstract class FineUploaderBase extends \Widget
 
             if(isset($_POST['prefix']) && \Input::post('prefix')!=""){
                 $prefix=html_entity_decode(\Input::post('prefix'));
-                $prefix= preg_replace('/[^a-z0-9]/ui', '_', $prefix);//sanatize for filename
-                if(strpos($prefix,"###")!=-1){
-                    if($_POST['prefixedField']) {
-                        $i = 0;
-                        foreach (explode("###", $prefix) as $namePart) {
-                            if (!empty($namePart))
-                                if ($i == 0 || $i == 1)
-                                    $prefix .= \Input::post('prefixedField');
-                                else
-                                    $prefix .= $namePart;
-                            $i++;
-                        }
-                    }else
-                        error_log("PrefixField was not replaced in Extension Fineuploader, handler.js
-                        and FineUploaderBase.php");
+                $prefix= str_replace(array('\\','/',':','*','?','"','<','>','|',' '),'_',$prefix);//sanatize for filename
+                if(preg_match("/##[^#]+##/",$prefix)!==0){
+                    error.log($GLOBALS['TL_LANG']['MSC']['fineuploader_prefix_error'].$prefix);
                 }
                 $arrFile['name'][0]=$prefix.$arrFile['name'][0];
                 $post_filename=$prefix.\Input::post('qqfilename');
+
             }
 
             $_FILES[$this->strName] = $arrFile;
@@ -246,7 +235,6 @@ abstract class FineUploaderBase extends \Widget
                 $strDestination = $varFolder;
             }
         }
-        //var_dump($strDestination);
         // Check the mandatoriness
         if ($varInput == '' && $this->mandatory) {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));

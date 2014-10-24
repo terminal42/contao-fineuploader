@@ -12,6 +12,9 @@
 /**
  * Miscellaneous
  */
+
+$GLOBALS['TL_LANG']['MSC']['fineuploader_error'] = 'Ein unbekannter Fehler ist aufgetretten.';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_prefix_error']= 'Der Prefix konnte nicht ersetzt werden für: ';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_drop'] = 'Datei zum hochladen hierhin ziehen';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_upload'] = 'Datei hochladen';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_processing'] = 'Dateien werden hochgeladen...';

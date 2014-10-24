@@ -26,11 +26,10 @@
      */
     ContaoFineUploader.init = function(el, config, options) {
         current_value = document.getElementById('ctrl_' + config.field).value;
-        var prefixField="";
+        var prefixFields=[];
         if (config.prefix) {
-            prefixField=getPrefixField(config.prefix);
+            prefixFields=getPrefixFields(config.prefix);
         }
-
         var params = {
             element: el,
             debug: config.debug ? true : false,
@@ -41,9 +40,9 @@
                 params: {
                     action: 'fineuploader_upload',
                     name: config.field,
-                    REQUEST_TOKEN: config.request_token,
-                    prefix: config.prefix
-                    }
+                    prefix: ((config.prefix!==undefined&&config.prefix!="")?config.prefix:""),
+                    REQUEST_TOKEN: config.request_token
+                }
             },
             chunking: {
                 enabled: config.chunking ? true : false,
@@ -95,14 +94,28 @@
                     }
                 },
                 onSubmit: function(id, name){
-                    if(prefixField==undefined || prefixField.value==undefined || prefixField.value==""){
-                        this._batchError(this._options.messages.prefixFieldError.replace(/\{prefixField\}/g, prefixField.name));
-                        return false;
-                    }
-                else{
-                        this._options.request.params.prefix=prefixField.value+getPrefixTail(config.prefix);
+                    this._options.request.params.prefix=config.prefix;//set prefix to be in POST
+                    if(prefixFields==undefined || prefixFields.length == 0){//no prefixField is set
                         return true;
-                    }
+                    }else {
+                        var notempty=true;
+                        for(i = 0; i < prefixFields.length; i++){//check each field
+                            if(prefixFields[i] !== undefined) {
+                                if (prefixFields[i].value == undefined || prefixFields[i].value == ""){//prefix got field but no value
+                                    this._batchError(this._options.messages.prefixFieldError.replace(/\{prefixField\}/g, capitaliseFirstLetter(prefixFields[i].name)));
+                                    notempty=false;
+                                }else {
+                                    this._options.request.params.prefix=this._options.request.params.prefix.replace("##"+prefixFields[i].name+"##", prefixFields[i].value);
+                                }
+                            }else{
+                                return false;
+                            }
+                        }
+                        if(!notempty)
+                            return false;
+                        else
+                            return true;
+                       }
                 },
                 onComplete: function(id, name, result) {
                     if (!result.success) {
@@ -201,19 +214,23 @@
         current_value = current.join(',');
         el.value = current_value;
     };
-    var getPrefixField = function(prefix) {
-        if(prefix.indexOf("###")!=-1)
-            prefix=prefix.substring(
-                prefix.indexOf("###")+3,
-                (prefix.substring(prefix.indexOf("###")+3,prefix.length)).indexOf("###")+prefix.indexOf("###")+3);
+    var getPrefixFields = function(prefix) {
+        var fieldnames=prefix.match(/##[^#]+##/g);
+        var res_array=[];
 
-        return document.getElementsByName(prefix)[0];
+        fieldnames.forEach(function(entry){
+            res_array.push(document.getElementsByName(entry.replace(/##/g,""))[0]);
+        });
+
+        if(res_array.length==0)
+            return undefined;
+        else
+            return res_array;
     };
-    var getPrefixTail = function(prefix) {
-        if(prefix.indexOf("###")!=-1)
-            var prefixTail=prefix.substring(
-                prefix.lastIndexOf("###")+3,prefix.length);
-       return prefixTail;
-    };
+
+    function capitaliseFirstLetter(string)
+    {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+    }
 
 })();
