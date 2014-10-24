@@ -14,7 +14,6 @@
     <div>
         <input type="hidden" name="<?php echo $this->strName; ?>_fineuploader" id="ctrl_<?php echo $this->strId; ?>_fineuploader" value="">
         <input type="hidden" name="<?php echo $this->strName; ?>" id="ctrl_<?php echo $this->strId; ?>" value="<?php echo $this->set; ?>">
-<!--        <input type="hidden" value="--><?//echo($this->prefix!=""?html_entity_decode($this->prefix):"");?><!--" name="prefix_--><?//echo($this->strId)?><!--">-->
         <div class="selector_container">
             <ul id="sort_<?php echo $this->strId; ?>"<?php if ($this->blnIsGallery): ?> class="sgallery"<?php endif; ?>>
                 <?php foreach ($this->values as $value): ?>

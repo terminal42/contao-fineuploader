@@ -101,7 +101,6 @@ class FormFineUploader extends FineUploaderBase
         $varReturn = parent::validator($varInput);
         $arrReturn = array_filter((array) $varReturn);
         $intCount = 0;
-
         foreach ($arrReturn as $varFile) {
             // Get the file model
             if (\Validator::isBinaryUuid($varFile)) {
@@ -116,21 +115,21 @@ class FormFineUploader extends FineUploaderBase
 
             $objFile = new \File($varFile, true);
 
-            if ($objModel!== null) {
-            //not shure about this ... but without there is a fault becaus file get validated 2 times
-
+//            if (isset($objFile->size))) { //TODO
+            //when post is send second time, files will be gone -> filesize() error
+            //with the isset on line nr. 127 got fixed ... but in the e-mail (which is also send for the secnd. time the path is of the tmp dir.)
                 $_SESSION['FILES'][$this->strName . '_' . $intCount++] = array
                 (
-                    'name' => $objFile->path,
+                    'name' => $objFile->name,
                     'type' => $objFile->mime,
                     'tmp_name' => TL_ROOT . '/' . $objFile->path,
                     'error' => 0,
-                    'size' => $objFile->size,
+                    'size' => (isset($objFile->size))?$objFile->size:"",
                     'uploaded' => true,
                     'uuid' => ($objModel !== null) ? \String::binToUuid($objFile->uuid) : ''
                 );
             }
-        }
+//        }
         return $varReturn;
     }
 
