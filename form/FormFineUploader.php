@@ -118,7 +118,7 @@ class FormFineUploader extends FineUploaderBase
 
             $_SESSION['FILES'][$this->strName . '_' . $intCount++] = array
             (
-                'name'     => $objFile->path,
+                'name'     => $objFile->name,
                 'type'     => $objFile->mime,
                 'tmp_name' => TL_ROOT . '/' . $objFile->path,
                 'error'    => 0,
