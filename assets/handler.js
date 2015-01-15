@@ -77,6 +77,14 @@
                 onValidateBatch: function(files) {
                     var count = (current_values[config.field] == '') ? 0 : current_values[config.field].split(',').length;
 
+                    // If the limit is set to 1 file and user attempts to upload 1 file
+                    // then it should replace the current value instead of throwing an error
+                    if (config.limit == 1 && files.length == 1 && count == 1) {
+                        count = 0;
+                        current_values[config.field] = '';
+                        this.clearStoredFiles();
+                    }
+
                     if (config.limit > 0 && config.limit < (count + files.length)) {
                         this._batchError(this._options.messages.tooManyItemsError.replace(/\{netItems\}/g, count + files.length).replace(/\{itemLimit\}/g, config.limit));
                         return false;
