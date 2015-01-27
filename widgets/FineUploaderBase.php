@@ -183,7 +183,15 @@ abstract class FineUploaderBase extends \Widget
 
                 $objFile->close();
                 $varInput = $objFile->path;
+
+                // Reset the chunk flag
+                $blnIsChunk = false;
             }
+        }
+
+        // Validate and move the file immediately
+        if ($this->arrConfiguration['directUpload'] && !$blnIsChunk) {
+            $varInput = $this->validatorSingle($varInput, $this->getDestinationFolder());
         }
 
         return $varInput;
@@ -197,31 +205,7 @@ abstract class FineUploaderBase extends \Widget
     protected function validator($varInput)
     {
         $varReturn = $this->blnIsMultiple ? array() : '';
-        $strDestination = $GLOBALS['TL_CONFIG']['uploadPath'];
-
-        // Specify the target folder in the DCA (eval)
-        if (isset($this->arrConfiguration['uploadFolder'])) {
-            $varFolder = $this->arrConfiguration['uploadFolder'];
-
-            // Use the user's home directory
-            if ($this->arrConfiguration['useHomeDir'] && FE_USER_LOGGED_IN) {
-                $objUser = FrontendUser::getInstance();
-
-                if ($objUser->assignDir && $objUser->homeDir) {
-                    $varFolder = $objUser->homeDir;
-                }
-            }
-
-            if (\Validator::isUuid($varFolder)) {
-                $objFolder = \FilesModel::findByUuid($varFolder);
-
-                if ($objFolder !== null) {
-                    $strDestination = $objFolder->path;
-                }
-            } else {
-                $strDestination = $varFolder;
-            }
-        }
+        $strDestination = $this->getDestinationFolder();
 
         // Check the mandatoriness
         if ($varInput == '' && $this->mandatory) {
@@ -251,6 +235,41 @@ abstract class FineUploaderBase extends \Widget
         return $varReturn;
     }
 
+    /**
+     * Get the destination folder
+     *
+     * @return mixed
+     */
+    protected function getDestinationFolder()
+    {
+        $destination = \Config::get('uploadPath');
+
+        // Specify the target folder in the DCA (eval)
+        if (isset($this->arrConfiguration['uploadFolder'])) {
+            $folder = $this->arrConfiguration['uploadFolder'];
+
+            // Use the user's home directory
+            if ($this->arrConfiguration['useHomeDir'] && FE_USER_LOGGED_IN) {
+                $user = FrontendUser::getInstance();
+
+                if ($user->assignDir && $user->homeDir) {
+                    $folder = $user->homeDir;
+                }
+            }
+
+            if (\Validator::isUuid($folder)) {
+                $folderModel = \FilesModel::findByUuid($folder);
+
+                if ($folderModel !== null) {
+                    $destination = $folderModel->path;
+                }
+            } else {
+                $destination = $folder;
+            }
+        }
+
+        return $destination;
+    }
 
     /**
      * Validate the single file

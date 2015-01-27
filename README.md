@@ -28,6 +28,10 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
         'chunking' => true, // Enable chunking
         'chunkSize' => 2000000, // Chunk size in bytes
 
+        // Upload the files directly to the destination folder. If not set, then the files are first uploaded
+        // to the temporary folder and moved to the destination folder only when the form is submitted
+        'directUpload' => true,
+
         // You can also use the default features of fileTree widget such as:
         // isGallery, isDownloads
 
