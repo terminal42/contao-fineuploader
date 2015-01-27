@@ -49,6 +49,8 @@ class FormFineUploader extends FineUploaderBase
     {
         // Execute the AJAX actions in front end
         if (\Environment::get('isAjaxRequest') && \Input::get('no_ajax') != 1) {
+            $this->addAttributes($arrAttributes);
+
             $objHandler = new FineUploaderAjax();
             $objHandler->executeAjaxActions($this->arrConfiguration);
 
