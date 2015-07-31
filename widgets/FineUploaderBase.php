@@ -24,12 +24,6 @@ abstract class FineUploaderBase extends \Widget
     protected $strTemporaryPath = 'system/tmp';
 
     /**
-     * Files mapper
-     * @var array
-     */
-    protected $arrFilesMapper = array();
-
-    /**
      * Initialize the object
      * @param array
      */
@@ -279,8 +273,6 @@ abstract class FineUploaderBase extends \Widget
      */
     protected function validatorSingle($varFile, $strDestination)
     {
-        $varOld = $varFile;
-
         // Move the temporary file
         if (!\Validator::isStringUuid($varFile) && is_file(TL_ROOT . '/' . $varFile)) {
             $varFile = $this->moveTemporaryFile($varFile, $strDestination);
@@ -290,9 +282,6 @@ abstract class FineUploaderBase extends \Widget
         if (\Validator::isStringUuid($varFile)) {
             $varFile = \String::uuidToBin($varFile);
         }
-
-        // Store in the mapper
-        $this->arrFilesMapper[$varOld] = $varFile;
 
         return $varFile;
     }
