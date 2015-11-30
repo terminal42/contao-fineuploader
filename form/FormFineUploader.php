@@ -143,10 +143,11 @@ class FormFineUploader extends FineUploaderBase
         if (!$this->blnValuesPrepared) {
             $arrSet = array();
             $arrValues = array();
+            $arrUuids = array();
+            $arrTemp = array();
 
             if (!empty($this->varValue)) { // Can be an array
-                $arrUuids = array();
-                $arrTemp = array();
+
                 $this->varValue = (array) $this->varValue;
 
                 foreach ($this->varValue as $varFile) {
@@ -255,7 +256,7 @@ class FormFineUploader extends FineUploaderBase
 
     /**
      * Use the parse() method instead.
-     * 
+     *
      * @throw \BadMethodCallException
      */
     public function generate()
