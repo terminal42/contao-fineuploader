@@ -104,7 +104,7 @@ class FineUploaderAjax
 
                     foreach ($varValue as $k => $v) {
                         if (\Validator::isUuid($v) && !is_file(TL_ROOT . '/' . $v)) {
-                            $varValue[$k] = \String::uuidToBin($v);
+                            $varValue[$k] = \StringUtil::uuidToBin($v);
                         }
                     }
 

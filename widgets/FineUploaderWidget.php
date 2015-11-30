@@ -98,7 +98,7 @@ class FineUploaderWidget extends FineUploaderBase
                     if (strlen($chunk)) {
                         $arrValues[$objFiles->uuid] = array
                         (
-                            'id' => (in_array($objFiles->uuid, $arrTemp) ? $objFiles->uuid : \String::binToUuid($objFiles->uuid)),
+                            'id' => (in_array($objFiles->uuid, $arrTemp) ? $objFiles->uuid : \StringUtil::binToUuid($objFiles->uuid)),
                             'value' => $chunk
                         );
 
@@ -114,7 +114,7 @@ class FineUploaderWidget extends FineUploaderBase
                 if (strlen($chunk)) {
                     $arrValues[$varFile] = array
                     (
-                        'id' => (in_array($varFile, $arrTemp) ? $varFile : \String::binToUuid($varFile)),
+                        'id' => (in_array($varFile, $arrTemp) ? $varFile : \StringUtil::binToUuid($varFile)),
                         'value' => $chunk
                     );
 
@@ -131,7 +131,7 @@ class FineUploaderWidget extends FineUploaderBase
             if (in_array($v, $arrTemp)) {
                 $strSet[$k] = $v;
             } else {
-                $arrSet[$k] = \String::binToUuid($v);
+                $arrSet[$k] = \StringUtil::binToUuid($v);
             }
         }
 

@@ -268,7 +268,7 @@ abstract class FineUploaderBase extends \Widget
 
         // Convert uuid to binary format
         if (\Validator::isStringUuid($varFile)) {
-            $varFile = \String::uuidToBin($varFile);
+            $varFile = \StringUtil::uuidToBin($varFile);
         }
 
         return $varFile;
