@@ -12,13 +12,23 @@
 /**
  * Add palettes to tl_form_field
  */
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,extensions,maxlength,chunking,multiple;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,tabindex,fSize';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,maxConnections,extensions,maxlength,chunking,multiple;{store_legend:hide},storeFile;{expert_legend:hide},class,accesskey,tabindex,fSize';
 $GLOBALS['TL_DCA']['tl_form_field']['palettes']['__selector__'][] = 'chunking';
-$GLOBALS['TL_DCA']['tl_form_field']['subpalettes']['chunking'] = 'chunkSize';
+$GLOBALS['TL_DCA']['tl_form_field']['subpalettes']['chunking'] = 'chunkSize,concurrent';
 
 /**
  * Add fields to tl_form_field
  */
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['maxConnections'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['maxConnections'],
+    'default'                 => 3,
+    'exclude'                 => true,
+    'inputType'               => 'text',
+    'eval'                    => array('rgxp'=>'natural', 'tl_class'=>'clr'),
+    'sql'                     => "int(10) NOT NULL default '3'"
+);
+
 $GLOBALS['TL_DCA']['tl_form_field']['fields']['chunking'] = array
 (
     'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['chunking'],
@@ -36,4 +46,13 @@ $GLOBALS['TL_DCA']['tl_form_field']['fields']['chunkSize'] = array
     'inputType'               => 'text',
     'eval'                    => array('rgxp'=>'digit', 'tl_class'=>'w50'),
     'sql'                     => "varchar(16) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['concurrent'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['concurrent'],
+    'exclude'                 => true,
+    'inputType'               => 'checkbox',
+    'eval'                    => array('tl_class'=>'w50 m12'),
+    'sql'                     => "char(1) NOT NULL default ''"
 );

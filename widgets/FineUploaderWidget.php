@@ -145,6 +145,8 @@ class FineUploaderWidget extends FineUploaderBase
         $this->limit = $this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0;
         $this->sizeLimit = $this->arrConfiguration['maxlength'] ? $this->arrConfiguration['maxlength'] : 0;
         $this->chunkSize = $this->arrConfiguration['chunkSize'] ? $this->arrConfiguration['chunkSize'] : 0;
+        $this->concurrent = $this->arrConfiguration['concurrent'] ? true : false;
+        $this->maxConnections = $this->arrConfiguration['maxConnections'] ? $this->arrConfiguration['maxConnections'] : 3;
         $this->config = $this->arrConfiguration['uploaderConfig'];
 
         $this->texts = json_encode(array

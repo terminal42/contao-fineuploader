@@ -65,9 +65,13 @@
         extensions: <?php echo $this->extensions; ?>,
         limit: <?php echo $this->limit; ?>,
         sizeLimit: <?php echo $this->sizeLimit; ?>,
+        maxConnections: <?php echo $this->maxConnections; ?>,
         <?php if ($this->chunking): ?>
         chunking: true,
         chunkSize: <?php echo $this->chunkSize; ?>,
+        <?php if ($this->concurrent): ?>
+        concurrent: true,
+        <?php endif; ?>
         <?php endif; ?>
         labels: <?php echo $this->texts; ?>
     }, {<?php echo $this->config; ?>});

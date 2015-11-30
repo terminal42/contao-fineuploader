@@ -41,9 +41,11 @@
                     REQUEST_TOKEN: config.request_token
                 }
             },
+            maxConnections: config.maxConnections,
             chunking: {
                 enabled: config.chunking ? true : false,
-                partSize: config.chunkSize
+                partSize: config.chunkSize,
+                concurrent: config.concurrent ? true : false,
             },
             failedUploadTextDisplay: {
                 mode: 'custom',

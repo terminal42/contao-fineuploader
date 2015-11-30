@@ -210,6 +210,8 @@ class FormFineUploader extends FineUploaderBase
             $this->sizeLimit = $this->arrConfiguration['maxlength'] ? $this->arrConfiguration['maxlength'] : 0;
             $this->config = $this->arrConfiguration['uploaderConfig'];
             $this->chunkSize = $this->arrConfiguration['chunkSize'] ? $this->arrConfiguration['chunkSize'] : 0;
+            $this->concurrent = $this->arrConfiguration['concurrent'] ? true : false;
+            $this->maxConnections = $this->arrConfiguration['maxConnections'] ? $this->arrConfiguration['maxConnections'] : 3;
 
             $this->texts = json_encode(array
             (

@@ -17,5 +17,7 @@ $GLOBALS['TL_LANG']['FFL']['fineUploader'] = array('Fine uploader', 'Drag and dr
 /**
  * Fields
  */
-$GLOBALS['TL_LANG']['tl_form_field']['chunking']  = array('Chunking aktivieren', 'Aktivieren Sie Chunking, wenn Sie grosse Dateien hochladen möchten.');
-$GLOBALS['TL_LANG']['tl_form_field']['chunkSize'] = array('Chunk-Grösse in Bytes', 'Bitte geben Sie die Chunk-Grösse in Bytes ein  (1MB = 1000000 Bytes).');
+$GLOBALS['TL_LANG']['tl_form_field']['maxConnections']  = array('Maximale Anzahl an Verbindungen', 'Geben Sie hier ein wie viele Verbindungen der gleiche Client maximal haben darf.');
+$GLOBALS['TL_LANG']['tl_form_field']['chunking']        = array('Chunking aktivieren', 'Aktivieren Sie Chunking, wenn Sie grosse Dateien hochladen möchten.');
+$GLOBALS['TL_LANG']['tl_form_field']['chunkSize']       = array('Chunk-Grösse in Bytes', 'Bitte geben Sie die Chunk-Grösse in Bytes ein  (1MB = 1000000 Bytes).');
+$GLOBALS['TL_LANG']['tl_form_field']['concurrent']      = array('Simultanes Hochladen aktivieren', 'Aktivieren Sie hier den simultanen Dateiupload. Beachten Sie auch die "Maximale Anzahl an Verbindungen" Einstellungsmöglichkeit.');
