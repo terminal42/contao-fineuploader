@@ -243,12 +243,14 @@ class FormFineUploader extends FineUploaderBase
                 ),
             ));
 
-            $this->labels = array
-            (
-                'drop'       => $GLOBALS['TL_LANG']['MSC']['fineuploader_drop'],
-                'upload'     => $GLOBALS['TL_LANG']['MSC']['fineuploader_upload'],
-                'processing' => $GLOBALS['TL_LANG']['MSC']['fineuploader_processing'],
-            );
+            $labels = array('drop', 'upload', 'processing', 'cancel', 'retry', 'delete', 'close', 'yes', 'no');
+            $preparedLabels = array();
+
+            foreach ($labels as $label) {
+                $preparedLabels[$label] = $GLOBALS['TL_LANG']['MSC']['fineuploader_' . $label];
+            }
+
+            $this->labels = $preparedLabels;
 
             $this->blnValuesPrepared = true;
         }
