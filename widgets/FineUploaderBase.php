@@ -232,29 +232,30 @@ abstract class FineUploaderBase extends \Widget
     protected function getDestinationFolder()
     {
         $destination = \Config::get('uploadPath');
+        $folder = null;
 
         // Specify the target folder in the DCA (eval)
         if (isset($this->arrConfiguration['uploadFolder'])) {
             $folder = $this->arrConfiguration['uploadFolder'];
+        }
 
-            // Use the user's home directory
-            if ($this->arrConfiguration['useHomeDir'] && FE_USER_LOGGED_IN) {
-                $user = FrontendUser::getInstance();
+        // Use the user's home directory
+        if ($this->arrConfiguration['useHomeDir'] && FE_USER_LOGGED_IN) {
+            $user = FrontendUser::getInstance();
 
-                if ($user->assignDir && $user->homeDir) {
-                    $folder = $user->homeDir;
-                }
+            if ($user->assignDir && $user->homeDir) {
+                $folder = $user->homeDir;
             }
+        }
 
-            if (\Validator::isUuid($folder)) {
-                $folderModel = \FilesModel::findByUuid($folder);
+        if ($folder !== null && \Validator::isUuid($folder)) {
+            $folderModel = \FilesModel::findByUuid($folder);
 
-                if ($folderModel !== null) {
-                    $destination = $folderModel->path;
-                }
-            } else {
-                $destination = $folder;
+            if ($folderModel !== null) {
+                $destination = $folderModel->path;
             }
+        } else {
+            $destination = $folder;
         }
 
         return $destination;

@@ -17,7 +17,8 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
     (
         'storeFile'         => true,                // Mandatory to store the file on the server
         'multiple'          => true,                // Allow multiple files to be uploaded
-        'uploadFolder'      => 'files/uploads',     // Upload path (destination folder)
+        'uploadFolder'      => 'files/uploads',     // Upload target directory (can also be a Contao file system UUID)
+        'useHomeDir'        => true,                // Upload to the FE member home directory (overrides "uploadFolder", can also be a Contao file system UUID)
         'uploaderConfig'    => 'debug: true',       // Custom uploader configuration (JSON)
         'uploaderLimit'     => 4,                   // Maximum files that can be uploaded
         'addToDbafs'        => true,                // Add files to the database assisted file system
