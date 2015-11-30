@@ -26,6 +26,7 @@ class FineUploaderAjax
     {
         switch ($strAction) {
             // Upload the file
+            /** @noinspection PhpMissingBreakStatementInspection */
             case 'fineuploader_upload':
                 $arrData['strTable'] = $dc->table;
                 $arrData['id']       = $dc->id; // @todo what was $this->strAjaxName for?
@@ -43,8 +44,8 @@ class FineUploaderAjax
 
                 $response = new \Haste\Http\Response\JsonResponse($arrResponse);
                 $response->send();
-                break;
-            
+                // no break, response exits script
+
             // Reload the widget
             case 'fineuploader_reload':
                 $intId = \Input::get('id');
@@ -121,8 +122,8 @@ class FineUploaderAjax
                 $arrAttribs['activeRecord'] = $dc->activeRecord;
 
                 $objWidget = new $GLOBALS['BE_FFL']['fineUploader']($arrAttribs);
-                echo $objWidget->parse();
-                exit; break;
+                $response = new \Haste\Http\Response\HtmlResponse($objWidget->parse());
+                $response->send();
         }
     }
 
@@ -149,8 +150,9 @@ class FineUploaderAjax
                     $arrResponse = array('success'=>true, 'file'=>$strFile);
                 }
 
-                echo json_encode($arrResponse);
-                exit; break;
+                $response = new \Haste\Http\Response\JsonResponse($arrResponse);
+                $response->send();
+                break;
         }
     }
 }
