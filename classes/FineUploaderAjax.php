@@ -29,22 +29,22 @@ class FineUploaderAjax
             /** @noinspection PhpMissingBreakStatementInspection */
             case 'fineuploader_upload':
                 $arrData['strTable'] = $dc->table;
-                $arrData['id']       = $dc->id; // @todo what was $this->strAjaxName for?
-                $arrData['name']     = \Input::post('name');
+                $arrData['id'] = $dc->id; // @todo what was $this->strAjaxName for?
+                $arrData['name'] = \Input::post('name');
 
                 /** @var FineUploaderWidget $objWidget */
                 $objWidget = new $GLOBALS['BE_FFL']['fineUploader']($arrData, $dc);
                 $strFile = $objWidget->validateUpload();
 
                 if ($objWidget->hasErrors()) {
-                    $arrResponse = array('success'=>false, 'error'=>$objWidget->getErrorAsString(), 'preventRetry'=>true);
+                    $arrResponse = array('success' => false, 'error' => $objWidget->getErrorAsString(), 'preventRetry' => true);
                 } else {
-                    $arrResponse = array('success'=>true, 'file'=>$strFile);
+                    $arrResponse = array('success' => true, 'file' => $strFile);
                 }
 
                 $response = new \Haste\Http\Response\JsonResponse($arrResponse);
                 $response->send();
-                // no break, response exits script
+            // no break, response exits script
 
             // Reload the widget
             case 'fineuploader_reload':
@@ -72,7 +72,7 @@ class FineUploaderAjax
                     $varValue = $GLOBALS['TL_CONFIG'][$strField];
                 } elseif ($intId > 0 && Database::getInstance()->tableExists($dc->table)) {
                     $objRow = Database::getInstance()->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-                                             ->execute($intId);
+                        ->execute($intId);
 
                     // The record does not exist
                     if ($objRow->numRows < 1) {
@@ -145,9 +145,9 @@ class FineUploaderAjax
                 $strFile = $objWidget->validateUpload();
 
                 if ($objWidget->hasErrors()) {
-                    $arrResponse = array('success'=>false, 'error'=>$objWidget->getErrorAsString(), 'preventRetry'=>true);
+                    $arrResponse = array('success' => false, 'error' => $objWidget->getErrorAsString(), 'preventRetry' => true);
                 } else {
-                    $arrResponse = array('success'=>true, 'file'=>$strFile);
+                    $arrResponse = array('success' => true, 'file' => $strFile);
                 }
 
                 $response = new \Haste\Http\Response\JsonResponse($arrResponse);
