@@ -18,11 +18,13 @@
     var current_values = {};
 
     /**
-     * Initialize the uploader
-     * @param object
-     * @param object
-     * @param object
-     * @return object
+     * Initialize the uploader.
+     *
+     * @param {object} el
+     * @param {object} config
+     * @param {object} options
+     *
+     * @returns {object}
      */
     ContaoFineUploader.init = function(el, config, options) {
         current_values[config.field] = document.getElementById('ctrl_' + config.field).value;
@@ -56,26 +58,26 @@
                 formatProgress: config.labels.text.formatProgress,
                 failUpload: config.labels.text.failUpload,
                 waitingForResponse: config.labels.text.waitingForResponse,
-                paused: config.labels.text.paused,
+                paused: config.labels.text.paused
             },
             messages: {
                 tooManyFilesError: config.labels.messages.tooManyFilesError,
-                unsupportedBrowser: config.labels.messages.unsupportedBrowser,
+                unsupportedBrowser: config.labels.messages.unsupportedBrowser
             },
             retry: {
-                autoRetryNote: config.labels.retry.autoRetryNote,
+                autoRetryNote: config.labels.retry.autoRetryNote
             },
             deleteFile: {
                 confirmMessage: config.labels.deleteFile.confirmMessage,
                 deletingStatusText: config.labels.deleteFile.deletingStatusText,
-                deletingFailedText: config.labels.deleteFile.deletingFailedText,
+                deletingFailedText: config.labels.deleteFile.deletingFailedText
             },
             paste: {
-                namePromptMessage: config.labels.paste.namePromptMessage,
+                namePromptMessage: config.labels.paste.namePromptMessage
             },
             callbacks: {
                 onValidateBatch: function(files) {
-                    var count = (current_values[config.field] == '') ? 0 : current_values[config.field].split(',').length;
+                    var count = (current_values[config.field] === '') ? 0 : current_values[config.field].split(',').length;
 
                     // If the limit is set to 1 file and user attempts to upload 1 file
                     // then it should replace the current value instead of throwing an error
@@ -92,7 +94,7 @@
                 },
                 onUpload: function() {
                     if (config.backend) {
-                        AjaxRequest.displayBox(Contao.lang.loading + ' …')
+                        AjaxRequest.displayBox(Contao.lang.loading + ' …');
                     }
                 },
                 onComplete: function(id, name, result) {
@@ -140,9 +142,10 @@
     };
 
     /**
-     * Delete the item
-     * @param object
-     * @param string
+     * Delete the item.
+     *
+     * @param {object} el
+     * @param {string} field
      */
     ContaoFineUploader.deleteItem = function(el, field) {
         var item = el.parentNode;
@@ -152,9 +155,10 @@
     };
 
     /**
-     * Make items sortable
-     * @param string
-     * @param string
+     * Make items sortable in the back end.
+     *
+     * @param {string} id
+     * @param {string} oid
      */
     ContaoFineUploader.makeSortable = function(id, oid) {
         var i;
@@ -174,9 +178,10 @@
     };
 
     /**
-     * Remove the value from field
-     * @param object
-     * @param string
+     * Remove the value from field.
+     *
+     * @param {object} el
+     * @param {string} value
      */
     var removeValueFromField = function(el, value) {
         var current = el.value.split(',');

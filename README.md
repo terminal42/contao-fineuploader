@@ -1,7 +1,7 @@
 fineuploader Contao extension
 =============================
 
-Provides the Fine Uploader to the Contao. The uploader initially uploads the files to ```system/tmp``` and moves them to the destination after the form is being submitted. The extension works also in the front end, but only with MooTools!
+Provides the Fine Uploader to the Contao. The uploader initially uploads the files to ```system/tmp``` and moves them to the destination after the form is being submitted.
 
 Includes the [Fine Uploader](http://fineuploader.com/) by Widen.
 
