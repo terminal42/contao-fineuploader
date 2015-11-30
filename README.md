@@ -21,9 +21,9 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
         'uploaderConfig' => 'debug: true', // Custom uploader configuration (JSON)
         'uploaderLimit' => 4, // Maximum files that can be uploaded
         'addToDbafs' => true, // Add files to the database assisted file system
-        'extensions' => $GLOBALS['TL_CONFIG']['uploadTypes'], // Allowed extension types
-        'maxlength' => 2048000, // Maximum file size
-        'doNotOvewrite' => true, // Do not overwrite files in destination folder
+        'extensions'        => 'pdf,zip',           // Allowed extension types
+        'maxlength'         => 2048000,             // Maximum file size (is ignored if you use chunking!)
+        'doNotOverwrite'    => true,                // Do not overwrite files in destination folder
 
         'chunking' => true, // Enable chunking
         'chunkSize' => 2000000, // Chunk size in bytes
