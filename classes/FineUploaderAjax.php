@@ -59,7 +59,7 @@ class FineUploaderAjax
 
                 // The field does not exist
                 if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField])) {
-                    System::log(('Field "' . $strField . '" does not exist in DCA "' . $dc->table . '"', __METHOD__, TL_ERROR);
+                    System::log('Field "' . $strField . '" does not exist in DCA "' . $dc->table . '"', __METHOD__, TL_ERROR);
                     header('HTTP/1.1 400 Bad Request');
                     die('Bad Request');
                 }
@@ -76,7 +76,7 @@ class FineUploaderAjax
 
                     // The record does not exist
                     if ($objRow->numRows < 1) {
-                        System::log(('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"', __METHOD__, TL_ERROR);
+                        System::log('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"', __METHOD__, TL_ERROR);
                         header('HTTP/1.1 400 Bad Request');
                         die('Bad Request');
                     }
