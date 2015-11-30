@@ -16,7 +16,6 @@
  */
 abstract class FineUploaderBase extends \Widget
 {
-
     /**
      * Temporary upload path
      * @var string
@@ -38,35 +37,24 @@ abstract class FineUploaderBase extends \Widget
     }
 
     /**
-     * Add specific attributes
+     * Add the required attribute if mandatory
+     *
      * @param string
      * @param mixed
      */
     public function __set($strKey, $varValue)
     {
         switch ($strKey) {
-            case 'maxlength':
-                // Do not add as attribute (see #3094)
-                $this->arrConfiguration['maxlength'] = $varValue;
-                break;
-
-            case 'mSize':
-                $this->arrConfiguration['uploaderLimit'] = $varValue;
-                break;
-
             case 'mandatory':
                 if ($varValue) {
                     $this->arrAttributes['required'] = 'required';
                 } else {
                     unset($this->arrAttributes['required']);
                 }
-                parent::__set($strKey, $varValue);
-                break;
-
-            default:
-                parent::__set($strKey, $varValue);
-                break;
+                // DO NOT BREAK HERE
         }
+
+        parent::__set($strKey, $varValue);
     }
 
     /**
