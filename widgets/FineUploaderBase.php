@@ -105,9 +105,16 @@ abstract class FineUploaderBase extends \Widget
         }
 
         // Override the default maxlength value
-        if (isset($this->arrConfiguration['maxlength'])) {
+        if (isset($this->arrConfiguration['maxlength']) || $blnIsChunk) {
+            // Store the original value
             $maxlength = $GLOBALS['TL_CONFIG']['maxFileSize'];
-            $GLOBALS['TL_CONFIG']['maxFileSize'] = $this->arrConfiguration['maxlength'];
+
+            // If chunking is enabled and the current file is a chunk, use the chunk size setting
+            if ($blnIsChunk) {
+                $GLOBALS['TL_CONFIG']['maxFileSize'] = $this->arrConfiguration['chunkSize'];
+            } else {
+                $GLOBALS['TL_CONFIG']['maxFileSize'] = $this->arrConfiguration['maxlength'];
+            }
         }
 
         try {
