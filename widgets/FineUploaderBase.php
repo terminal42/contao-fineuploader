@@ -254,7 +254,8 @@ abstract class FineUploaderBase extends \Widget
     }
 
     /**
-     * Validate the single file
+     * Validate a single file.
+     *
      * @param mixed
      * @param string
      * @return mixed
@@ -363,7 +364,7 @@ abstract class FineUploaderBase extends \Widget
         }
 
         $objFile = new \File($strPath, true);
-        $strInfo = $strPath . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isGdImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
+        $strInfo = $strPath . ' <span class="tl_gray">(' . \System::getReadableSize($objFile->size) . ($objFile->isGdImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
         $allowedDownload = trimsplit(',', strtolower($GLOBALS['TL_CONFIG']['allowedDownload']));
         $strReturn = '';
 

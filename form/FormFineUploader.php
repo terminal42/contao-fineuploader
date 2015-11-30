@@ -58,9 +58,9 @@ class FormFineUploader extends FineUploaderBase
         }
 
         parent::__construct($arrAttributes);
-        $this->blnIsMultiple = $this->arrConfiguration['multiple'];
-        $this->blnIsGallery = $this->arrConfiguration['isGallery'];
-        $this->blnIsDownloads = $this->arrConfiguration['isDownloads'];
+        $this->blnIsMultiple    = $this->arrConfiguration['multiple'];
+        $this->blnIsGallery     = $this->arrConfiguration['isGallery'];
+        $this->blnIsDownloads   = $this->arrConfiguration['isDownloads'];
 
         // Include the assets
         $GLOBALS['TL_JAVASCRIPT']['fineuploader']         = 'system/modules/fineuploader/assets/fine-uploader/fine-uploader.min.js';
@@ -212,29 +212,29 @@ class FormFineUploader extends FineUploaderBase
 
             $this->texts = json_encode(array
             (
-                'text' => array
+                'text'       => array
                 (
-                    'formatProgress' => $GLOBALS['TL_LANG']['MSC']['fineuploader_formatProgress'],
-                    'failUpload' => $GLOBALS['TL_LANG']['MSC']['fineuploader_failUpload'],
+                    'formatProgress'     => $GLOBALS['TL_LANG']['MSC']['fineuploader_formatProgress'],
+                    'failUpload'         => $GLOBALS['TL_LANG']['MSC']['fineuploader_failUpload'],
                     'waitingForResponse' => $GLOBALS['TL_LANG']['MSC']['fineuploader_waitingForResponse'],
-                    'paused' => $GLOBALS['TL_LANG']['MSC']['fineuploader_paused'],
+                    'paused'             => $GLOBALS['TL_LANG']['MSC']['fineuploader_paused'],
                 ),
-                'messages' => array
+                'messages'   => array
                 (
-                    'tooManyFilesError' => $GLOBALS['TL_LANG']['MSC']['fineuploader_tooManyFilesError'],
+                    'tooManyFilesError'  => $GLOBALS['TL_LANG']['MSC']['fineuploader_tooManyFilesError'],
                     'unsupportedBrowser' => $GLOBALS['TL_LANG']['MSC']['fineuploader_unsupportedBrowser'],
                 ),
-                'retry' => array
+                'retry'      => array
                 (
                     'autoRetryNote' => $GLOBALS['TL_LANG']['MSC']['fineuploader_autoRetryNote'],
                 ),
                 'deleteFile' => array
                 (
-                    'confirmMessage' => $GLOBALS['TL_LANG']['MSC']['fineuploader_confirmMessage'],
+                    'confirmMessage'     => $GLOBALS['TL_LANG']['MSC']['fineuploader_confirmMessage'],
                     'deletingStatusText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingStatusText'],
                     'deletingFailedText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingFailedText'],
                 ),
-                'paste' => array
+                'paste'      => array
                 (
                     'namePromptMessage' => $GLOBALS['TL_LANG']['MSC']['fineuploader_namePromptMessage'],
                 ),
@@ -242,8 +242,8 @@ class FormFineUploader extends FineUploaderBase
 
             $this->labels = array
             (
-                'drop' => $GLOBALS['TL_LANG']['MSC']['fineuploader_drop'],
-                'upload' => $GLOBALS['TL_LANG']['MSC']['fineuploader_upload'],
+                'drop'       => $GLOBALS['TL_LANG']['MSC']['fineuploader_drop'],
+                'upload'     => $GLOBALS['TL_LANG']['MSC']['fineuploader_upload'],
                 'processing' => $GLOBALS['TL_LANG']['MSC']['fineuploader_processing'],
             );
 
@@ -254,7 +254,8 @@ class FormFineUploader extends FineUploaderBase
     }
 
     /**
-     * Use the parse() method instead
+     * Use the parse() method instead.
+     * 
      * @throw \BadMethodCallException
      */
     public function generate()

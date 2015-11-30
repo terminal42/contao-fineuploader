@@ -55,8 +55,8 @@ class FineUploaderWidget extends FineUploaderBase
     {
         parent::__construct($arrAttributes);
 
-        $this->blnIsMultiple = $this->arrConfiguration['multiple'];
-        $this->blnIsGallery = $this->arrConfiguration['isGallery'];
+        $this->blnIsMultiple  = $this->arrConfiguration['multiple'];
+        $this->blnIsGallery   = $this->arrConfiguration['isGallery'];
         $this->blnIsDownloads = $this->arrConfiguration['isDownloads'];
 
         // Include the assets
