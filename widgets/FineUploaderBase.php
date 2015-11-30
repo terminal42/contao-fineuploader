@@ -196,7 +196,7 @@ abstract class FineUploaderBase extends \Widget
         $varReturn = $this->blnIsMultiple ? array() : '';
         $strDestination = $this->getDestinationFolder();
 
-        // Check the mandatoriness
+        // Check if mandatory
         if ($varInput == '' && $this->mandatory) {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
         }
