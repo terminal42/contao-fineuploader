@@ -37,6 +37,94 @@ abstract class FineUploaderBase extends \Widget
     }
 
     /**
+     * Add the labels and messages.
+     *
+     * @param null $arrAttributes
+     */
+    public function parse($arrAttributes = null)
+    {
+        // Messages (passed on to fineuploader JS)
+        $basicTextOptions = array(
+            'text'  => array(
+                'formatProgress',
+                'failUpload',
+                'waitingForResponse',
+                'paused',
+            ),
+            'messages'  => array(
+                'typeError',
+                'sizeError',
+                'minSizeError',
+                'emptyError',
+                'noFilesError',
+                'tooManyItemsError',
+                'maxHeightImageError',
+                'maxWidthImageError',
+                'minHeightImageError',
+                'minWidthImageError',
+                'retryFailTooManyItems',
+                'onLeave',
+                'unsupportedBrowserIos8Safari',
+            ),
+            'retry' => array(
+                'autoRetryNote',
+            ),
+            'deleteFile' => array(
+                'confirmMessage',
+                'deletingStatusText',
+                'deletingFailedText',
+            ),
+            'paste' => array(
+                'namePromptMessage',
+            )
+        );
+
+        $config = array();
+
+        foreach ($basicTextOptions as $category => $messages) {
+            foreach ($messages as $message) {
+                // Only translate if available, otherwise fall back to default (EN)
+                if (isset($GLOBALS['TL_LANG']['MSC']['fineuploader_trans'][$category][$message])) {
+                    $config[$category][$message] = $GLOBALS['TL_LANG']['MSC']['fineuploader_trans'][$category][$message];
+                }
+            }
+        }
+
+        // BC (used to be a JSON string)
+        if (isset($this->arrConfiguration['uploaderConfig'])
+            && $this->arrConfiguration['uploaderConfig'] !== ''
+        ) {
+            $this->arrConfiguration['uploaderConfig'] = json_decode('{' . $this->arrConfiguration['uploaderConfig'] . '}', true);
+        }
+
+        // Merge with custom options
+        $this->config = json_encode(array_merge($config, (array) $this->arrConfiguration['uploaderConfig']));
+
+        // Labels (in HTML)
+        $labels = array(
+            'drop',
+            'upload',
+            'processing',
+            'cancel',
+            'retry',
+            'delete',
+            'close',
+            'yes',
+            'no',
+        );
+
+        $preparedLabels = array();
+
+        foreach ($labels as $label) {
+            $preparedLabels[$label] = $GLOBALS['TL_LANG']['MSC']['fineuploader_' . $label];
+        }
+
+        $this->labels = $preparedLabels;
+
+        return parent::parse($arrAttributes);
+    }
+
+    /**
      * Add the required attribute if mandatory
      *
      * @param string

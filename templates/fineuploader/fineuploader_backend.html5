@@ -105,8 +105,7 @@
         concurrent: true,
         <?php endif; ?>
         <?php endif; ?>
-        labels: <?php echo $this->texts; ?>
-    }, {<?php echo $this->config; ?>});
+    }, <?php echo $this->config; ?>);
     </script>
 </div>
 <?php endif; ?>

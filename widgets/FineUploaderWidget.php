@@ -147,46 +147,6 @@ class FineUploaderWidget extends FineUploaderBase
         $this->chunkSize = $this->arrConfiguration['chunkSize'] ? $this->arrConfiguration['chunkSize'] : 0;
         $this->concurrent = $this->arrConfiguration['concurrent'] ? true : false;
         $this->maxConnections = $this->arrConfiguration['maxConnections'] ? $this->arrConfiguration['maxConnections'] : 3;
-        $this->config = $this->arrConfiguration['uploaderConfig'];
-
-        $this->texts = json_encode(array
-        (
-            'text' => array
-            (
-                'formatProgress' => $GLOBALS['TL_LANG']['MSC']['fineuploader_formatProgress'],
-                'failUpload' => $GLOBALS['TL_LANG']['MSC']['fineuploader_failUpload'],
-                'waitingForResponse' => $GLOBALS['TL_LANG']['MSC']['fineuploader_waitingForResponse'],
-                'paused' => $GLOBALS['TL_LANG']['MSC']['fineuploader_paused'],
-            ),
-            'messages' => array
-            (
-                'tooManyFilesError' => $GLOBALS['TL_LANG']['MSC']['fineuploader_tooManyFilesError'],
-                'unsupportedBrowser' => $GLOBALS['TL_LANG']['MSC']['fineuploader_unsupportedBrowser'],
-            ),
-            'retry' => array
-            (
-                'autoRetryNote' => $GLOBALS['TL_LANG']['MSC']['fineuploader_autoRetryNote'],
-            ),
-            'deleteFile' => array
-            (
-                'confirmMessage' => $GLOBALS['TL_LANG']['MSC']['fineuploader_confirmMessage'],
-                'deletingStatusText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingStatusText'],
-                'deletingFailedText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingFailedText'],
-            ),
-            'paste' => array
-            (
-                'namePromptMessage' => $GLOBALS['TL_LANG']['MSC']['fineuploader_namePromptMessage'],
-            ),
-        ));
-
-        $labels = array('drop', 'upload', 'processing', 'cancel', 'retry', 'delete', 'close', 'yes', 'no');
-        $preparedLabels = array();
-
-        foreach ($labels as $label) {
-            $preparedLabels[$label] = $GLOBALS['TL_LANG']['MSC']['fineuploader_' . $label];
-        }
-
-        $this->labels = $preparedLabels;
 
         return parent::parse($arrAttributes);
     }
