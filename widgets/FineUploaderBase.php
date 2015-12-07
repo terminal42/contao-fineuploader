@@ -403,6 +403,8 @@ abstract class FineUploaderBase extends \Widget
 
         $blnRename = \Files::getInstance()->rename($strFile, $strNew);
 
+        \Files::getInstance()->chmod($strNew, \Config::get('defaultFileChmod'));
+
         // Add the file to Dbafs
         if ($this->arrConfiguration['addToDbafs'] && $blnRename) {
             $objModel = \Dbafs::addResource($strNew);
