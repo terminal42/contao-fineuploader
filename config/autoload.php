@@ -14,10 +14,11 @@
  */
 ClassLoader::addClasses(array
 (
-    'FineUploaderAjax'   => 'system/modules/fineuploader/classes/FineUploaderAjax.php',
-    'FineUploaderBase'   => 'system/modules/fineuploader/widgets/FineUploaderBase.php',
-    'FineUploaderWidget' => 'system/modules/fineuploader/widgets/FineUploaderWidget.php',
-    'FormFineUploader'   => 'system/modules/fineuploader/form/FormFineUploader.php',
+    'FineUploaderAjax'    => 'system/modules/fineuploader/classes/FineUploaderAjax.php',
+    'FineUploaderBackend' => 'system/modules/fineuploader/classes/FineUploaderBackend.php',
+    'FineUploaderBase'    => 'system/modules/fineuploader/widgets/FineUploaderBase.php',
+    'FineUploaderWidget'  => 'system/modules/fineuploader/widgets/FineUploaderWidget.php',
+    'FormFineUploader'    => 'system/modules/fineuploader/form/FormFineUploader.php',
 ));
 
 /**

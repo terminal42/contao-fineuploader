@@ -59,10 +59,17 @@ class FineUploaderWidget extends FineUploaderBase
         $this->blnIsGallery   = $this->arrConfiguration['isGallery'];
         $this->blnIsDownloads = $this->arrConfiguration['isDownloads'];
 
-        // Include the assets
-        $GLOBALS['TL_JAVASCRIPT']['fineuploader']           = 'system/modules/fineuploader/assets/fine-uploader/fine-uploader.min.js';
-        $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler']   = 'system/modules/fineuploader/assets/handler.min.js';
-        $GLOBALS['TL_CSS']['fineuploader_handler']          = 'system/modules/fineuploader/assets/handler.min.css';
+        static::includeAssets();
+    }
+
+    /**
+     * Include the assets
+     */
+    public static function includeAssets()
+    {
+        $GLOBALS['TL_JAVASCRIPT']['fineuploader']         = 'system/modules/fineuploader/assets/fine-uploader/fine-uploader.min.js';
+        $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.js';
+        $GLOBALS['TL_CSS']['fineuploader_handler']        = 'system/modules/fineuploader/assets/handler.min.css';
     }
 
     /**
@@ -139,7 +146,7 @@ class FineUploaderWidget extends FineUploaderBase
         $this->sortable = count($arrValues) > 1;
         $this->orderHint = $GLOBALS['TL_LANG']['MSC']['dragItemsHint'];
         $this->values = $arrValues;
-        $this->ajax = \Environment::get('isAjaxRequest');
+        $this->ajax = \Environment::get('isAjaxRequest') && (\Input::post('action') !== 'toggleSubpalette');
         $this->deleteTitle = specialchars($GLOBALS['TL_LANG']['MSC']['delete']);
         $this->extensions = json_encode(trimsplit(',', $this->arrConfiguration['extensions']));
         $this->limit = $this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0;

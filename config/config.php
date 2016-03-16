@@ -23,3 +23,4 @@ $GLOBALS['TL_FFL']['fineUploader'] = 'FormFineUploader';
  * Hooks
  */
 $GLOBALS['TL_HOOKS']['executePostActions'][] = array('FineUploaderAjax', 'dispatchAjaxRequest');
+$GLOBALS['TL_HOOKS']['loadDataContainer'][]  = array('FineUploaderBackend', 'loadAssets');
