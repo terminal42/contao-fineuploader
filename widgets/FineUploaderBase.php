@@ -168,6 +168,9 @@ abstract class FineUploaderBase extends \Widget
                 'size' => array($_FILES[$strTempName]['size']),
             );
 
+            // Replace the comma character (#22)
+            $arrFile['name'] = str_replace(',', '_', $arrFile['name']);
+
             // Set the UUID as the filename
             if ($blnIsChunk) {
                 $arrFile['name'][0] = \Input::post('qquuid') . '.chunk';
