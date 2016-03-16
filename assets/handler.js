@@ -72,10 +72,20 @@
                         this._batchError(this._options.messages.tooManyItemsError.replace(/\{netItems\}/g, count + files.length).replace(/\{itemLimit\}/g, config.limit));
                         return false;
                     }
+
+                    // Call the custom callback
+                    if (config.onValidateBatchCallback) {
+                        config.onValidateBatchCallback.apply(this, arguments);
+                    }
                 },
                 onUpload: function() {
                     if (config.backend) {
                         AjaxRequest.displayBox(Contao.lang.loading + ' …');
+                    }
+
+                    // Call the custom callback
+                    if (config.onUploadCallback) {
+                        config.onUploadCallback.apply(this, arguments);
                     }
                 },
                 onComplete: function(id, name, result) {
@@ -109,6 +119,11 @@
                         }).post({'action':'fineuploader_reload', 'name':config.field, 'value':current_values[config.field], 'REQUEST_TOKEN':config.request_token});
                     } else {
                         document.getElementById('ctrl_' + config.field).value = current_values[config.field];
+                    }
+
+                    // Call the custom callback
+                    if (config.onCompleteCallback) {
+                        config.onCompleteCallback.apply(this, arguments);
                     }
                 }
             }
