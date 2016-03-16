@@ -60,7 +60,7 @@ class FineUploaderWidget extends FineUploaderBase
         $this->blnIsDownloads = $this->arrConfiguration['isDownloads'];
 
         // Include the assets
-        $GLOBALS['TL_JAVASCRIPT']['fineuploader']           = 'system/modules/fineuploader/assets/fineuploader/fine-uploader.min.js';
+        $GLOBALS['TL_JAVASCRIPT']['fineuploader']           = 'system/modules/fineuploader/assets/fine-uploader/fine-uploader.min.js';
         $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler']   = 'system/modules/fineuploader/assets/handler.min.js';
         $GLOBALS['TL_CSS']['fineuploader_handler']          = 'system/modules/fineuploader/assets/handler.min.css';
     }
