@@ -93,6 +93,7 @@
         backend: false,
         extensions: <?php echo $this->extensions; ?>,
         limit: <?php echo $this->limit; ?>,
+        minSizeLimit: <?php echo $this->minSizeLimit; ?>,
         sizeLimit: <?php echo $this->sizeLimit; ?>,
         maxConnections: <?php echo $this->maxConnections; ?>,
         <?php if ($this->chunking): ?>

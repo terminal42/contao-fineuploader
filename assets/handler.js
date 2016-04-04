@@ -54,6 +54,7 @@
             },
             validation: {
                 allowedExtensions: config.extensions,
+                minSizeLimit: config.minSizeLimit,
                 sizeLimit: config.sizeLimit
             },
             callbacks: {

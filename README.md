@@ -23,6 +23,7 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
         'uploaderLimit'     => 4,                   // Maximum files that can be uploaded
         'addToDbafs'        => true,                // Add files to the database assisted file system
         'extensions'        => 'pdf,zip',           // Allowed extension types
+        'minlength'         => 1048000,             // Minimum file size
         'maxlength'         => 2048000,             // Maximum file size (is ignored if you use chunking!)
         'doNotOverwrite'    => true,                // Do not overwrite files in destination folder
 

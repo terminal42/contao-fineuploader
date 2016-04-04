@@ -207,6 +207,7 @@ class FormFineUploader extends FineUploaderBase
             $this->deleteTitle = specialchars($GLOBALS['TL_LANG']['MSC']['delete']);
             $this->extensions = json_encode(trimsplit(',', $this->arrConfiguration['extensions']));
             $this->limit = $this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0;
+            $this->minSizeLimit = $this->arrConfiguration['minlength'] ? $this->arrConfiguration['minlength'] : 0;
             $this->sizeLimit = $this->arrConfiguration['maxlength'] ? $this->arrConfiguration['maxlength'] : 0;
             $this->chunkSize = $this->arrConfiguration['chunkSize'] ? $this->arrConfiguration['chunkSize'] : 0;
             $this->concurrent = $this->arrConfiguration['concurrent'] ? true : false;
