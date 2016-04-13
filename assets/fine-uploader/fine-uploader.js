@@ -3,7 +3,7 @@
 *
 * Copyright 2015, Widen Enterprises, Inc. info@fineuploader.com
 *
-* Version: 5.4.1
+* Version: 5.6.0
 *
 * Homepage: http://fineuploader.com
 *
@@ -901,7 +901,7 @@ var qq = function(element) {
 }());
 
 /*global qq */
-qq.version = "5.4.1";
+qq.version = "5.6.0";
 
 /* globals qq */
 qq.supportedFeatures = (function() {
@@ -1200,17 +1200,24 @@ qq.UploadButton = function(o) {
         disposeSupport = new qq.DisposeSupport(),
 
         options = {
-            // "Container" element
-            element: null,
-
-            // If true adds `multiple` attribute to `<input type="file">`
-            multiple: false,
-
             // Corresponds to the `accept` attribute on the associated `<input type="file">`
             acceptFiles: null,
 
+            // "Container" element
+            element: null,
+
+            focusClass: "qq-upload-button-focus",
+
             // A true value allows folders to be selected, if supported by the UA
             folders: false,
+
+            // **This option will be removed** in the future as the :hover CSS pseudo-class is available on all supported browsers
+            hoverClass: "qq-upload-button-hover",
+
+            ios8BrowserCrashWorkaround: false,
+
+            // If true adds `multiple` attribute to `<input type="file">`
+            multiple: false,
 
             // `name` attribute of `<input type="file">`
             name: "qqfile",
@@ -1218,12 +1225,7 @@ qq.UploadButton = function(o) {
             // Called when the browser invokes the onchange handler on the `<input type="file">`
             onChange: function(input) {},
 
-            ios8BrowserCrashWorkaround: false,
-
-            // **This option will be removed** in the future as the :hover CSS pseudo-class is available on all supported browsers
-            hoverClass: "qq-upload-button-hover",
-
-            focusClass: "qq-upload-button-focus"
+            title: null
         },
         input, buttonId;
 
@@ -1237,7 +1239,7 @@ qq.UploadButton = function(o) {
         var input = document.createElement("input");
 
         input.setAttribute(qq.UploadButton.BUTTON_ID_ATTR_NAME, buttonId);
-        input.setAttribute("title", "file input");
+        input.setAttribute("title", options.title);
 
         self.setMultiple(options.multiple, input);
 
@@ -1582,6 +1584,14 @@ qq.status = {
         // DEPRECATED - TODO REMOVE IN NEXT MAJOR RELEASE (replaced by addFiles)
         addBlobs: function(blobDataOrArray, params, endpoint) {
             this.addFiles(blobDataOrArray, params, endpoint);
+        },
+
+        addInitialFiles: function(cannedFileList) {
+            var self = this;
+
+            qq.each(cannedFileList, function(index, cannedFile) {
+                self._addCannedFile(cannedFile);
+            });
         },
 
         addFiles: function(data, params, endpoint) {
@@ -2196,17 +2206,18 @@ qq.status = {
             }
 
             button = new qq.UploadButton({
-                element: spec.element,
-                folders: spec.folders,
-                name: this._options.request.inputName,
-                multiple: allowMultiple(),
                 acceptFiles: acceptFiles,
+                element: spec.element,
+                focusClass: this._options.classes.buttonFocus,
+                folders: spec.folders,
+                hoverClass: this._options.classes.buttonHover,
+                ios8BrowserCrashWorkaround: this._options.workarounds.ios8BrowserCrash,
+                multiple: allowMultiple(),
+                name: this._options.request.inputName,
                 onChange: function(input) {
                     self._onInputChange(input);
                 },
-                hoverClass: this._options.classes.buttonHover,
-                focusClass: this._options.classes.buttonFocus,
-                ios8BrowserCrashWorkaround: this._options.workarounds.ios8BrowserCrash
+                title: spec.title == null ? this._options.text.fileInputTitle : spec.title
             });
 
             this._disposeSupport.addDisposer(function() {
@@ -2626,11 +2637,12 @@ qq.status = {
         // Creates an extra button element
         _initExtraButton: function(spec) {
             var button = this._createUploadButton({
-                element: spec.element,
-                multiple: spec.multiple,
                 accept: spec.validation.acceptFiles,
+                allowedExtensions: spec.validation.allowedExtensions,
+                element: spec.element,
                 folders: spec.folders,
-                allowedExtensions: spec.validation.allowedExtensions
+                multiple: spec.multiple,
+                title: spec.fileInputTitle
             });
 
             this._extraButtonSpecs[button.getButtonId()] = spec;
@@ -3551,6 +3563,7 @@ qq.status = {
 
             text: {
                 defaultResponseError: "Upload failure reason unknown",
+                fileInputTitle: "file input",
                 sizeSymbols: ["kB", "MB", "GB", "TB", "PB", "EB"]
             },
 
@@ -3677,7 +3690,10 @@ qq.status = {
         this._deleteHandler = qq.DeleteFileAjaxRequester && this._createDeleteHandler();
 
         if (this._options.button) {
-            this._defaultButtonId = this._createUploadButton({element: this._options.button}).getButtonId();
+            this._defaultButtonId = this._createUploadButton({
+                element: this._options.button,
+                title: this._options.text.fileInputTitle
+            }).getButtonId();
         }
 
         this._generateExtraButtonSpecs();
@@ -4331,9 +4347,8 @@ qq.UploadHandlerController = function(o, namespace) {
 
             // Send the next chunk
             else {
-                log("Sending chunked upload request for item " + id + ": bytes " + (chunkData.start + 1) + "-" + chunkData.end + " of " + size);
+                log(qq.format("Sending chunked upload request for item {}.{}, bytes {}-{} of {}.", id, chunkIdx, chunkData.start + 1, chunkData.end, size));
                 options.onUploadChunk(id, name, handler._getChunkDataForCallback(chunkData));
-
                 inProgressChunks.push(chunkIdx);
                 handler._getFileState(id).chunking.inProgress = inProgressChunks;
 
@@ -4372,6 +4387,9 @@ qq.UploadHandlerController = function(o, namespace) {
                         else if (chunked.hasMoreParts(id)) {
                             chunked.sendNext(id);
                         }
+                        else {
+                            log(qq.format("File ID {} has no more chunks to send and these chunk indexes are still marked as in-progress: {}", id, JSON.stringify(inProgressChunks)));
+                        }
                     },
 
                     // upload chunk failure
@@ -4402,8 +4420,13 @@ qq.UploadHandlerController = function(o, namespace) {
                             if (concurrentChunkingPossible) {
                                 handler._getFileState(id).temp.ignoreFailure = true;
 
+                                log(qq.format("Going to attempt to abort these chunks: {}. These are currently in-progress: {}.", JSON.stringify(Object.keys(handler._getXhrs(id))), JSON.stringify(handler._getFileState(id).chunking.inProgress)));
                                 qq.each(handler._getXhrs(id), function(ckid, ckXhr) {
+                                    log(qq.format("Attempting to abort file {}.{}. XHR readyState {}. ", id, ckid, ckXhr.readyState));
                                     ckXhr.abort();
+                                    // Flag the transport, in case we are waiting for some other async operation
+                                    // to complete before attempting to upload the chunk
+                                    ckXhr._cancelled = true;
                                 });
 
                                 // We must indicate that all aborted chunks are no longer in progress
@@ -5375,6 +5398,7 @@ qq.XhrUploadHandler = function(spec) {
                 remaining = optRemaining || handler._getFileState(id).chunking.remaining;
 
             if (inProgress) {
+                log(qq.format("Moving these chunks from in-progress {}, to remaining.", JSON.stringify(inProgress)));
                 inProgress.reverse();
                 qq.each(inProgress, function(idx, chunkIdx) {
                     remaining.unshift(chunkIdx);
@@ -5462,8 +5486,8 @@ qq.XhrUploadHandler = function(spec) {
                 totalChunks = handler._getTotalChunks(id),
                 cachedChunks = this._getFileState(id).temp.cachedChunks,
 
-                // To work around a Webkit GC bug, we must keep each chunk `Blob` in scope until we are done with it.
-                // See https://github.com/Widen/fine-uploader/issues/937#issuecomment-41418760
+            // To work around a Webkit GC bug, we must keep each chunk `Blob` in scope until we are done with it.
+            // See https://github.com/Widen/fine-uploader/issues/937#issuecomment-41418760
                 blob = cachedChunks[chunkIndex] || qq.sliceBlob(fileOrBlob, startBytes, endBytes);
 
             cachedChunks[chunkIndex] = blob;
@@ -5787,6 +5811,11 @@ qq.WindowReceiveMessage = function(o) {
     "use strict";
 
     qq.uiPublicApi = {
+        addInitialFiles: function(cannedFileList) {
+            this._parent.prototype.addInitialFiles.apply(this, arguments);
+            this._templating.addCacheToDom();
+        },
+
         clearStoredFiles: function() {
             this._parent.prototype.clearStoredFiles.apply(this, arguments);
             this._templating.clearFiles();
@@ -5813,7 +5842,10 @@ qq.WindowReceiveMessage = function(o) {
             this._templating.reset();
 
             if (!this._options.button && this._templating.getButton()) {
-                this._defaultButtonId = this._createUploadButton({element: this._templating.getButton()}).getButtonId();
+                this._defaultButtonId = this._createUploadButton({
+                    element: this._templating.getButton(),
+                    title: this._options.text.fileInputTitle
+                }).getButtonId();
             }
 
             if (this._dnd) {
@@ -6347,7 +6379,7 @@ qq.WindowReceiveMessage = function(o) {
 
             if (canned) {
                 this._templating.addFileToCache(id, this._options.formatFileName(name), prependData, dontDisplay);
-                this._thumbnailUrls[id] && this._templating.updateThumbnail(id, this._thumbnailUrls[id], true);
+                this._templating.updateThumbnail(id, this._thumbnailUrls[id], true);
             }
             else {
                 this._templating.addFile(id, this._options.formatFileName(name), prependData, dontDisplay);
@@ -6662,7 +6694,10 @@ qq.FineUploader = function(o, namespace) {
         this._classes = this._options.classes;
 
         if (!this._options.button && this._templating.getButton()) {
-            this._defaultButtonId = this._createUploadButton({element: this._templating.getButton()}).getButtonId();
+            this._defaultButtonId = this._createUploadButton({
+                element: this._templating.getButton(),
+                title: this._options.text.fileInputTitle
+            }).getButtonId();
         }
 
         this._setupClickAndEditEventHandlers();
@@ -11203,4 +11238,4 @@ qq.FilenameEditHandler = function(s, inheritedInternalApi) {
     });
 };
 
-/*! 2015-11-17 */
+/*! 2016-04-11 */
