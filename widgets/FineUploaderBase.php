@@ -153,8 +153,7 @@ abstract class FineUploaderBase extends \Widget
     {
         \Message::reset();
         $strTempName = $this->strName . '_fineuploader';
-        $objUploader = new \FileUpload();
-        $objUploader->setName($this->strName);
+        $objUploader = new \Haste\Util\FileUpload($this->strName);
         $blnIsChunk = isset($_POST['qqpartindex']);
 
         // Convert the $_FILES array to Contao format
@@ -186,26 +185,18 @@ abstract class FineUploaderBase extends \Widget
         }
 
         $varInput = '';
-        $extensions = null;
-        $maxlength = null;
 
         // Add the "chunk" extension to upload types
         if ($blnIsChunk) {
-            $extensions = $GLOBALS['TL_CONFIG']['uploadTypes'];
-            $GLOBALS['TL_CONFIG']['uploadTypes'] .= ',chunk';
+            $extensions   = trimsplit(',', $GLOBALS['TL_CONFIG']['uploadTypes']);
+            $extensions[] = 'chunk';
+
+            $objUploader->setExtensions($extensions);
         }
 
         // Override the default maxlength value
         if ($this->arrConfiguration['maxlength'] > 0 || $blnIsChunk) {
-            // Store the original value
-            $maxlength = $GLOBALS['TL_CONFIG']['maxFileSize'];
-
-            // If chunking is enabled and the current file is a chunk, use the chunk size setting
-            if ($blnIsChunk) {
-                $GLOBALS['TL_CONFIG']['maxFileSize'] = $this->arrConfiguration['chunkSize'];
-            } else {
-                $GLOBALS['TL_CONFIG']['maxFileSize'] = $this->arrConfiguration['maxlength'];
-            }
+            $objUploader->setMaxFileSize($blnIsChunk ? $this->arrConfiguration['chunkSize'] : $this->arrConfiguration['maxlength']);
         }
 
         try {
@@ -220,16 +211,6 @@ abstract class FineUploaderBase extends \Widget
             \Message::reset();
         } catch (\Exception $e) {
             $this->addError($e->getMessage());
-        }
-
-        // Restore the default maxlength value
-        if ($maxlength !== null) {
-            $GLOBALS['TL_CONFIG']['maxFileSize'] = $maxlength;
-        }
-
-        // Restore the default extensions value
-        if ($extensions !== null) {
-            $GLOBALS['TL_CONFIG']['uploadTypes'] = $extensions;
         }
 
         if (!is_array($varInput) || empty($varInput)) {
