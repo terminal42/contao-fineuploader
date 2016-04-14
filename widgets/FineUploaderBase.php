@@ -133,6 +133,13 @@ abstract class FineUploaderBase extends \Widget
     public function __set($strKey, $varValue)
     {
         switch ($strKey) {
+            // Set the maxlength value only if it's bigger than 0 (see #27)
+            case 'maxlength':
+                if ($varValue > 0) {
+                    $this->arrConfiguration['maxlength'] = $varValue;
+                }
+                return;
+
             case 'mandatory':
                 if ($varValue) {
                     $this->arrAttributes['required'] = 'required';
