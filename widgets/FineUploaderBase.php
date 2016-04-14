@@ -194,7 +194,12 @@ abstract class FineUploaderBase extends \Widget
             $objUploader->setExtensions($extensions);
         }
 
-        // Override the default maxlength value
+        // Validate the minlength
+        if ($this->arrConfiguration['minlength'] > 0 && !$blnIsChunk) {
+            $objUploader->setMinFileSize($this->arrConfiguration['minlength']);
+        }
+
+        // Validate the maxlength
         if ($this->arrConfiguration['maxlength'] > 0 || $blnIsChunk) {
             $objUploader->setMaxFileSize($blnIsChunk ? $this->arrConfiguration['chunkSize'] : $this->arrConfiguration['maxlength']);
         }
