@@ -250,6 +250,20 @@ abstract class FineUploaderBase extends \Widget
                 $objFile->close();
                 $varInput = $objFile->path;
 
+                // Validate the minlength
+                if ($this->arrConfiguration['minlength'] > 0 && $objFile->size < $this->arrConfiguration['minlength']) {
+                    $readableSize = \System::getReadableSize($this->arrConfiguration['minlength']);
+                    $this->addError(sprintf($GLOBALS['TL_LANG']['MSC']['fineuploader_errorMinlength'], $readableSize));
+                    \System::log('File "'.$objFile->name.'" is smaller than the minimum file size of '.$readableSize, __METHOD__, TL_ERROR);
+                }
+
+                // Validate the maxlength
+                if ($this->arrConfiguration['maxlength'] > 0 && $objFile->size > $this->arrConfiguration['maxlength']) {
+                    $readableSize = \System::getReadableSize($this->arrConfiguration['maxlength']);
+                    $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], $readableSize));
+                    \System::log('File "'.$objFile->name.'" exceeds the maximum file size of '.$readableSize, __METHOD__, TL_ERROR);
+                }
+
                 // Reset the chunk flag
                 $blnIsChunk = false;
             }
