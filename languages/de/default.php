@@ -13,7 +13,7 @@
  * Miscellaneous
  */
 $GLOBALS['TL_LANG']['MSC']['fineuploader_error']          = 'Ein unbekannter Fehler ist aufgetreten.';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_errorMinlength'] = 'The minimum size for file uploads is %s!';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_errorMinlength'] = 'Die minimale Dateigrösse liegt bei %s!';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_drop']           = 'Datei zum Hochladen hierhin ziehen';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_upload']         = 'Datei hochladen';
 $GLOBALS['TL_LANG']['MSC']['fineuploader_processing']     = 'Dateien werden hochgeladen…';
