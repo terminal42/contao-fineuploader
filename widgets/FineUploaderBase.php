@@ -266,6 +266,9 @@ abstract class FineUploaderBase extends \Widget
 
                 // Reset the chunk flag
                 $blnIsChunk = false;
+
+                // Unset the file session after merging the chunks
+                unset($_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][\Input::post('qqfilename')]);
             }
         }
 
