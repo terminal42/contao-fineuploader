@@ -12,17 +12,16 @@
 /**
  * Miscellaneous
  */
-$GLOBALS['TL_LANG']['MSC']['fineuploader_error']          = 'Ein unbekannter Fehler ist aufgetreten.';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_errorMinlength'] = 'Die minimale Dateigrösse liegt bei %s!';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_drop']           = 'Datei zum Hochladen hierhin ziehen';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_upload']         = 'Datei hochladen';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_processing']     = 'Dateien werden hochgeladen…';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_cancel']         = 'Abbrechen';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_retry']          = 'Wiederholen';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_delete']         = 'Löschen';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_close']          = 'Schliessen';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_yes']            = 'Ja';
-$GLOBALS['TL_LANG']['MSC']['fineuploader_no']             = 'Nein';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_error']      = 'Ein unbekannter Fehler ist aufgetreten.';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_drop']       = 'Datei zum Hochladen hierhin ziehen';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_upload']     = 'Datei hochladen';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_processing'] = 'Dateien werden hochgeladen…';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_cancel']     = 'Abbrechen';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_retry']      = 'Wiederholen';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_delete']     = 'Löschen';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_close']      = 'Schliessen';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_yes']        = 'Ja';
+$GLOBALS['TL_LANG']['MSC']['fineuploader_no']         = 'Nein';
 
 /**
  * Fineuploader translations
