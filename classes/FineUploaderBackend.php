@@ -23,7 +23,7 @@ class FineUploaderBackend
      */
     public function loadAssets($table)
     {
-        if (TL_MODE !== 'BE') {
+        if (TL_MODE !== 'BE' || !is_array($GLOBALS['TL_DCA'][$table]['fields'])) {
             return;
         }
 
