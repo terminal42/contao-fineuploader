@@ -1,18 +1,19 @@
 /*!
 * Fine Uploader
 *
-* Copyright 2015, Widen Enterprises, Inc. info@fineuploader.com
+* Copyright 2013-present, Widen Enterprises, Inc.
 *
-* Version: 5.6.0
+* Version: 5.10.0
 *
 * Homepage: http://fineuploader.com
 *
 * Repository: git://github.com/FineUploader/fine-uploader.git
 *
-* Licensed only under the Widen Commercial License (http://fineuploader.com/licensing).
+* Licensed only under the MIT license (http://fineuploader.com/licensing).
 */ 
 
 
+(function(global) {
 /*globals window, navigator, document, FormData, File, HTMLInputElement, XMLHttpRequest, Blob, Storage, ActiveXObject */
 /* jshint -W079 */
 var qq = function(element) {
@@ -553,6 +554,10 @@ var qq = function(element) {
         return qq.ie() && navigator.userAgent.indexOf("rv:11") !== -1;
     };
 
+    qq.edge = function() {
+        return navigator.userAgent.indexOf("Edge") >= 0;
+    };
+
     qq.safari = function() {
         return navigator.vendor !== undefined && navigator.vendor.indexOf("Apple") !== -1;
     };
@@ -566,7 +571,7 @@ var qq = function(element) {
     };
 
     qq.firefox = function() {
-        return (!qq.ie11() && navigator.userAgent.indexOf("Mozilla") !== -1 && navigator.vendor !== undefined && navigator.vendor === "");
+        return (!qq.edge() && !qq.ie11() && navigator.userAgent.indexOf("Mozilla") !== -1 && navigator.vendor !== undefined && navigator.vendor === "");
     };
 
     qq.windows = function() {
@@ -901,7 +906,7 @@ var qq = function(element) {
 }());
 
 /*global qq */
-qq.version = "5.6.0";
+qq.version = "5.10.0";
 
 /* globals qq */
 qq.supportedFeatures = (function() {
@@ -1738,15 +1743,16 @@ qq.status = {
         // returning a promise that is fulfilled when the attempt completes.
         // Thumbnail can either be based off of a URL for an image returned
         // by the server in the upload response, or the associated `Blob`.
-        drawThumbnail: function(fileId, imgOrCanvas, maxSize, fromServer) {
+        drawThumbnail: function(fileId, imgOrCanvas, maxSize, fromServer, customResizeFunction) {
             var promiseToReturn = new qq.Promise(),
                 fileOrUrl, options;
 
             if (this._imageGenerator) {
                 fileOrUrl = this._thumbnailUrls[fileId];
                 options = {
-                    scale: maxSize > 0,
-                    maxSize: maxSize > 0 ? maxSize : null
+                    customResizeFunction: customResizeFunction,
+                    maxSize: maxSize > 0 ? maxSize : null,
+                    scale: maxSize > 0
                 };
 
                 // If client-side preview generation is possible
@@ -2988,7 +2994,7 @@ qq.status = {
                 this._uploadData.setStatus(id, qq.status.DELETE_FAILED);
                 this.log("Delete request for '" + name + "' has failed.", "error");
 
-                // For error reporing, we only have accesss to the response status if this is not
+                // For error reporting, we only have access to the response status if this is not
                 // an `XDomainRequest`.
                 if (xhrOrXdr.withCredentials === undefined) {
                     this._options.callbacks.onError(id, name, "Delete request failed", xhrOrXdr);
@@ -3628,6 +3634,8 @@ qq.status = {
 
             // scale images client side, upload a new file for each scaled version
             scaling: {
+                customResizer: null,
+
                 // send the original file as well
                 sendOriginal: true,
 
@@ -6379,11 +6387,11 @@ qq.WindowReceiveMessage = function(o) {
 
             if (canned) {
                 this._templating.addFileToCache(id, this._options.formatFileName(name), prependData, dontDisplay);
-                this._templating.updateThumbnail(id, this._thumbnailUrls[id], true);
+                this._templating.updateThumbnail(id, this._thumbnailUrls[id], true, this._options.thumbnails.customResizer);
             }
             else {
                 this._templating.addFile(id, this._options.formatFileName(name), prependData, dontDisplay);
-                this._templating.generatePreview(id, this.getFile(id));
+                this._templating.generatePreview(id, this.getFile(id), this._options.thumbnails.customResizer);
             }
 
             this._filesInBatchAddedToUi += 1;
@@ -6501,7 +6509,7 @@ qq.WindowReceiveMessage = function(o) {
 
                 // This will replace the "waiting" placeholder with a "preview not available" placeholder
                 // if called with a null thumbnailUrl.
-                this._templating.updateThumbnail(fileId, thumbnailUrl);
+                this._templating.updateThumbnail(fileId, thumbnailUrl, this._options.thumbnails.customResizer);
             }
         },
 
@@ -6611,6 +6619,7 @@ qq.FineUploader = function(o, namespace) {
         },
 
         thumbnails: {
+            customResizer: null,
             maxCount: 0,
             placeholders: {
                 waitUntilResponse: false,
@@ -7216,9 +7225,10 @@ qq.Templating = function(spec) {
                 relatedThumbnailId = optFileOrBlob && optFileOrBlob.qqThumbnailId,
                 thumbnail = getThumbnail(id),
                 spec = {
+                    customResizeFunction: queuedThumbRequest.customResizeFunction,
                     maxSize: thumbnailMaxSize,
-                    scale: true,
-                    orient: true
+                    orient: true,
+                    scale: true
                 };
 
             if (qq.supportedFeatures.imagePreviews) {
@@ -7264,8 +7274,9 @@ qq.Templating = function(spec) {
                 showWaitingImg = queuedThumbRequest.showWaitingImg,
                 thumbnail = getThumbnail(id),
                 spec = {
-                    maxSize: thumbnailMaxSize,
-                    scale: serverScale
+                    customResizeFunction: queuedThumbRequest.customResizeFunction,
+                    scale: serverScale,
+                    maxSize: thumbnailMaxSize
                 };
 
             if (thumbnail) {
@@ -7320,7 +7331,7 @@ qq.Templating = function(spec) {
         },
 
         useCachedPreview = function(targetThumbnailId, cachedThumbnailId) {
-            var targetThumnail = getThumbnail(targetThumbnailId),
+            var targetThumbnail = getThumbnail(targetThumbnailId),
                 cachedThumbnail = getThumbnail(cachedThumbnailId);
 
             log(qq.format("ID {} is the same file as ID {}.  Will use generated thumbnail from ID {} instead.", targetThumbnailId, cachedThumbnailId, cachedThumbnailId));
@@ -7330,13 +7341,13 @@ qq.Templating = function(spec) {
                 generatedThumbnails++;
                 previewGeneration[targetThumbnailId].success();
                 log(qq.format("Now using previously generated thumbnail created for ID {} on ID {}.", cachedThumbnailId, targetThumbnailId));
-                targetThumnail.src = cachedThumbnail.src;
-                show(targetThumnail);
+                targetThumbnail.src = cachedThumbnail.src;
+                show(targetThumbnail);
             },
             function() {
                 previewGeneration[targetThumbnailId].failure();
                 if (!options.placeholders.waitUntilUpdate) {
-                    maybeSetDisplayNotAvailableImg(targetThumbnailId, targetThumnail);
+                    maybeSetDisplayNotAvailableImg(targetThumbnailId, targetThumbnail);
                 }
             });
         };
@@ -7712,16 +7723,16 @@ qq.Templating = function(spec) {
             show(getSpinner(id));
         },
 
-        generatePreview: function(id, optFileOrBlob) {
+        generatePreview: function(id, optFileOrBlob, customResizeFunction) {
             if (!this.isHiddenForever(id)) {
-                thumbGenerationQueue.push({id: id, optFileOrBlob: optFileOrBlob});
+                thumbGenerationQueue.push({id: id, customResizeFunction: customResizeFunction, optFileOrBlob: optFileOrBlob});
                 !thumbnailQueueMonitorRunning && generateNextQueuedPreview();
             }
         },
 
-        updateThumbnail: function(id, thumbnailUrl, showWaitingImg) {
+        updateThumbnail: function(id, thumbnailUrl, showWaitingImg, customResizeFunction) {
             if (!this.isHiddenForever(id)) {
-                thumbGenerationQueue.push({update: true, id: id, thumbnailUrl: thumbnailUrl, showWaitingImg: showWaitingImg});
+                thumbGenerationQueue.push({customResizeFunction: customResizeFunction, update: true, id: id, thumbnailUrl: thumbnailUrl, showWaitingImg: showWaitingImg});
                 !thumbnailQueueMonitorRunning && generateNextQueuedPreview();
             }
         },
@@ -8358,7 +8369,7 @@ qq.DragAndDrop = function(o) {
                 var newEntries = accumEntries ? accumEntries.concat(entries) : entries;
 
                 if (entries.length) {
-                    setTimeout(function() { // prevent stack oveflow, however unlikely
+                    setTimeout(function() { // prevent stack overflow, however unlikely
                         getFilesInDirectory(entry, dirReader, newEntries, promise);
                     }, 0);
                 }
@@ -8903,12 +8914,19 @@ qq.DeleteFileAjaxRequester = function(o) {
     /**
      * Rendering image element (with resizing) and get its data URL
      */
-    function renderImageToDataURL(img, options, doSquash) {
+    function renderImageToDataURL(img, blob, options, doSquash) {
         var canvas = document.createElement("canvas"),
-            mime = options.mime || "image/jpeg";
+            mime = options.mime || "image/jpeg",
+            promise = new qq.Promise();
 
-        renderImageToCanvas(img, canvas, options, doSquash);
-        return canvas.toDataURL(mime, options.quality || 0.8);
+        renderImageToCanvas(img, blob, canvas, options, doSquash)
+            .then(function() {
+                promise.success(
+                    canvas.toDataURL(mime, options.quality || 0.8)
+                );
+            })
+
+        return promise;
     }
 
     function maybeCalculateDownsampledDimensions(spec) {
@@ -8929,15 +8947,30 @@ qq.DeleteFileAjaxRequester = function(o) {
     /**
      * Rendering image element (with resizing) into the canvas element
      */
-    function renderImageToCanvas(img, canvas, options, doSquash) {
+    function renderImageToCanvas(img, blob, canvas, options, doSquash) {
         var iw = img.naturalWidth,
             ih = img.naturalHeight,
             width = options.width,
             height = options.height,
             ctx = canvas.getContext("2d"),
+            promise = new qq.Promise(),
             modifiedDimensions;
 
         ctx.save();
+
+        if (options.resize) {
+            return renderImageToCanvasWithCustomResizer({
+                blob: blob,
+                canvas: canvas,
+                image: img,
+                imageHeight: ih,
+                imageWidth: iw,
+                orientation: options.orientation,
+                resize: options.resize,
+                targetHeight: height,
+                targetWidth: width
+            })
+        }
 
         if (!qq.supportedFeatures.unlimitedScaledImageSize) {
             modifiedDimensions = maybeCalculateDownsampledDimensions({
@@ -8948,7 +8981,7 @@ qq.DeleteFileAjaxRequester = function(o) {
             if (modifiedDimensions) {
                 qq.log(qq.format("Had to reduce dimensions due to device limitations from {}w / {}h to {}w / {}h",
                     width, height, modifiedDimensions.newWidth, modifiedDimensions.newHeight),
-                "warn");
+                    "warn");
 
                 width = modifiedDimensions.newWidth;
                 height = modifiedDimensions.newHeight;
@@ -8979,7 +9012,7 @@ qq.DeleteFileAjaxRequester = function(o) {
                 tmpCtx = tmpCanvas.getContext("2d");
 
                 while (sy < ih) {
-                    sx = 0,
+                    sx = 0;
                     dx = 0;
                     while (sx < iw) {
                         tmpCtx.clearRect(0, 0, d, d);
@@ -9000,6 +9033,49 @@ qq.DeleteFileAjaxRequester = function(o) {
         }
 
         canvas.qqImageRendered && canvas.qqImageRendered();
+        promise.success();
+
+        return promise;
+    }
+
+    function renderImageToCanvasWithCustomResizer(resizeInfo) {
+        var blob = resizeInfo.blob,
+            image = resizeInfo.image,
+            imageHeight = resizeInfo.imageHeight,
+            imageWidth = resizeInfo.imageWidth,
+            orientation = resizeInfo.orientation,
+            promise = new qq.Promise(),
+            resize = resizeInfo.resize,
+            sourceCanvas = document.createElement("canvas"),
+            sourceCanvasContext = sourceCanvas.getContext("2d"),
+            targetCanvas = resizeInfo.canvas,
+            targetHeight = resizeInfo.targetHeight,
+            targetWidth = resizeInfo.targetWidth;
+
+        transformCoordinate(sourceCanvas, imageWidth, imageHeight, orientation);
+
+        targetCanvas.height = targetHeight;
+        targetCanvas.width = targetWidth;
+
+        sourceCanvasContext.drawImage(image, 0, 0);
+
+        resize({
+            blob: blob,
+            height: targetHeight,
+            image: image,
+            sourceCanvas: sourceCanvas,
+            targetCanvas: targetCanvas,
+            width: targetWidth
+        })
+            .then(
+                function success() {
+                    targetCanvas.qqImageRendered && targetCanvas.qqImageRendered();
+                    promise.success();
+                },
+                promise.failure
+            )
+
+        return promise;
     }
 
     /**
@@ -9146,11 +9222,14 @@ qq.DeleteFileAjaxRequester = function(o) {
         if (tagName === "img") {
             (function() {
                 var oldTargetSrc = target.src;
-                target.src = renderImageToDataURL(self.srcImage, opt, doSquash);
-                oldTargetSrc === target.src && target.onload();
+                renderImageToDataURL(self.srcImage, self.blob, opt, doSquash)
+                    .then(function(dataUri) {
+                        target.src = dataUri;
+                        oldTargetSrc === target.src && target.onload();
+                    });
             }())
         } else if (tagName === "canvas") {
-            renderImageToCanvas(this.srcImage, target, opt, doSquash);
+            renderImageToCanvas(this.srcImage, this.blob, target, opt, doSquash);
         }
         if (typeof this.onrender === "function") {
             this.onrender(target);
@@ -9329,7 +9408,8 @@ qq.ImageGenerator = function(log) {
                                 maxWidth: maxSize,
                                 maxHeight: maxSize,
                                 orientation: orientation,
-                                mime: mime
+                                mime: mime,
+                                resize: options.customResizeFunction
                             });
                         },
 
@@ -9339,7 +9419,8 @@ qq.ImageGenerator = function(log) {
                             mpImg.render(container, {
                                 maxWidth: maxSize,
                                 maxHeight: maxSize,
-                                mime: mime
+                                mime: mime,
+                                resize: options.customResizeFunction
                             });
                         }
                     );
@@ -9355,7 +9436,7 @@ qq.ImageGenerator = function(log) {
         return drawPreview;
     }
 
-    function drawOnCanvasOrImgFromUrl(url, canvasOrImg, draw, maxSize) {
+    function drawOnCanvasOrImgFromUrl(url, canvasOrImg, draw, maxSize, customResizeFunction) {
         var tempImg = new Image(),
             tempImgRender = new qq.Promise();
 
@@ -9375,7 +9456,8 @@ qq.ImageGenerator = function(log) {
                 mpImg.render(canvasOrImg, {
                     maxWidth: maxSize,
                     maxHeight: maxSize,
-                    mime: determineMimeOfFileName(url)
+                    mime: determineMimeOfFileName(url),
+                    resize: customResizeFunction
                 });
             },
 
@@ -9449,7 +9531,7 @@ qq.ImageGenerator = function(log) {
          *
          * @param fileBlobOrUrl a `File`, `Blob`, or a URL pointing to the image
          * @param container <img> or <canvas> to contain the preview
-         * @param options possible properties include `maxSize` (int), `orient` (bool - default true), and `resize` (bool - default true)
+         * @param options possible properties include `maxSize` (int), `orient` (bool - default true), resize` (bool - default true), and `customResizeFunction`.
          * @returns qq.Promise fulfilled when the preview has been drawn, or the attempt has failed
          */
         generate: function(fileBlobOrUrl, container, options) {
@@ -9701,7 +9783,7 @@ qq.Identify = function(fileOrBlob, log) {
          */
         isPreviewable: function() {
             var self = this,
-                idenitifer = new qq.Promise(),
+                identifier = new qq.Promise(),
                 previewable = false,
                 name = fileOrBlob.name === undefined ? "blob" : fileOrBlob.name;
 
@@ -9719,7 +9801,7 @@ qq.Identify = function(fileOrBlob, log) {
                             // so, if this is a TIFF and the UA isn't Safari, declare this file "non-previewable".
                             if (mime !== "image/tiff" || qq.supportedFeatures.tiffPreviews) {
                                 previewable = true;
-                                idenitifer.success(mime);
+                                identifier.success(mime);
                             }
 
                             return false;
@@ -9729,19 +9811,19 @@ qq.Identify = function(fileOrBlob, log) {
                     log(qq.format("'{}' is {} able to be rendered in this browser", name, previewable ? "" : "NOT"));
 
                     if (!previewable) {
-                        idenitifer.failure();
+                        identifier.failure();
                     }
                 },
                 function() {
                     log("Error reading file w/ name '" + name + "'.  Not able to be rendered in this browser.");
-                    idenitifer.failure();
+                    identifier.failure();
                 });
             }
             else {
-                idenitifer.failure();
+                identifier.failure();
             }
 
-            return idenitifer;
+            return identifier;
         },
 
         /**
@@ -9988,9 +10070,9 @@ qq.Session = function(spec) {
             refreshCompleteCallback = function(response, success, xhrOrXdr) {
                 handleFileItems(response, success, xhrOrXdr, refreshEffort);
             },
-            requsterOptions = qq.extend({}, options),
+            requesterOptions = qq.extend({}, options),
             requester = new qq.SessionAjaxRequester(
-                qq.extend(requsterOptions, {onComplete: refreshCompleteCallback})
+                qq.extend(requesterOptions, {onComplete: refreshCompleteCallback})
             );
 
         requester.queryServer();
@@ -10251,6 +10333,7 @@ qq.Scaler = function(spec, log) {
     "use strict";
 
     var self = this,
+        customResizeFunction = spec.customResizer,
         includeOriginal = spec.sendOriginal,
         orient = spec.orient,
         defaultType = spec.defaultType,
@@ -10269,10 +10352,10 @@ qq.Scaler = function(spec, log) {
             var self = this,
                 records = [],
                 originalBlob = originalBlobOrBlobData.blob ? originalBlobOrBlobData.blob : originalBlobOrBlobData,
-                idenitifier = new qq.Identify(originalBlob, log);
+                identifier = new qq.Identify(originalBlob, log);
 
             // If the reference file cannot be rendered natively, we can't create scaled versions.
-            if (idenitifier.isPreviewableSync()) {
+            if (identifier.isPreviewableSync()) {
                 // Create records for each scaled version & add them to the records array, smallest first.
                 qq.each(sizes, function(idx, sizeRecord) {
                     var outputType = self._determineOutputType({
@@ -10290,6 +10373,7 @@ qq.Scaler = function(spec, log) {
                         }),
                         blob: new qq.BlobProxy(originalBlob,
                         qq.bind(self._generateScaledImage, self, {
+                            customResizeFunction: customResizeFunction,
                             maxSize: sizeRecord.maxSize,
                             orient: orient,
                             type: outputType,
@@ -10409,6 +10493,7 @@ qq.extend(qq.Scaler.prototype, {
             name = uploadData && uploadData.name,
             uuid = uploadData && uploadData.uuid,
             scalingOptions = {
+                customResizer: specs.customResizer,
                 sendOriginal: false,
                 orient: specs.orient,
                 defaultType: specs.type || null,
@@ -10529,6 +10614,7 @@ qq.extend(qq.Scaler.prototype, {
         "use strict";
 
         var self = this,
+            customResizeFunction = spec.customResizeFunction,
             log = spec.log,
             maxSize = spec.maxSize,
             orient = spec.orient,
@@ -10542,7 +10628,7 @@ qq.extend(qq.Scaler.prototype, {
 
         log("Attempting to generate scaled version for " + sourceFile.name);
 
-        imageGenerator.generate(sourceFile, canvas, {maxSize: maxSize, orient: orient}).then(function() {
+        imageGenerator.generate(sourceFile, canvas, {maxSize: maxSize, orient: orient, customResizeFunction: customResizeFunction}).then(function() {
             var scaledImageDataUri = canvas.toDataURL(type, quality),
                 signalSuccess = function() {
                     log("Success generating scaled version for " + sourceFile.name);
@@ -10581,7 +10667,7 @@ qq.extend(qq.Scaler.prototype, {
 
         reader.onload = function() {
             originalImageDataUri = reader.result;
-            insertionEffort.success(ExifRestorer.restore(originalImageDataUri, scaledImageDataUri));
+            insertionEffort.success(qq.ExifRestorer.restore(originalImageDataUri, scaledImageDataUri));
         };
 
         reader.onerror = function() {
@@ -10644,7 +10730,7 @@ qq.extend(qq.Scaler.prototype, {
 //Based on MinifyJpeg
 //http://elicon.blog57.fc2.com/blog-entry-206.html
 
-var ExifRestorer = (function()
+qq.ExifRestorer = (function()
 {
    
 	var ExifRestorer = {};
@@ -10893,7 +10979,7 @@ qq.TotalProgress = function(callback, getSize) {
 
         /**
          * Invokes the callback with the current total progress of all files in the batch.  Called whenever it may
-         * be appropriate to re-calculate and dissemenate this data.
+         * be appropriate to re-calculate and disseminate this data.
          *
          * @param id ID of a file that has changed in some important way
          * @param newLoaded New loaded value for this file.  -1 if this value should no longer be part of calculations
@@ -11237,5 +11323,17 @@ qq.FilenameEditHandler = function(s, inheritedInternalApi) {
         }
     });
 };
+if (typeof define === 'function' && define.amd) {
+   define(function() {
+       return qq;
+   });
+}
+else if (typeof module !== 'undefined' && module.exports) {
+   module.exports = qq;
+}
+else {
+   global.qq = qq;
+}
+}(window));
 
-/*! 2016-04-11 */
+/*! 2016-06-16 */
