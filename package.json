@@ -1,0 +1,19 @@
+{
+    "name": "contao-fineuploader",
+    "repository": {
+        "type": "git",
+        "url": "git+github.com/terminal42/contao-fineuploader"
+    },
+    "license": "MIT",
+    "dependencies": {
+        "autoprefixer": "^6.3.6",
+        "fine-uploader": "^5.10.0",
+        "gulp": "^3.9.1",
+        "gulp-clean-css": "^2.0.3",
+        "gulp-postcss": "^6.1.1",
+        "gulp-rename": "^1.2.2",
+        "gulp-sourcemaps": "^1.6.0",
+        "gulp-uglify": "^1.5.3",
+        "gulp-util": "^3.0.7"
+    }
+}
