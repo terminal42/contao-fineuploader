@@ -1,7 +1,7 @@
 fineuploader Contao extension
 =============================
 
-Provides the Fine Uploader to the Contao. The uploader initially uploads the files to ```system/tmp``` and moves them to the destination after the form is being submitted. The extension works also in the front end, but only with MooTools!
+Provides the Fine Uploader to the Contao. The uploader initially uploads the files to ```system/tmp``` and moves them to the destination after the form is being submitted.
 
 Includes the [Fine Uploader](http://fineuploader.com/) by Widen.
 
@@ -15,18 +15,26 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
     'inputType'               => 'fineUploader',
     'eval'                    => array
     (
-        'storeFile' => true, // Mandatory to store the file on the server
-        'multiple' => true, // Allow multiple files to be uploaded
-        'uploadFolder' => 'files/uploads', // Upload path (destination folder)
-        'uploaderConfig' => 'debug: true', // Custom uploader configuration (JSON)
-        'uploaderLimit' => 4, // Maximum files that can be uploaded
-        'addToDbafs' => true, // Add files to the database assisted file system
-        'extensions' => $GLOBALS['TL_CONFIG']['uploadTypes'], // Allowed extension types
-        'maxlength' => 2048000, // Maximum file size
-        'doNotOvewrite' => true, // Do not overwrite files in destination folder
+        'storeFile'         => true,                // Mandatory to store the file on the server
+        'multiple'          => true,                // Allow multiple files to be uploaded
+        'uploadFolder'      => 'files/uploads',     // Upload target directory (can also be a Contao file system UUID)
+        'useHomeDir'        => true,                // Upload to the FE member home directory (overrides "uploadFolder", can also be a Contao file system UUID)
+        'uploaderConfig'    => "['debug': true]",   // Custom uploader configuration that gets merged with the other params
+        'uploaderLimit'     => 4,                   // Maximum files that can be uploaded
+        'addToDbafs'        => true,                // Add files to the database assisted file system
+        'extensions'        => 'pdf,zip',           // Allowed extension types
+        'minlength'         => 1048000,             // Minimum file size
+        'maxlength'         => 2048000,             // Maximum file size (is ignored if you use chunking!)
+        'doNotOverwrite'    => true,                // Do not overwrite files in destination folder
 
-        'chunking' => true, // Enable chunking
-        'chunkSize' => 2000000, // Chunk size in bytes
+        'chunking'          => true,                // Enable chunking
+        'chunkSize'         => 2000000,             // Chunk size in bytes
+        'concurrent'        => true                 // Allow multiple chunks to be uploaded simultaneously per file
+        'maxConnections'    => 3                    // Maximum allowable concurrent requests
+
+        // Upload the files directly to the destination folder. If not set, then the files are first uploaded
+        // to the temporary folder and moved to the destination folder only when the form is submitted
+        'directUpload' => true,
 
         // You can also use the default features of fileTree widget such as:
         // isGallery, isDownloads

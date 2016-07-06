@@ -3,7 +3,7 @@
 /**
  * fineuploader extension for Contao Open Source CMS
  *
- * @copyright  Copyright (c) 2008-2014, terminal42 gmbh
+ * @copyright  Copyright (c) 2008-2015, terminal42 gmbh
  * @author     terminal42 gmbh <info@terminal42.ch>
  * @license    http://opensource.org/licenses/lgpl-3.0.html LGPL
  * @link       http://github.com/terminal42/contao-fineuploader
@@ -16,18 +16,11 @@
  */
 abstract class FineUploaderBase extends \Widget
 {
-
     /**
      * Temporary upload path
      * @var string
      */
     protected $strTemporaryPath = 'system/tmp';
-
-    /**
-     * Files mapper
-     * @var array
-     */
-    protected $arrFilesMapper = array();
 
     /**
      * Initialize the object
@@ -44,35 +37,112 @@ abstract class FineUploaderBase extends \Widget
     }
 
     /**
-     * Add specific attributes
+     * Add the labels and messages.
+     *
+     * @param null $arrAttributes
+     */
+    public function parse($arrAttributes = null)
+    {
+        // Messages (passed on to fineuploader JS)
+        $basicTextOptions = array(
+            'text'  => array(
+                'formatProgress',
+                'failUpload',
+                'waitingForResponse',
+                'paused',
+            ),
+            'messages'  => array(
+                'typeError',
+                'sizeError',
+                'minSizeError',
+                'emptyError',
+                'noFilesError',
+                'tooManyItemsError',
+                'maxHeightImageError',
+                'maxWidthImageError',
+                'minHeightImageError',
+                'minWidthImageError',
+                'retryFailTooManyItems',
+                'onLeave',
+                'unsupportedBrowserIos8Safari',
+            ),
+            'retry' => array(
+                'autoRetryNote',
+            ),
+            'deleteFile' => array(
+                'confirmMessage',
+                'deletingStatusText',
+                'deletingFailedText',
+            ),
+            'paste' => array(
+                'namePromptMessage',
+            )
+        );
+
+        $config = array();
+
+        foreach ($basicTextOptions as $category => $messages) {
+            foreach ($messages as $message) {
+                // Only translate if available, otherwise fall back to default (EN)
+                if (isset($GLOBALS['TL_LANG']['MSC']['fineuploader_trans'][$category][$message])) {
+                    $config[$category][$message] = $GLOBALS['TL_LANG']['MSC']['fineuploader_trans'][$category][$message];
+                }
+            }
+        }
+
+        // BC (used to be a JSON string)
+        if (isset($this->arrConfiguration['uploaderConfig'])
+            && $this->arrConfiguration['uploaderConfig'] !== ''
+        ) {
+            $this->arrConfiguration['uploaderConfig'] = json_decode('{' . $this->arrConfiguration['uploaderConfig'] . '}', true);
+        }
+
+        // Merge with custom options
+        $this->config = json_encode(array_merge($config, (array) $this->arrConfiguration['uploaderConfig']));
+
+        // Labels (in HTML)
+        $labels = array(
+            'drop',
+            'upload',
+            'processing',
+            'cancel',
+            'retry',
+            'delete',
+            'close',
+            'yes',
+            'no',
+        );
+
+        $preparedLabels = array();
+
+        foreach ($labels as $label) {
+            $preparedLabels[$label] = $GLOBALS['TL_LANG']['MSC']['fineuploader_' . $label];
+        }
+
+        $this->labels = $preparedLabels;
+
+        return parent::parse($arrAttributes);
+    }
+
+    /**
+     * Add the required attribute if mandatory
+     *
      * @param string
      * @param mixed
      */
     public function __set($strKey, $varValue)
     {
         switch ($strKey) {
-            case 'maxlength':
-                // Do not add as attribute (see #3094)
-                $this->arrConfiguration['maxlength'] = $varValue;
-                break;
-
-            case 'mSize':
-                $this->arrConfiguration['uploaderLimit'] = $varValue;
-                break;
-
             case 'mandatory':
                 if ($varValue) {
                     $this->arrAttributes['required'] = 'required';
                 } else {
                     unset($this->arrAttributes['required']);
                 }
-                parent::__set($strKey, $varValue);
-                break;
-
-            default:
-                parent::__set($strKey, $varValue);
-                break;
+                // DO NOT BREAK HERE
         }
+
+        parent::__set($strKey, $varValue);
     }
 
     /**
@@ -83,8 +153,7 @@ abstract class FineUploaderBase extends \Widget
     {
         \Message::reset();
         $strTempName = $this->strName . '_fineuploader';
-        $objUploader = new \FileUpload();
-        $objUploader->setName($this->strName);
+        $objUploader = new \Haste\Util\FileUpload($this->strName);
         $blnIsChunk = isset($_POST['qqpartindex']);
 
         // Convert the $_FILES array to Contao format
@@ -97,6 +166,9 @@ abstract class FineUploaderBase extends \Widget
                 'error' => array($_FILES[$strTempName]['error']),
                 'size' => array($_FILES[$strTempName]['size']),
             );
+
+            // Replace the comma character (#22)
+            $arrFile['name'] = str_replace(',', '_', $arrFile['name']);
 
             // Set the UUID as the filename
             if ($blnIsChunk) {
@@ -113,19 +185,23 @@ abstract class FineUploaderBase extends \Widget
         }
 
         $varInput = '';
-        $extensions = null;
-        $maxlength = null;
 
         // Add the "chunk" extension to upload types
         if ($blnIsChunk) {
-            $extensions = $GLOBALS['TL_CONFIG']['uploadTypes'];
-            $GLOBALS['TL_CONFIG']['uploadTypes'] .= ',chunk';
+            $extensions   = trimsplit(',', $GLOBALS['TL_CONFIG']['uploadTypes']);
+            $extensions[] = 'chunk';
+
+            $objUploader->setExtensions($extensions);
         }
 
-        // Override the default maxlength value
-        if (isset($this->arrConfiguration['maxlength'])) {
-            $maxlength = $GLOBALS['TL_CONFIG']['maxFileSize'];
-            $GLOBALS['TL_CONFIG']['maxFileSize'] = $this->arrConfiguration['maxlength'];
+        // Validate the minlength
+        if ($this->arrConfiguration['minlength'] > 0 && !$blnIsChunk) {
+            $objUploader->setMinFileSize($this->arrConfiguration['minlength']);
+        }
+
+        // Validate the maxlength
+        if ($this->arrConfiguration['maxlength'] > 0 || $blnIsChunk) {
+            $objUploader->setMaxFileSize($blnIsChunk ? $this->arrConfiguration['chunkSize'] : $this->arrConfiguration['maxlength']);
         }
 
         try {
@@ -140,16 +216,6 @@ abstract class FineUploaderBase extends \Widget
             \Message::reset();
         } catch (\Exception $e) {
             $this->addError($e->getMessage());
-        }
-
-        // Restore the default maxlength value
-        if ($maxlength !== null) {
-            $GLOBALS['TL_CONFIG']['maxFileSize'] = $maxlength;
-        }
-
-        // Restore the default extensions value
-        if ($extensions !== null) {
-            $GLOBALS['TL_CONFIG']['uploadTypes'] = $extensions;
         }
 
         if (!is_array($varInput) || empty($varInput)) {
@@ -183,7 +249,32 @@ abstract class FineUploaderBase extends \Widget
 
                 $objFile->close();
                 $varInput = $objFile->path;
+
+                // Validate the minlength
+                if ($this->arrConfiguration['minlength'] > 0 && $objFile->size < $this->arrConfiguration['minlength']) {
+                    $readableSize = \System::getReadableSize($this->arrConfiguration['minlength']);
+                    $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['minFileSize'], $readableSize));
+                    \System::log('File "'.$objFile->name.'" is smaller than the minimum file size of '.$readableSize, __METHOD__, TL_ERROR);
+                }
+
+                // Validate the maxlength
+                if ($this->arrConfiguration['maxlength'] > 0 && $objFile->size > $this->arrConfiguration['maxlength']) {
+                    $readableSize = \System::getReadableSize($this->arrConfiguration['maxlength']);
+                    $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['maxFileSize'], $readableSize));
+                    \System::log('File "'.$objFile->name.'" exceeds the maximum file size of '.$readableSize, __METHOD__, TL_ERROR);
+                }
+
+                // Reset the chunk flag
+                $blnIsChunk = false;
+
+                // Unset the file session after merging the chunks
+                unset($_SESSION[$this->strName . '_FINEUPLOADER_CHUNKS'][\Input::post('qqfilename')]);
             }
+        }
+
+        // Validate and move the file immediately
+        if ($this->arrConfiguration['directUpload'] && !$blnIsChunk) {
+            $varInput = $this->validatorSingle($varInput, $this->getDestinationFolder());
         }
 
         return $varInput;
@@ -197,33 +288,9 @@ abstract class FineUploaderBase extends \Widget
     protected function validator($varInput)
     {
         $varReturn = $this->blnIsMultiple ? array() : '';
-        $strDestination = $GLOBALS['TL_CONFIG']['uploadPath'];
+        $strDestination = $this->getDestinationFolder();
 
-        // Specify the target folder in the DCA (eval)
-        if (isset($this->arrConfiguration['uploadFolder'])) {
-            $varFolder = $this->arrConfiguration['uploadFolder'];
-
-            // Use the user's home directory
-            if ($this->arrConfiguration['useHomeDir'] && FE_USER_LOGGED_IN) {
-                $objUser = FrontendUser::getInstance();
-
-                if ($objUser->assignDir && $objUser->homeDir) {
-                    $varFolder = $objUser->homeDir;
-                }
-            }
-
-            if (\Validator::isUuid($varFolder)) {
-                $objFolder = \FilesModel::findByUuid($varFolder);
-
-                if ($objFolder !== null) {
-                    $strDestination = $objFolder->path;
-                }
-            } else {
-                $strDestination = $varFolder;
-            }
-        }
-
-        // Check the mandatoriness
+        // Check if mandatory
         if ($varInput == '' && $this->mandatory) {
             $this->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $this->strLabel));
         }
@@ -251,17 +318,52 @@ abstract class FineUploaderBase extends \Widget
         return $varReturn;
     }
 
+    /**
+     * Get the destination folder
+     *
+     * @return mixed
+     */
+    protected function getDestinationFolder()
+    {
+        $destination = \Config::get('uploadPath');
+        $folder = null;
+
+        // Specify the target folder in the DCA (eval)
+        if (isset($this->arrConfiguration['uploadFolder'])) {
+            $folder = $this->arrConfiguration['uploadFolder'];
+        }
+
+        // Use the user's home directory
+        if ($this->arrConfiguration['useHomeDir'] && FE_USER_LOGGED_IN) {
+            $user = FrontendUser::getInstance();
+
+            if ($user->assignDir && $user->homeDir) {
+                $folder = $user->homeDir;
+            }
+        }
+
+        if ($folder !== null && \Validator::isUuid($folder)) {
+            $folderModel = \FilesModel::findByUuid($folder);
+
+            if ($folderModel !== null) {
+                $destination = $folderModel->path;
+            }
+        } else {
+            $destination = $folder;
+        }
+
+        return $destination;
+    }
 
     /**
-     * Validate the single file
+     * Validate a single file.
+     *
      * @param mixed
      * @param string
      * @return mixed
      */
     protected function validatorSingle($varFile, $strDestination)
     {
-        $varOld = $varFile;
-
         // Move the temporary file
         if (!\Validator::isStringUuid($varFile) && is_file(TL_ROOT . '/' . $varFile)) {
             $varFile = $this->moveTemporaryFile($varFile, $strDestination);
@@ -269,11 +371,8 @@ abstract class FineUploaderBase extends \Widget
 
         // Convert uuid to binary format
         if (\Validator::isStringUuid($varFile)) {
-            $varFile = \String::uuidToBin($varFile);
+            $varFile = \StringUtil::uuidToBin($varFile);
         }
-
-        // Store in the mapper
-        $this->arrFilesMapper[$varOld] = $varFile;
 
         return $varFile;
     }
@@ -309,6 +408,8 @@ abstract class FineUploaderBase extends \Widget
         }
 
         $blnRename = \Files::getInstance()->rename($strFile, $strNew);
+
+        \Files::getInstance()->chmod($strNew, \Config::get('defaultFileChmod'));
 
         // Add the file to Dbafs
         if ($this->arrConfiguration['addToDbafs'] && $blnRename) {
@@ -367,7 +468,7 @@ abstract class FineUploaderBase extends \Widget
         }
 
         $objFile = new \File($strPath, true);
-        $strInfo = $strPath . ' <span class="tl_gray">(' . $this->getReadableSize($objFile->size) . ($objFile->isGdImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
+        $strInfo = $strPath . ' <span class="tl_gray">(' . \System::getReadableSize($objFile->size) . ($objFile->isGdImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
         $allowedDownload = trimsplit(',', strtolower($GLOBALS['TL_CONFIG']['allowedDownload']));
         $strReturn = '';
 

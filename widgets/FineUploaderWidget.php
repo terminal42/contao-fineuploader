@@ -3,7 +3,7 @@
 /**
  * fineuploader extension for Contao Open Source CMS
  *
- * @copyright  Copyright (c) 2008-2014, terminal42 gmbh
+ * @copyright  Copyright (c) 2008-2015, terminal42 gmbh
  * @author     terminal42 gmbh <info@terminal42.ch>
  * @license    http://opensource.org/licenses/lgpl-3.0.html LGPL
  * @link       http://github.com/terminal42/contao-fineuploader
@@ -55,14 +55,21 @@ class FineUploaderWidget extends FineUploaderBase
     {
         parent::__construct($arrAttributes);
 
-        $this->blnIsMultiple = $this->arrConfiguration['multiple'];
-        $this->blnIsGallery = $this->arrConfiguration['isGallery'];
+        $this->blnIsMultiple  = $this->arrConfiguration['multiple'];
+        $this->blnIsGallery   = $this->arrConfiguration['isGallery'];
         $this->blnIsDownloads = $this->arrConfiguration['isDownloads'];
 
-        // Include the assets
-        $GLOBALS['TL_JAVASCRIPT']['fineuploader'] = 'system/modules/fineuploader/assets/fineuploader/fineuploader-5.0.2.min.js';
+        static::includeAssets();
+    }
+
+    /**
+     * Include the assets
+     */
+    public static function includeAssets()
+    {
+        $GLOBALS['TL_JAVASCRIPT']['fineuploader']         = 'system/modules/fineuploader/assets/fine-uploader/fine-uploader.min.js';
         $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.js';
-        $GLOBALS['TL_CSS']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.css';
+        $GLOBALS['TL_CSS']['fineuploader_handler']        = 'system/modules/fineuploader/assets/handler.min.css';
     }
 
     /**
@@ -98,7 +105,7 @@ class FineUploaderWidget extends FineUploaderBase
                     if (strlen($chunk)) {
                         $arrValues[$objFiles->uuid] = array
                         (
-                            'id' => (in_array($objFiles->uuid, $arrTemp) ? $objFiles->uuid : \String::binToUuid($objFiles->uuid)),
+                            'id' => (in_array($objFiles->uuid, $arrTemp) ? $objFiles->uuid : \StringUtil::binToUuid($objFiles->uuid)),
                             'value' => $chunk
                         );
 
@@ -114,7 +121,7 @@ class FineUploaderWidget extends FineUploaderBase
                 if (strlen($chunk)) {
                     $arrValues[$varFile] = array
                     (
-                        'id' => (in_array($varFile, $arrTemp) ? $varFile : \String::binToUuid($varFile)),
+                        'id' => (in_array($varFile, $arrTemp) ? $varFile : \StringUtil::binToUuid($varFile)),
                         'value' => $chunk
                     );
 
@@ -131,7 +138,7 @@ class FineUploaderWidget extends FineUploaderBase
             if (in_array($v, $arrTemp)) {
                 $strSet[$k] = $v;
             } else {
-                $arrSet[$k] = \String::binToUuid($v);
+                $arrSet[$k] = \StringUtil::binToUuid($v);
             }
         }
 
@@ -139,50 +146,15 @@ class FineUploaderWidget extends FineUploaderBase
         $this->sortable = count($arrValues) > 1;
         $this->orderHint = $GLOBALS['TL_LANG']['MSC']['dragItemsHint'];
         $this->values = $arrValues;
-        $this->ajax = \Environment::get('isAjaxRequest');
+        $this->ajax = \Environment::get('isAjaxRequest') && (\Input::post('action') !== 'toggleSubpalette');
         $this->deleteTitle = specialchars($GLOBALS['TL_LANG']['MSC']['delete']);
         $this->extensions = json_encode(trimsplit(',', $this->arrConfiguration['extensions']));
         $this->limit = $this->arrConfiguration['uploaderLimit'] ? $this->arrConfiguration['uploaderLimit'] : 0;
+        $this->minSizeLimit = $this->arrConfiguration['minlength'] ? $this->arrConfiguration['minlength'] : 0;
         $this->sizeLimit = $this->arrConfiguration['maxlength'] ? $this->arrConfiguration['maxlength'] : 0;
         $this->chunkSize = $this->arrConfiguration['chunkSize'] ? $this->arrConfiguration['chunkSize'] : 0;
-        $this->config = $this->arrConfiguration['uploaderConfig'];
-
-        $this->texts = json_encode(array
-        (
-            'text' => array
-            (
-                'formatProgress' => $GLOBALS['TL_LANG']['MSC']['fineuploader_formatProgress'],
-                'failUpload' => $GLOBALS['TL_LANG']['MSC']['fineuploader_failUpload'],
-                'waitingForResponse' => $GLOBALS['TL_LANG']['MSC']['fineuploader_waitingForResponse'],
-                'paused' => $GLOBALS['TL_LANG']['MSC']['fineuploader_paused'],
-            ),
-            'messages' => array
-            (
-                'tooManyFilesError' => $GLOBALS['TL_LANG']['MSC']['fineuploader_tooManyFilesError'],
-                'unsupportedBrowser' => $GLOBALS['TL_LANG']['MSC']['fineuploader_unsupportedBrowser'],
-            ),
-            'retry' => array
-            (
-                'autoRetryNote' => $GLOBALS['TL_LANG']['MSC']['fineuploader_autoRetryNote'],
-            ),
-            'deleteFile' => array
-            (
-                'confirmMessage' => $GLOBALS['TL_LANG']['MSC']['fineuploader_confirmMessage'],
-                'deletingStatusText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingStatusText'],
-                'deletingFailedText' => $GLOBALS['TL_LANG']['MSC']['fineuploader_deletingFailedText'],
-            ),
-            'paste' => array
-            (
-                'namePromptMessage' => $GLOBALS['TL_LANG']['MSC']['fineuploader_namePromptMessage'],
-            ),
-        ));
-
-        $this->labels = array
-        (
-            'drop' => $GLOBALS['TL_LANG']['MSC']['fineuploader_drop'],
-            'upload' => $GLOBALS['TL_LANG']['MSC']['fineuploader_upload'],
-            'processing' => $GLOBALS['TL_LANG']['MSC']['fineuploader_processing'],
-        );
+        $this->concurrent = $this->arrConfiguration['concurrent'] ? true : false;
+        $this->maxConnections = $this->arrConfiguration['maxConnections'] ? $this->arrConfiguration['maxConnections'] : 3;
 
         return parent::parse($arrAttributes);
     }

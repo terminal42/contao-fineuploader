@@ -3,7 +3,7 @@
 /**
  * fineuploader extension for Contao Open Source CMS
  *
- * @copyright  Copyright (c) 2008-2014, terminal42 gmbh
+ * @copyright  Copyright (c) 2008-2015, terminal42 gmbh
  * @author     terminal42 gmbh <info@terminal42.ch>
  * @license    http://opensource.org/licenses/lgpl-3.0.html LGPL
  * @link       http://github.com/terminal42/contao-fineuploader
@@ -14,7 +14,7 @@
  *
  * Provide methods to handle fine uploader ajax actions.
  */
-class FineUploaderAjax extends Controller
+class FineUploaderAjax
 {
 
     /**
@@ -26,28 +26,30 @@ class FineUploaderAjax extends Controller
     {
         switch ($strAction) {
             // Upload the file
+            /** @noinspection PhpMissingBreakStatementInspection */
             case 'fineuploader_upload':
                 $arrData['strTable'] = $dc->table;
-                $arrData['id'] = $this->strAjaxName ?: $dc->id;
+                $arrData['id'] = $dc->id; // @todo what was $this->strAjaxName for?
                 $arrData['name'] = \Input::post('name');
 
+                /** @var FineUploaderWidget $objWidget */
                 $objWidget = new $GLOBALS['BE_FFL']['fineUploader']($arrData, $dc);
                 $strFile = $objWidget->validateUpload();
 
                 if ($objWidget->hasErrors()) {
-                    $arrResponse = array('success'=>false, 'error'=>$objWidget->getErrorAsString(), 'preventRetry'=>true);
+                    $arrResponse = array('success' => false, 'error' => $objWidget->getErrorAsString(), 'preventRetry' => true);
                 } else {
-                    $arrResponse = array('success'=>true, 'file'=>$strFile);
+                    $arrResponse = array('success' => true, 'file' => $strFile);
                 }
 
-                echo json_encode($arrResponse);
-                exit; break;
+                $response = new \Haste\Http\Response\JsonResponse($arrResponse);
+                $response->send();
+            // no break, response exits script
 
             // Reload the widget
             case 'fineuploader_reload':
                 $intId = \Input::get('id');
                 $strField = $dc->field = \Input::post('name');
-                $this->import('Database');
 
                 // Handle the keys in "edit multiple" mode
                 if (\Input::get('act') == 'editAll') {
@@ -57,7 +59,7 @@ class FineUploaderAjax extends Controller
 
                 // The field does not exist
                 if (!isset($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField])) {
-                    $this->log('Field "' . $strField . '" does not exist in DCA "' . $dc->table . '"', __METHOD__, TL_ERROR);
+                    System::log('Field "' . $strField . '" does not exist in DCA "' . $dc->table . '"', __METHOD__, TL_ERROR);
                     header('HTTP/1.1 400 Bad Request');
                     die('Bad Request');
                 }
@@ -68,13 +70,13 @@ class FineUploaderAjax extends Controller
                 // Load the value
                 if ($GLOBALS['TL_DCA'][$dc->table]['config']['dataContainer'] == 'File') {
                     $varValue = $GLOBALS['TL_CONFIG'][$strField];
-                } elseif ($intId > 0 && $this->Database->tableExists($dc->table)) {
-                    $objRow = $this->Database->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
-                                             ->execute($intId);
+                } elseif ($intId > 0 && Database::getInstance()->tableExists($dc->table)) {
+                    $objRow = Database::getInstance()->prepare("SELECT * FROM " . $dc->table . " WHERE id=?")
+                        ->execute($intId);
 
                     // The record does not exist
                     if ($objRow->numRows < 1) {
-                        $this->log('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"', __METHOD__, TL_ERROR);
+                        System::log('A record with the ID "' . $intId . '" does not exist in table "' . $dc->table . '"', __METHOD__, TL_ERROR);
                         header('HTTP/1.1 400 Bad Request');
                         die('Bad Request');
                     }
@@ -87,8 +89,7 @@ class FineUploaderAjax extends Controller
                 if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'])) {
                     foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback) {
                         if (is_array($callback)) {
-                            $this->import($callback[0]);
-                            $varValue = $this->$callback[0]->$callback[1]($varValue, $dc);
+                            $varValue = System::importStatic($callback[0])->$callback[1]($varValue, $dc);
                         } elseif (is_callable($callback)) {
                             $varValue = $callback($varValue, $dc);
                         }
@@ -103,7 +104,7 @@ class FineUploaderAjax extends Controller
 
                     foreach ($varValue as $k => $v) {
                         if (\Validator::isUuid($v) && !is_file(TL_ROOT . '/' . $v)) {
-                            $varValue[$k] = \String::uuidToBin($v);
+                            $varValue[$k] = \StringUtil::uuidToBin($v);
                         }
                     }
 
@@ -121,8 +122,8 @@ class FineUploaderAjax extends Controller
                 $arrAttribs['activeRecord'] = $dc->activeRecord;
 
                 $objWidget = new $GLOBALS['BE_FFL']['fineUploader']($arrAttribs);
-                echo $objWidget->parse();
-                exit; break;
+                $response = new \Haste\Http\Response\HtmlResponse($objWidget->parse());
+                $response->send();
         }
     }
 
@@ -139,17 +140,19 @@ class FineUploaderAjax extends Controller
             case 'fineuploader_upload':
                 $arrData['name'] = \Input::post('name');
 
+                /** @var FormFineUploader $objWidget */
                 $objWidget = new $GLOBALS['TL_FFL']['fineUploader']($arrData);
                 $strFile = $objWidget->validateUpload();
 
                 if ($objWidget->hasErrors()) {
-                    $arrResponse = array('success'=>false, 'error'=>$objWidget->getErrorAsString(), 'preventRetry'=>true);
+                    $arrResponse = array('success' => false, 'error' => $objWidget->getErrorAsString(), 'preventRetry' => true);
                 } else {
-                    $arrResponse = array('success'=>true, 'file'=>$strFile);
+                    $arrResponse = array('success' => true, 'file' => $strFile);
                 }
 
-                echo json_encode($arrResponse);
-                exit; break;
+                $response = new \Haste\Http\Response\JsonResponse($arrResponse);
+                $response->send();
+                break;
         }
     }
 }
