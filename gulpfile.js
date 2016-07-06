@@ -9,7 +9,7 @@ const cleanCSS = require('gulp-clean-css');
 const postcss = require('gulp-postcss');
 const autoprefixer = require('autoprefixer');
 
-const production = !!gutil.env.production;
+const production = !gutil.env.development;
 
 // Copy the files
 gulp.task('copy', function () {
