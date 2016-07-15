@@ -1,29 +1,26 @@
-<?php if (!$this->tableless): ?>
-    <tr class="<?php echo $this->rowClass; ?>">
-        <td class="col_0 col_first"><?php echo $this->generateLabel(); ?></td>
-        <td class="col_1 col_last">
-<?php else: ?>
+<?php $this->extend('form_row'); ?>
+
+<?php $this->block('label'); ?>
 <?php echo $this->generateLabel(); ?>
-<?php endif; ?>
+<?php $this->endblock(); ?>
+
+<?php $this->block('field'); ?>
 
 <?php if ($this->hasErrors()): ?>
 <p class="error"><?php echo $this->getErrorAsString(); ?></p>
 <?php endif; ?>
 
-<div>
-    <div>
-        <input type="hidden" name="<?php echo $this->strName; ?>_fineuploader" id="ctrl_<?php echo $this->strId; ?>_fineuploader" value="">
-        <input type="hidden" name="<?php echo $this->strName; ?>" id="ctrl_<?php echo $this->strId; ?>" value="<?php echo $this->set; ?>">
-        <div class="selector_container">
-            <ul id="sort_<?php echo $this->strId; ?>"<?php if ($this->blnIsGallery): ?> class="sgallery"<?php endif; ?>>
-                <?php foreach ($this->values as $value): ?>
-                <li data-id="<?php echo $value['id']; ?>">
-                    <a href="#" class="delete" title="<?php echo $this->deleteTitle; ?>" onclick="ContaoFineUploader.deleteItem(this, '<?php echo $this->strId; ?>');return false;"></a>
-                    <?php echo $value['value']; ?>
-                </li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
+    <input type="hidden" name="<?php echo $this->strName; ?>_fineuploader" id="ctrl_<?php echo $this->strId; ?>_fineuploader" value="">
+    <input type="hidden" name="<?php echo $this->strName; ?>" id="ctrl_<?php echo $this->strId; ?>" value="<?php echo $this->set; ?>">
+    <div class="selector_container">
+        <ul id="sort_<?php echo $this->strId; ?>"<?php if ($this->blnIsGallery): ?> class="sgallery"<?php endif; ?>>
+            <?php foreach ($this->values as $value): ?>
+            <li data-id="<?php echo $value['id']; ?>">
+                <a href="#" class="delete" title="<?php echo $this->deleteTitle; ?>" onclick="ContaoFineUploader.deleteItem(this, '<?php echo $this->strId; ?>');return false;"></a>
+                <?php echo $value['value']; ?>
+            </li>
+            <?php endforeach; ?>
+        </ul>
     </div>
 
     <script type="text/template" id="qq-template">
@@ -105,9 +102,5 @@
         <?php endif; ?>
     }, <?php echo $this->config; ?>);
     </script>
-</div>
 
-<?php if (!$this->tableless): ?>
-        </td>
-    </tr>
-<?php endif; ?>
+<?php $this->endblock(); ?>

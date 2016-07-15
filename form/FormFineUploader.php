@@ -30,6 +30,13 @@ class FormFineUploader extends FineUploaderBase
     protected $strTemplate = 'fineuploader_frontend';
 
     /**
+     * The CSS class prefix
+     *
+     * @var string
+     */
+    protected $strPrefix = 'widget widget-fineuploader';
+
+    /**
      * Multiple flag
      * @var boolean
      */
