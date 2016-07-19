@@ -119,12 +119,12 @@ abstract class FineUploaderBase extends \Widget
             $preparedLabels[$label] = $GLOBALS['TL_LANG']['MSC']['fineuploader_' . $label];
         }
 
-        $this->labels = $preparedLabels;
-
         // Set the upload button label
         if ($this->uploadButtonLabel) {
-            $this->labels['upload'] = $this->uploadButtonLabel;
+            $preparedLabels['upload'] = $this->uploadButtonLabel;
         }
+
+        $this->labels = $preparedLabels;
 
         return parent::parse($arrAttributes);
     }
