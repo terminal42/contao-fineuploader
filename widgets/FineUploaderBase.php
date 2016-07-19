@@ -121,6 +121,11 @@ abstract class FineUploaderBase extends \Widget
 
         $this->labels = $preparedLabels;
 
+        // Set the upload button label
+        if ($this->uploadButtonLabel) {
+            $this->labels['upload'] = $this->uploadButtonLabel;
+        }
+
         return parent::parse($arrAttributes);
     }
 

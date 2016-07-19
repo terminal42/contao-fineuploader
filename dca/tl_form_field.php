@@ -12,7 +12,7 @@
 /**
  * Add palettes to tl_form_field
  */
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,maxConnections,extensions,minlength,maxlength,chunking,multiple;{store_legend:hide},storeFile,addToDbafs;{expert_legend:hide},class,accesskey,tabindex,fSize';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,maxConnections,extensions,minlength,maxlength,uploadButtonLabel,chunking,multiple;{store_legend:hide},storeFile,addToDbafs;{expert_legend:hide},class,accesskey,tabindex,fSize';
 $GLOBALS['TL_DCA']['tl_form_field']['palettes']['__selector__'][] = 'chunking';
 $GLOBALS['TL_DCA']['tl_form_field']['subpalettes']['chunking'] = 'chunkSize,concurrent';
 
@@ -64,4 +64,13 @@ $GLOBALS['TL_DCA']['tl_form_field']['fields']['addToDbafs'] = array
     'inputType'               => 'checkbox',
     'eval'                    => array('tl_class'=>'clr'),
     'sql'                     => "char(1) NOT NULL default ''"
+);
+
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['uploadButtonLabel'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['uploadButtonLabel'],
+    'exclude'                 => true,
+    'inputType'               => 'text',
+    'eval'                    => array('maxlength' => 64, 'tl_class'=>'w50'),
+    'sql'                     => "varchar(64) NOT NULL default ''"
 );

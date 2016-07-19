@@ -26,6 +26,7 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
         'minlength'         => 1048000,             // Minimum file size
         'maxlength'         => 2048000,             // Maximum file size (is ignored if you use chunking!)
         'doNotOverwrite'    => true,                // Do not overwrite files in destination folder
+        'uploadButtonLabel' => 'Upload images',     // Custom upload button label
 
         'chunking'          => true,                // Enable chunking
         'chunkSize'         => 2000000,             // Chunk size in bytes
