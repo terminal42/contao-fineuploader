@@ -59,6 +59,10 @@ class FineUploaderWidget extends FineUploaderBase
         $this->blnIsGallery   = $this->arrConfiguration['isGallery'];
         $this->blnIsDownloads = $this->arrConfiguration['isDownloads'];
 
+        if (!$this->blnIsMultiple) {
+            $this->arrConfiguration['uploaderLimit'] = 1;
+        }
+
         static::includeAssets();
     }
 

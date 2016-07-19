@@ -69,6 +69,10 @@ class FormFineUploader extends FineUploaderBase
         $this->blnIsGallery     = $this->arrConfiguration['isGallery'];
         $this->blnIsDownloads   = $this->arrConfiguration['isDownloads'];
 
+        if (!$this->blnIsMultiple) {
+            $this->arrConfiguration['uploaderLimit'] = 1;
+        }
+
         // Include the assets
         $GLOBALS['TL_JAVASCRIPT']['fineuploader']         = 'system/modules/fineuploader/assets/fine-uploader/fine-uploader.min.js';
         $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.js';
