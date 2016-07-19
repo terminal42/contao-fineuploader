@@ -209,6 +209,16 @@ abstract class FineUploaderBase extends \Widget
             $objUploader->setMaxFileSize($blnIsChunk ? $this->arrConfiguration['chunkSize'] : $this->arrConfiguration['maxlength']);
         }
 
+        // Set the maximum width
+        if ($this->arrConfiguration['maxWidth']) {
+            $objUploader->setImageWidth($this->arrConfiguration['maxWidth']);
+        }
+
+        // Set the maximum height
+        if ($this->arrConfiguration['maxHeight']) {
+            $objUploader->setImageHeight($this->arrConfiguration['maxHeight']);
+        }
+
         try {
             $varInput = $objUploader->uploadTo($this->strTemporaryPath);
 
