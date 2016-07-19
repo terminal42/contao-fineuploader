@@ -16,7 +16,7 @@
         <ul id="sort_<?php echo $this->strId; ?>"<?php if ($this->blnIsGallery): ?> class="sgallery"<?php endif; ?>>
             <?php foreach ($this->values as $value): ?>
             <li data-id="<?php echo $value['id']; ?>">
-                <a href="#" class="delete" title="<?php echo $this->deleteTitle; ?>" onclick="ContaoFineUploader.deleteItem(this, '<?php echo $this->strId; ?>');return false;"></a>
+                <a href="#" class="delete" title="<?php echo $this->deleteTitle; ?>" onclick="ContaoFineUploader.deleteItem(this, '<?php echo $this->strId; ?>');return false;"><?= $this->deleteTitle ?></a>
                 <?php echo $value['value']; ?>
             </li>
             <?php endforeach; ?>
