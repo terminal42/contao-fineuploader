@@ -93,6 +93,7 @@
         minSizeLimit: <?php echo $this->minSizeLimit; ?>,
         sizeLimit: <?php echo $this->sizeLimit; ?>,
         maxConnections: <?php echo $this->maxConnections; ?>,
+        uploadButtonTitle: '<?php echo $this->labels['upload']; ?>',
         <?php if ($this->chunking): ?>
         chunking: true,
         chunkSize: <?php echo $this->chunkSize; ?>,
