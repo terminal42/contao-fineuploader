@@ -117,7 +117,7 @@ class FormFineUploader extends FineUploaderBase
 
         foreach ($arrReturn as $varFile) {
             // Get the file model
-            if (\Validator::isBinaryUuid($varFile)) {
+            if (\Validator::isUuid($varFile)) {
                 $objModel = \FilesModel::findByUuid($varFile);
 
                 if ($objModel === null) {
@@ -162,7 +162,7 @@ class FormFineUploader extends FineUploaderBase
                 $this->varValue = (array) $this->varValue;
 
                 foreach ($this->varValue as $varFile) {
-                    if (\Validator::isBinaryUuid($varFile)) {
+                    if (\Validator::isUuid($varFile)) {
                         $arrUuids[] = $varFile;
                     } else {
                         $arrTemp[] = $varFile;
