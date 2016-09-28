@@ -75,7 +75,7 @@ class FineUploaderWidget extends FineUploaderBase
         $GLOBALS['TL_JAVASCRIPT']['fineuploader_handler'] = 'system/modules/fineuploader/assets/handler.min.js';
         $GLOBALS['TL_CSS']['fineuploader_handler']        = 'system/modules/fineuploader/assets/handler.min.css';
 
-        if (class_exists('Contao\CoreBundle\Framework\ContaoFrameworkInterface')) {
+        if (interface_exists('Contao\CoreBundle\Framework\ContaoFrameworkInterface')) {
             $GLOBALS['TL_CSS']['fineuploader_contao4'] = 'system/modules/fineuploader/assets/contao4.css';
         }
     }
