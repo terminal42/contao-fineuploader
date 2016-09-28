@@ -1,0 +1,9 @@
+.selector_container .delete {
+    bottom: 4px;
+    background-image: url("../../../themes/flexible/icons/delete.svg") !important;
+    opacity: 0.25;
+}
+
+.selector_container .delete:hover {
+    opacity: 1;
+}
