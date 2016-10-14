@@ -467,6 +467,7 @@ abstract class FineUploaderBase extends \Widget
             return '';
         }
 
+        $imageSize = $this->getImageSize();
         $objFile = new \File($strPath, true);
         $strInfo = $strPath . ' <span class="tl_gray">(' . \System::getReadableSize($objFile->size) . ($objFile->isGdImage ? ', ' . $objFile->width . 'x' . $objFile->height . ' px' : '') . ')</span>';
         $allowedDownload = trimsplit(',', strtolower($GLOBALS['TL_CONFIG']['allowedDownload']));
@@ -475,7 +476,7 @@ abstract class FineUploaderBase extends \Widget
         // Show files and folders
         if (!$this->blnIsGallery && !$this->blnIsDownloads) {
             if ($objFile->isGdImage) {
-                $strReturn = \Image::getHtml(\Image::get($strPath, 80, 60, 'center_center'), '', 'class="gimage" title="' . specialchars($strInfo) . '"');
+                $strReturn = \Image::getHtml(\Image::get($strPath, $imageSize[0], $imageSize[1], $imageSize[2]), '', 'class="gimage" title="' . specialchars($strInfo) . '"');
             } else {
                 $strReturn = \Image::getHtml($objFile->icon) . ' ' . $strInfo;
             }
@@ -486,7 +487,7 @@ abstract class FineUploaderBase extends \Widget
             if ($this->blnIsGallery) {
                 // Only show images
                 if ($objFile->isGdImage) {
-                    $strReturn = \Image::getHtml(\Image::get($strPath, 80, 60, 'center_center'), '', 'class="gimage" title="' . specialchars($strInfo) . '"');
+                    $strReturn = \Image::getHtml(\Image::get($strPath, $imageSize[0], $imageSize[1], $imageSize[2]), '', 'class="gimage" title="' . specialchars($strInfo) . '"');
                 }
             } else {
                 // Only show allowed download types
@@ -497,5 +498,19 @@ abstract class FineUploaderBase extends \Widget
         }
 
         return $strReturn;
+    }
+
+    /**
+     * Get the image size
+     *
+     * @return array
+     */
+    protected function getImageSize()
+    {
+        if (is_array($this->imageSize)) {
+            return $this->imageSize;
+        }
+
+        return [80, 60, 'center_center'];
     }
 }

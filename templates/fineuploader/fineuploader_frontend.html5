@@ -1,26 +1,33 @@
-<?php if (!$this->tableless): ?>
-    <tr class="<?php echo $this->rowClass; ?>">
-        <td class="col_0 col_first"><?php echo $this->generateLabel(); ?></td>
-        <td class="col_1 col_last">
-<?php else: ?>
-<?php echo $this->generateLabel(); ?>
-<?php endif; ?>
+<?php $this->extend('form_row'); ?>
 
+<?php $this->block('label'); ?>
+<?php if ($this->label): ?>
+    <label for="ctrl_<?= $this->id ?>"<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?>>
+        <?php if ($this->mandatory): ?>
+            <span class="invisible"><?= $this->mandatoryField ?> </span><?= $this->label ?><span class="mandatory">*</span>
+        <?php else: ?>
+            <?= $this->label ?>
+        <?php endif; ?>
+    </label>
+<?php endif; ?>
+<?php $this->endblock(); ?>
+
+<?php $this->block('field'); ?>
 <?php if ($this->hasErrors()): ?>
-<p class="error"><?php echo $this->getErrorAsString(); ?></p>
+    <p class="error"><?= $this->getErrorAsString() ?></p>
 <?php endif; ?>
 
-<div>
-    <div>
+<div class="fineuploader-container">
+    <div class="values">
         <input type="hidden" name="<?php echo $this->strName; ?>_fineuploader" id="ctrl_<?php echo $this->strId; ?>_fineuploader" value="">
         <input type="hidden" name="<?php echo $this->strName; ?>" id="ctrl_<?php echo $this->strId; ?>" value="<?php echo $this->set; ?>">
         <div class="selector_container">
             <ul id="sort_<?php echo $this->strId; ?>"<?php if ($this->blnIsGallery): ?> class="sgallery"<?php endif; ?>>
                 <?php foreach ($this->values as $value): ?>
-                <li data-id="<?php echo $value['id']; ?>">
-                    <a href="#" class="delete" title="<?php echo $this->deleteTitle; ?>" onclick="ContaoFineUploader.deleteItem(this, '<?php echo $this->strId; ?>');return false;"></a>
-                    <?php echo $value['value']; ?>
-                </li>
+                    <li data-id="<?php echo $value['id']; ?>">
+                        <a href="#" class="delete" title="<?php echo $this->deleteTitle; ?>" onclick="ContaoFineUploader.deleteItem(this, '<?php echo $this->strId; ?>');return false;"></a>
+                        <?php echo $value['value']; ?>
+                    </li>
                 <?php endforeach; ?>
             </ul>
         </div>
@@ -37,10 +44,10 @@
             <div class="qq-upload-button-selector qq-upload-button">
                 <div><?php echo $this->labels['upload']; ?></div>
             </div>
-                <span class="qq-drop-processing-selector qq-drop-processing">
-                    <span><?php echo $this->labels['processing']; ?></span>
-                    <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
-                </span>
+            <span class="qq-drop-processing-selector qq-drop-processing">
+                <span><?php echo $this->labels['processing']; ?></span>
+                <span class="qq-drop-processing-spinner-selector qq-drop-processing-spinner"></span>
+            </span>
             <ul class="qq-upload-list-selector qq-upload-list" aria-live="polite" aria-relevant="additions removals">
                 <li>
                     <div class="qq-progress-bar-container-selector">
@@ -87,27 +94,24 @@
     <div id="<?php echo $this->strId; ?>_fineuploader" class="upload_container"></div>
 
     <script>
-    ContaoFineUploader.init(document.getElementById('<?php echo $this->strId; ?>_fineuploader'), {
-        field: '<?php echo $this->strId; ?>',
-        request_token: '<?php echo REQUEST_TOKEN; ?>',
-        backend: false,
-        extensions: <?php echo $this->extensions; ?>,
-        limit: <?php echo $this->limit; ?>,
-        minSizeLimit: <?php echo $this->minSizeLimit; ?>,
-        sizeLimit: <?php echo $this->sizeLimit; ?>,
-        maxConnections: <?php echo $this->maxConnections; ?>,
-        <?php if ($this->chunking): ?>
-        chunking: true,
-        chunkSize: <?php echo $this->chunkSize; ?>,
-        <?php if ($this->concurrent): ?>
-        concurrent: true,
-        <?php endif; ?>
-        <?php endif; ?>
-    }, <?php echo $this->config; ?>);
+        ContaoFineUploader.init(document.getElementById('<?php echo $this->strId; ?>_fineuploader'), {
+            field: '<?php echo $this->strId; ?>',
+            request_token: '<?php echo REQUEST_TOKEN; ?>',
+            backend: false,
+            extensions: <?php echo $this->extensions; ?>,
+            limit: <?php echo $this->limit; ?>,
+            minSizeLimit: <?php echo $this->minSizeLimit; ?>,
+            sizeLimit: <?php echo $this->sizeLimit; ?>,
+            maxConnections: <?php echo $this->maxConnections; ?>,
+            <?php if ($this->chunking): ?>
+            chunking: true,
+            chunkSize: <?php echo $this->chunkSize; ?>,
+            <?php if ($this->concurrent): ?>
+            concurrent: true,
+            <?php endif; ?>
+            <?php endif; ?>
+        }, <?php echo $this->config; ?>);
     </script>
 </div>
 
-<?php if (!$this->tableless): ?>
-        </td>
-    </tr>
-<?php endif; ?>
+<?php $this->endblock(); ?>
