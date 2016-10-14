@@ -30,6 +30,13 @@ class FormFineUploader extends FineUploaderBase
     protected $strTemplate = 'fineuploader_frontend';
 
     /**
+     * The CSS class prefix
+     *
+     * @var string
+     */
+    protected $strPrefix = 'widget widget-fineuploader';
+
+    /**
      * Multiple flag
      * @var boolean
      */
@@ -61,6 +68,10 @@ class FormFineUploader extends FineUploaderBase
         $this->blnIsMultiple    = $this->arrConfiguration['multiple'];
         $this->blnIsGallery     = $this->arrConfiguration['isGallery'];
         $this->blnIsDownloads   = $this->arrConfiguration['isDownloads'];
+
+        if (!$this->blnIsMultiple) {
+            $this->arrConfiguration['uploaderLimit'] = 1;
+        }
 
         // Include the assets
         $GLOBALS['TL_JAVASCRIPT']['fineuploader']         = 'system/modules/fineuploader/assets/fine-uploader/fine-uploader.min.js';
@@ -106,7 +117,7 @@ class FormFineUploader extends FineUploaderBase
 
         foreach ($arrReturn as $varFile) {
             // Get the file model
-            if (\Validator::isBinaryUuid($varFile)) {
+            if (\Validator::isUuid($varFile)) {
                 $objModel = \FilesModel::findByUuid($varFile);
 
                 if ($objModel === null) {
@@ -151,7 +162,7 @@ class FormFineUploader extends FineUploaderBase
                 $this->varValue = (array) $this->varValue;
 
                 foreach ($this->varValue as $varFile) {
-                    if (\Validator::isBinaryUuid($varFile)) {
+                    if (\Validator::isUuid($varFile)) {
                         $arrUuids[] = $varFile;
                     } else {
                         $arrTemp[] = $varFile;

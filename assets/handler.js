@@ -61,6 +61,9 @@
                 maxChars: 1000,
                 responseProperty: 'error'
             },
+            text: {
+                fileInputTitle: config.uploadButtonTitle
+            },
             validation: {
                 allowedExtensions: config.extensions,
                 minSizeLimit: config.minSizeLimit,
