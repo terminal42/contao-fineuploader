@@ -146,7 +146,7 @@ class Uploader
         $validator = $this->framework->getAdapter('\Contao\Validator');
 
         // Move the temporary file
-        if (!$validator->isStringUuid($file) && $this->fs->fileExists($file) && $config->isStoreFile()) {
+        if (!$validator->isStringUuid($file) && $this->fs->fileExists($file) && $config->isStoreFileEnabled()) {
             $file = $this->fs->moveTmpFile($file, $config->getUploadFolder(), $config->isDoNotOverwriteEnabled());
 
             // Add the file to database file system

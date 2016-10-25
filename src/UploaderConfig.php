@@ -445,7 +445,7 @@ class UploaderConfig
      *
      * @return boolean
      */
-    public function isStoreFile()
+    public function isStoreFileEnabled()
     {
         return $this->storeFile;
     }
