@@ -68,10 +68,13 @@ class FrontendWidget extends BaseWidget
     protected function includeAssets($frontendAssets = true)
     {
         $manager = $this->getAssetsManager();
+        $assets  = $manager->getBasicAssets();
 
-        $manager->includeAssets(
-            $frontendAssets ? $manager->getFrontendAssets($this->multiple) : $manager->getBasicAssets()
-        );
+        if ($frontendAssets) {
+            $assets = array_merge($assets, $manager->getFrontendAssets($this->multiple));
+        }
+
+        $manager->includeAssets($assets);
     }
 
     /**

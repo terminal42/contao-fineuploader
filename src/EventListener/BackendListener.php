@@ -74,7 +74,9 @@ class BackendListener
 
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] as $field) {
             if (isset($field['inputType']) && $field['inputType'] === 'fineUploader') {
-                $this->assetsManager->includeAssets($this->assetsManager->getBackendAssets());
+                $this->assetsManager->includeAssets(
+                    array_merge($this->assetsManager->getBasicAssets(), $this->assetsManager->getBackendAssets())
+                );
                 break;
             }
         }

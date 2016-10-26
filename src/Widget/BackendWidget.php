@@ -25,7 +25,7 @@ class BackendWidget extends BaseWidget
         $manager = $this->getAssetsManager();
 
         // Include the assets in case they have not been included yet
-        $manager->includeAssets($manager->getBackendAssets());
+        $manager->includeAssets(array_merge($manager->getBasicAssets(), $manager->getBackendAssets()));
     }
 
     /**

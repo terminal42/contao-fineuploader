@@ -59,13 +59,10 @@ class AssetsManager
      */
     public function getBackendAssets()
     {
-        return array_merge(
-            $this->getBasicAssets(),
-            [
-                $this->getAssetPath('backend/backend.css'),
-                $this->getAssetPath('backend/backend.js'),
-            ]
-        );
+        return [
+            $this->getAssetPath('backend/backend.css'),
+            $this->getAssetPath('backend/backend.js'),
+        ];
     }
 
     /**
@@ -87,7 +84,7 @@ class AssetsManager
             $assets[] = $this->getAssetPath('sortable/sortable.js');
         }
 
-        return array_merge($this->getBasicAssets(), $assets);
+        return $assets;
     }
 
     /**
