@@ -165,7 +165,7 @@
             var self = this;
 
             // Handle the delete buttons
-            self.deleteButtons.forEach(function (el) {
+            Array.from(self.deleteButtons).forEach(function (el) {
                 el.addEventListener('click', function (e) {
                     e.preventDefault();
                     self.deleteFile(this.dataset.deleteId);
@@ -223,7 +223,7 @@
             this.submitForm = this.fineUploader.getInProgress() === 0;
 
             // Disable the form buttons alongside the form
-            document.querySelectorAll('[type="submit"]').forEach(function (button) {
+            Array.from(document.querySelectorAll('[type="submit"]')).forEach(function (button) {
                 if (button.form === this.field.form) {
                     button.disabled = !this.submitForm;
                 }
