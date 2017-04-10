@@ -151,7 +151,7 @@ class BackendHandler
         if (is_array($dca['fields'][$field]['load_callback'])) {
             foreach ($dca['fields'][$field]['load_callback'] as $callback) {
                 if (is_array($callback)) {
-                    $value = System::importStatic($callback[0])->$callback[1]($value, $dc);
+                    $value = System::importStatic($callback[0])->{$callback[1]}($value, $dc);
                 } elseif (is_callable($callback)) {
                     $value = $callback($value, $dc);
                 }
