@@ -1,0 +1,14 @@
+<input type="hidden" name="<?= $this->name ?>_fineuploader" id="ctrl_<?= $this->id ?>_fineuploader" value="">
+<input type="hidden" name="<?= $this->name ?>" id="ctrl_<?= $this->id ?>" value="<?= implode(',', $this->order) ?>" data-fineuploader="field">
+
+<div class="values-container">
+    <?php if ($this->sortable): ?>
+        <p class="sort-hint"><?= $GLOBALS['TL_LANG']['MSC']['dragItemsHint'] ?></p>
+    <?php endif; ?>
+
+    <ul class="values-list<?php if ($this->sortable): ?> sortable<?php endif; ?><?php if ($this->isGallery): ?> gallery<?php endif; ?>">
+        <?php foreach ($this->values as $id => $template): ?>
+            <li data-fineuploader="item" data-item-id="<?= $id ?>"><?= $template->parse() ?></li>
+        <?php endforeach; ?>
+    </ul>
+</div>

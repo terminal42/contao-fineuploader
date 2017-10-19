@@ -1,0 +1,2 @@
+parameters:
+    terminal42_fineuploader.tmp_path: "system/tmp"

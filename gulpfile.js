@@ -11,41 +11,76 @@ const autoprefixer = require('autoprefixer');
 
 const production = !gutil.env.development;
 
-// Copy the files
-gulp.task('copy', function () {
-    return gulp.src(['node_modules/fine-uploader/fine-uploader/**/*'], {'base': 'node_modules/fine-uploader/fine-uploader'})
-        .pipe(gulp.dest('assets/fine-uploader'));
+// Copy the FineUploader
+gulp.task('copy-fineuploader', function () {
+    return gulp.src(
+        ['node_modules/fine-uploader/fine-uploader/**/*'],
+        {'base': 'node_modules/fine-uploader/fine-uploader'}
+    )
+        .pipe(gulp.dest('src/Resources/public/fine-uploader'));
 });
 
-// Build app.js
+// Copy the Sortable
+gulp.task('copy-sortable', function () {
+    return gulp.src(
+        [
+            'node_modules/sortablejs/Sortable.js',
+            'node_modules/sortablejs/Sortable.min.js'
+        ],
+        {'base': 'node_modules/sortablejs'}
+    )
+        .pipe(rename(function (path) {
+            path.basename = path.basename.toLowerCase();
+        }))
+        .pipe(gulp.dest('src/Resources/public/sortable'));
+});
+
+// Prepare JavaScript files
 gulp.task('scripts', function () {
-    return gulp.src('assets/handler.js')
+    return gulp.src(
+        [
+            'src/Resources/public/backend/backend.js',
+            'src/Resources/public/frontend/frontend.js',
+            'src/Resources/public/handler/handler.js'
+        ],
+        {'base': '.'}
+    )
         .pipe(production ? uglify() : gutil.noop())
-        .pipe(rename('handler.min.js'))
+        .pipe(rename(function (path) {
+            path.extname = '.min' + path.extname;
+        }))
         .on('error', gutil.log)
         .pipe(production ? sourcemaps.write() : gutil.noop())
-        .pipe(gulp.dest('assets'));
+        .pipe(gulp.dest('./'));
 });
 
-// Build bundle.css
+// Prepare CSS files
 gulp.task('styles', function () {
-    return gulp.src('assets/handler.css')
+    return gulp.src([
+            'src/Resources/public/backend/backend.css',
+            'src/Resources/public/frontend/frontend.css',
+            'src/Resources/public/handler/handler.css'
+        ],
+        {'base': '.'}
+    )
         .pipe(production ? sourcemaps.init() : gutil.noop())
         .pipe(postcss([autoprefixer({browsers: ['> 5%']})]))
         .pipe(production ? sourcemaps.write() : gutil.noop())
         .pipe(production ? cleanCSS() : gutil.noop())
-        .pipe(rename('handler.min.css'))
-        .pipe(gulp.dest('assets'));
+        .pipe(rename(function (path) {
+            path.extname = '.min' + path.extname;
+        }))
+        .pipe(gulp.dest('./'));
 });
 
 // Watch task
 gulp.task('watch', function () {
-    gulp.watch(['assets/*.js'], ['scripts']);
-    gulp.watch(['assets/*.css'], ['styles']);
+    gulp.watch(['src/Resources/public/**/*.js'], ['scripts']);
+    gulp.watch(['src/Resources/public/**/*.css'], ['styles']);
 });
 
 // Build task
-gulp.task('build', ['copy', 'scripts', 'styles']);
+gulp.task('build', ['copy-fineuploader', 'copy-sortable', 'scripts', 'styles']);
 
 // Build by default
 gulp.task('default', ['build']);

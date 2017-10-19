@@ -1,0 +1,39 @@
+<h3><?= $this->generateLabel() . $this->xlabel ?></h3>
+
+<?php if ($this->hasErrors()): ?>
+    <p class="error"><?= $this->getErrorAsString() ?></p>
+<?php endif; ?>
+
+<div id="fineuploader-widget-<?= $this->id ?>" class="fineuploader-wrapper">
+    <div class="fineuploader-container" data-fineuploader="ajax-container">
+        <?= $this->parseValues() ?>
+    </div>
+
+    <div id="<?= $this->id ?>-fineuploader-template" style="display:none;">
+        <?php
+        // Temporarily set the debug mode to false to avoid debug template tags like <!-- TEMPLATE START: ... -->
+        $debug = \Contao\Config::get('debugMode'); \Contao\Config::set('debugMode', false);
+        ?>
+        <?php $this->insert('fineuploader_uploader', $this->arrConfiguration) ?>
+        <?php \Contao\Config::set('debugMode', $debug); ?>
+    </div>
+
+    <div id="<?= $this->id ?>-fineuploader" class="upload-container" data-fineuploader="uploader"></div>
+
+    <script>
+        window.addEvent('domready', function() {
+            var template = document.getElementById('<?= $this->id ?>-fineuploader-template');
+            template.grab(new Element('script', {
+                id: 'qq-template',
+                type: 'text/template',
+                html: template.get('html')
+            }), 'after');
+            template.dispose();
+
+            new ContaoFineUploaderBackend(
+                document.getElementById('fineuploader-widget-<?= $this->id ?>'),
+                <?= json_encode($this->jsConfig) ?>
+            );
+        });
+    </script>
+</div>
