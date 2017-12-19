@@ -136,6 +136,7 @@ class Filesystem
 
         /** @var \Contao\Files $files */
         $files = $this->framework->createInstance('\Contao\Files');
+        $files->mkdir(dirname($new));
 
         // Try to rename the file
         if (!$files->rename($file, $new)) {
