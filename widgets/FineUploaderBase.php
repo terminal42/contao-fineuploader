@@ -28,6 +28,8 @@ abstract class FineUploaderBase extends \Widget
      */
     public function __construct($arrAttributes=null)
     {
+        $arrAttributes['decodeEntities'] = true;
+
         parent::__construct($arrAttributes);
 
         // Clean the chunks session when the widget is initialized
