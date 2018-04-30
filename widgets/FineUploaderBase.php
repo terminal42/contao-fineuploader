@@ -225,8 +225,16 @@ abstract class FineUploaderBase extends \Widget
             $varInput = $objUploader->uploadTo($this->strTemporaryPath);
 
             if ($objUploader->hasError()) {
-                foreach ($_SESSION['TL_ERROR'] as $strError) {
-                    $this->addError($strError);
+                if (version_compare(VERSION, '4.2', '>=')) {
+                    $session = \System::getContainer()->get('session');
+
+                    foreach ($session->getFlashBag()->peek('contao.'.TL_MODE.'.error') as $strError) {
+                        $this->addError($strError);
+                    }
+                } else {
+                    foreach ((array) $_SESSION['TL_ERROR'] as $strError) {
+                        $this->addError($strError);
+                    }
                 }
             }
 
