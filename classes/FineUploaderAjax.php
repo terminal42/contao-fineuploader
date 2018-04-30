@@ -151,7 +151,8 @@ class FineUploaderAjax
                 }
 
                 $response = new \Haste\Http\Response\JsonResponse($arrResponse);
-                $response->send();
+                $response->send(false);
+                exit;
                 break;
         }
     }
