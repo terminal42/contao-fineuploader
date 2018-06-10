@@ -12,13 +12,22 @@
 /**
  * Add palettes to tl_form_field
  */
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,maxConnections,extensions,minlength,maxlength,chunking,multiple;{store_legend:hide},storeFile,addToDbafs;{expert_legend:hide},class,fSize';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,maxConnections,extensions,minlength,maxlength,isGallery,chunking,multiple;{store_legend:hide},storeFile,addToDbafs;{expert_legend:hide},class,fSize';
 $GLOBALS['TL_DCA']['tl_form_field']['palettes']['__selector__'][] = 'chunking';
 $GLOBALS['TL_DCA']['tl_form_field']['subpalettes']['chunking'] = 'chunkSize,concurrent';
 
 /**
  * Add fields to tl_form_field
  */
+$GLOBALS['TL_DCA']['tl_form_field']['fields']['isGallery'] = array
+(
+    'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['isGallery'],
+    'exclude'                 => true,
+    'inputType'               => 'checkbox',
+    'eval'                    => array('tl_class'=>'w50 m12'),
+    'sql'                     => "char(1) NOT NULL default ''"
+);
+
 $GLOBALS['TL_DCA']['tl_form_field']['fields']['maxConnections'] = array
 (
     'label'                   => &$GLOBALS['TL_LANG']['tl_form_field']['maxConnections'],
