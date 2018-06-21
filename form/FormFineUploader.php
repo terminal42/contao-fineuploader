@@ -71,6 +71,8 @@ class FormFineUploader extends FineUploaderBase
 
         if (!$this->blnIsMultiple) {
             $this->arrConfiguration['uploaderLimit'] = 1;
+        }else{
+            $this->arrConfiguration['uploaderLimit'] = $this->arrConfiguration['mSize'] ? $this->arrConfiguration['mSize'] : 0;
         }
 
         // Include the assets
