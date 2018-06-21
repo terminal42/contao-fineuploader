@@ -22,3 +22,4 @@ $GLOBALS['TL_LANG']['tl_form_field']['chunking']        = array('Chunking aktivi
 $GLOBALS['TL_LANG']['tl_form_field']['addToDbafs']      = array('Zum DBAFS hinzufügen', 'Die Datei zum datenbankunterstützten Dateisystem hinzufügen. Bitte beachten: In diesem Fall gibt das Formularfeld eine UUID statt dem Pfad zurück.');
 $GLOBALS['TL_LANG']['tl_form_field']['chunkSize']       = array('Chunk-Grösse in Bytes', 'Bitte geben Sie die Chunk-Grösse in Bytes ein  (1MB = 1000000 Bytes).');
 $GLOBALS['TL_LANG']['tl_form_field']['concurrent']      = array('Simultanes Hochladen aktivieren', 'Aktivieren Sie hier den simultanen Dateiupload. Beachten Sie auch die "Maximale Anzahl an Verbindungen" Einstellungsmöglichkeit.');
+$GLOBALS['TL_LANG']['tl_form_field']['isGallery']       = array('Thumbnails bei Bilduploads anzeigen', 'Aktivieren Sie die Anzeige der Thumbnails bei Bilduploads.');

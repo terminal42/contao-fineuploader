@@ -26,7 +26,10 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = array
         'extensions'        => 'pdf,zip',           // Allowed extension types
         'minlength'         => 1048000,             // Minimum file size
         'maxlength'         => 2048000,             // Maximum file size (is ignored if you use chunking!)
+        'maxWidth'          => 800,                 // Maximum width (applies to images only)
+        'maxHeight'         => 600,                 // Maximum height (applies to images only)
         'doNotOverwrite'    => true,                // Do not overwrite files in destination folder
+        'uploadButtonLabel' => 'Upload images',     // Custom upload button label
 
         'chunking'          => true,                // Enable chunking
         'chunkSize'         => 2000000,             // Chunk size in bytes

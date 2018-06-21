@@ -27,7 +27,16 @@
      * @returns {object}
      */
     ContaoFineUploader.init = function(el, config, options) {
-        current_values[config.field] = document.getElementById('ctrl_' + config.field).value;
+        var field = document.getElementById('ctrl_' + config.field);
+        var submitForm = true;
+
+        current_values[config.field] = field.value;
+
+        field.form.addEventListener('submit', function (e) {
+            if (!submitForm) {
+                e.preventDefault();
+            }
+        });
 
         var params = {
             element: el,
@@ -45,7 +54,7 @@
             chunking: {
                 enabled: config.chunking ? true : false,
                 partSize: config.chunkSize,
-                concurrent: config.concurrent ? true : false,
+                concurrent: config.concurrent ? true : false
             },
             failedUploadTextDisplay: {
                 mode: 'custom',
@@ -81,6 +90,15 @@
                     if (config.onValidateBatchCallback) {
                         config.onValidateBatchCallback.apply(this, arguments);
                     }
+                },
+                onStatusChange: function () {
+                    submitForm = this.getInProgress() === 0;
+
+                    document.querySelectorAll('[type="submit"]').forEach(function (button) {
+                        if (button.form === field.form) {
+                            button.disabled = !submitForm;
+                        }
+                    });
                 },
                 onUpload: function() {
                     if (config.backend) {
