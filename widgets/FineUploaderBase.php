@@ -121,6 +121,11 @@ abstract class FineUploaderBase extends \Widget
             $preparedLabels[$label] = $GLOBALS['TL_LANG']['MSC']['fineuploader_' . $label];
         }
 
+        // Set the upload button label
+        if ($this->uploadButtonLabel) {
+            $preparedLabels['upload'] = $this->uploadButtonLabel;
+        }
+
         $this->labels = $preparedLabels;
 
         return parent::parse($arrAttributes);
@@ -204,6 +209,16 @@ abstract class FineUploaderBase extends \Widget
         // Validate the maxlength
         if ($this->arrConfiguration['maxlength'] > 0 || $blnIsChunk) {
             $objUploader->setMaxFileSize($blnIsChunk ? $this->arrConfiguration['chunkSize'] : $this->arrConfiguration['maxlength']);
+        }
+
+        // Set the maximum width
+        if ($this->arrConfiguration['maxWidth']) {
+            $objUploader->setImageWidth($this->arrConfiguration['maxWidth']);
+        }
+
+        // Set the maximum height
+        if ($this->arrConfiguration['maxHeight']) {
+            $objUploader->setImageHeight($this->arrConfiguration['maxHeight']);
         }
 
         try {
