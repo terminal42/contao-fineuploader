@@ -1,4 +1,7 @@
 services:
+    _defaults:
+        public: true
+
     terminal42_fineuploader.assets_manager:
         class: Terminal42\FineUploaderBundle\AssetsManager
         arguments:
