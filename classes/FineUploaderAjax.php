@@ -89,7 +89,7 @@ class FineUploaderAjax
                 if (is_array($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'])) {
                     foreach ($GLOBALS['TL_DCA'][$dc->table]['fields'][$strField]['load_callback'] as $callback) {
                         if (is_array($callback)) {
-                            $varValue = System::importStatic($callback[0])->$callback[1]($varValue, $dc);
+                            $varValue = System::importStatic($callback[0])->{$callback[1]}($varValue, $dc);
                         } elseif (is_callable($callback)) {
                             $varValue = $callback($varValue, $dc);
                         }
