@@ -13,3 +13,7 @@ nbproject/
 # Composer
 /vendor
 /composer.lock
+
+# Node modules
+package-lock.json
+yarn.lock
