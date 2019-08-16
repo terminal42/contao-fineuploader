@@ -32,11 +32,14 @@
 
         current_values[config.field] = field.value;
 
-        field.form.addEventListener('submit', function (e) {
-            if (!submitForm) {
-                e.preventDefault();
-            }
-        });
+        // Only add the event listener if the form exists (#55)
+        if (field.form) {
+            field.form.addEventListener('submit', function (e) {
+                if (!submitForm) {
+                    e.preventDefault();
+                }
+            });
+        }
 
         var params = {
             element: el,
