@@ -113,31 +113,38 @@
                 return;
             }
 
-            $.ajax({
-                data: {
-                    'action': this.settings.ajaxActionName,
-                    'name': this.uploader.field.name,
-                    'value': this.uploader.currentValue,
-                    'REQUEST_TOKEN': this.uploader.field.form.querySelector('input[name="REQUEST_TOKEN"]').value
-                },
-                dataType: 'html',
-                method: 'POST',
-                beforeSend: function () {
-                    $(this.uploader.ajaxContainer).addClass('ajax-loading');
-                }.bind(this),
-                complete: function () {
-                    $(this.uploader.ajaxContainer).removeClass('ajax-loading');
-                }.bind(this),
-                error: function () {
-                    alert(this.settings.errorMessage);
-                }.bind(this),
-                success: function (buffer) {
-                    this.uploader.setAjaxContainerContent(buffer);
+            this.uploader.ajaxContainer.classList.add('ajax-loading');
+
+            var request = new XMLHttpRequest();
+
+            request.open('POST', window.location.href, true);
+            request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
+            request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
+
+            request.onload = function () {
+                if (request.status >= 200 && request.status < 400) {
+                    this.uploader.setAjaxContainerContent(request.response);
 
                     // Make the elements sortable
                     this.makeSortable();
-                }.bind(this)
-            });
+                } else {
+                    alert(this.settings.errorMessage);
+                }
+
+                this.uploader.ajaxContainer.classList.remove('ajax-loading');
+            }.bind(this);
+
+            request.onerror = function() {
+                alert(this.settings.errorMessage);
+                this.uploader.ajaxContainer.classList.remove('ajax-loading');
+            }.bind(this);
+
+            request.send(
+                'action=' + this.settings.ajaxActionName
+                + '&name=' + this.uploader.field.name
+                + '&value=' + this.uploader.currentValue
+                + '&REQUEST_TOKEN=' + this.uploader.field.form.querySelector('input[name="REQUEST_TOKEN"]').value
+            );
         }
     };
 

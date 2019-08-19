@@ -36,15 +36,13 @@
     <?php $this->includeAssets(); ?>
 
     <script>
-        (function ($) {
-            $(document).ready(function () {
-                new ContaoFineUploaderFrontend(
-                    document.getElementById('fineuploader-widget-<?= $this->id ?>'),
-                    <?= json_encode($this->jsConfig) ?>,
-                    {errorMessage: '<?= $GLOBALS['TL_LANG']['ERR']['general'] ?>'}
-                );
-            });
-        })(jQuery);
+        document.addEventListener('DOMContentLoaded', function () {
+            new ContaoFineUploaderFrontend(
+                document.getElementById('fineuploader-widget-<?= $this->id ?>'),
+                <?= json_encode($this->jsConfig) ?>,
+                {errorMessage: '<?= $GLOBALS['TL_LANG']['ERR']['general'] ?>'}
+            );
+        });
     </script>
 </div>
 
