@@ -267,7 +267,7 @@ class WidgetHelper
         $template->id       = $widget->id;
         $template->name     = $widget->name;
         $template->order    = array_keys($values);
-        $template->sortable = $widget->multiple && count($values) > 1;
+        $template->sortable = $widget->sortable && $widget->multiple && count($values) > 1;
         $template->values   = $values;
 
         return $template;
