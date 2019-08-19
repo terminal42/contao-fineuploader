@@ -119,6 +119,8 @@ abstract class BaseWidget extends Widget
      */
     protected function setDefaultAttributes()
     {
+        $this->decodeEntities = true;
+
         // Set the default image size
         if (!$this->imageSize) {
             $this->imageSize = [80, 60, 'center_center'];
