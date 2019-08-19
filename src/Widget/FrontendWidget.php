@@ -71,7 +71,7 @@ class FrontendWidget extends BaseWidget
         $assets  = $manager->getBasicAssets();
 
         if ($frontendAssets) {
-            $assets = array_merge($assets, $manager->getFrontendAssets($this->multiple));
+            $assets = array_merge($assets, $manager->getFrontendAssets($this->sortable && $this->multiple));
         }
 
         $manager->includeAssets($assets);
