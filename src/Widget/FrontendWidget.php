@@ -31,8 +31,6 @@ class FrontendWidget extends BaseWidget
     {
         parent::__construct($attributes);
 
-        set_time_limit(5);//@todo @debug
-
         $response = $this->container->get('terminal42_fineuploader.request.frontend_handler')->handleWidgetInitRequest(
             $this->container->get('request_stack')->getCurrentRequest(),
             $this

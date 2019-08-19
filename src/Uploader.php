@@ -108,7 +108,6 @@ class Uploader
             $result = $uploader->uploadTo($this->fs->getTmpPath());
 
             // Collect the errors
-            // @todo - is it a part of the uploader service?
             if ($uploader->hasError()) {
                 $errors = $this->session->getFlashBag()->peek(sprintf('contao.%s.error', $scope));
 
@@ -117,7 +116,6 @@ class Uploader
                 }
             }
 
-            // @todo - is it a part of the uploader service?
             $this->session->getFlashBag()->clear();
         } catch (\Exception $e) {
             $widget->addError($e->getMessage());
@@ -176,9 +174,6 @@ class Uploader
     {
         // Add the "chunk" extension to upload types
         if ($isChunk) {
-            // @todo - ignore the general uploadTypes?
-            //$extensions   = trimsplit(',', $this->framework->getAdapter('\Contao\Config')->get('uploadTypes'));
-            //$extensions[] = 'chunk';
             $uploader->setExtensions(['chunk']);
         }
 
@@ -193,14 +188,12 @@ class Uploader
         }
 
         // Set the maximum image width
-        // @todo - $isChunk check here?
-        if ($config->getMaxImageWidth() > 0) {
+        if ($config->getMaxImageWidth() > 0 && !$isChunk) {
             $uploader->setImageWidth($config->getMaxImageWidth());
         }
 
         // Set the maximum image height
-        // @todo - $isChunk check here?
-        if ($config->getMaxImageHeight() > 0) {
+        if ($config->getMaxImageHeight() > 0 && !$isChunk) {
             $uploader->setImageHeight($config->getMaxImageHeight());
         }
     }

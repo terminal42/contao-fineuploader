@@ -112,13 +112,6 @@ class ChunkUploader
                     $this->framework->getAdapter('\Contao\System')->getReadableSize($minSizeLimit)
                 )
             );
-
-            // @todo - log here?
-//            \System::log(
-//                'File "'.$file->name.'" is smaller than the minimum file size of '.$readableSize,
-//                __METHOD__,
-//                TL_ERROR
-//            );
         }
 
         $maxSizeLimit = $config->getMaxSizeLimit();
@@ -131,13 +124,6 @@ class ChunkUploader
                     $this->framework->getAdapter('\Contao\System')->getReadableSize($maxSizeLimit)
                 )
             );
-
-            // @todo - log here?
-//            \System::log(
-//                'File "'.$file->name.'" exceeds the maximum file size of '.$readableSize,
-//                __METHOD__,
-//                TL_ERROR
-//            );
         }
     }
 
