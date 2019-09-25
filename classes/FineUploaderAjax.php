@@ -28,18 +28,19 @@ class FineUploaderAjax
             // Upload the file
             /** @noinspection PhpMissingBreakStatementInspection */
             case 'fineuploader_upload':
-                $arrData['strTable'] = $dc->table;
+                $class = $GLOBALS['BE_FFL']['fineUploader'];
+
+                $arrData = $class::getAttributesFromDca($GLOBALS['TL_DCA'][$dc->table]['fields'][\Input::post('name')], \Input::post('name'), null, \Input::post('name'), $dc->table, $dc);
                 $arrData['id'] = $dc->id; // @todo what was $this->strAjaxName for?
-                $arrData['name'] = \Input::post('name');
 
                 /** @var FineUploaderWidget $objWidget */
-                $objWidget = new $GLOBALS['BE_FFL']['fineUploader']($arrData, $dc);
+                $objWidget = new $class($arrData, $dc);
                 $strFile = $objWidget->validateUpload();
 
                 if ($objWidget->hasErrors()) {
                     $arrResponse = array('success' => false, 'error' => $objWidget->getErrorAsString(), 'preventRetry' => true);
                 } else {
-                    $arrResponse = array('success' => true, 'file' => $strFile);
+                    $arrResponse = array('success' => true, 'file' => \Validator::isBinaryUuid($strFile) ? \StringUtil::binToUuid($strFile) : $strFile);
                 }
 
                 $response = new \Haste\Http\Response\JsonResponse($arrResponse);
