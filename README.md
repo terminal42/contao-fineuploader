@@ -1,5 +1,5 @@
-fineuploader Contao extension
-=============================
+FineUploader Bundle for Contao Open Source CMS
+==============================================
 
 This extension integrates the [Fine Uploader](http://fineuploader.com/) by Widen with Contao Open Source CMS.
 
@@ -10,12 +10,6 @@ Install the package using Composer:
 
 ```
 composer require terminal42/contao-fineuploader
-```
-
-Register the bundle in your ```app/AppKernel.php```:
-
-```php
-$bundles[] = new Terminal42\FineUploaderBundle\Terminal42FineUploaderBundle();
 ```
 
 

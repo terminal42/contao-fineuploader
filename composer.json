@@ -1,28 +1,23 @@
 {
     "name": "terminal42/contao-fineuploader",
-    "description": "Uploader extension with chunking support for Contao Open Source CMS using FineUploader by Widen",
-    "keywords": [
-        "contao",
-        "uploader",
-        "fineuploader",
-        "chunking"
-    ],
-    "type": "contao-module",
-    "license": "LGPL-3.0+",
+    "description": "FineUploader bundle for Contao Open Source CMS",
+    "keywords": ["contao", "uploader", "fineuploader", "chunking"],
+    "type": "contao-bundle",
+    "license": "MIT",
     "authors": [
         {
             "name": "terminal42 gmbh",
-            "homepage": "http://terminal42.ch"
+            "homepage": "https://terminal42.ch"
         }
     ],
     "require": {
-        "php": ">=5.4.0",
+        "php": ">=7.1",
         "contao/core-bundle": "^4.4",
-        "codefog/contao-haste": "~4.17"
+        "codefog/contao-haste": "^4.17"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "phpunit/phpunit": "5.5.*"
+        "contao/php-cs-fixer": "^2.2"
     },
     "conflict": {
         "contao/manager-plugin": "<2.0 || >=3.0"
@@ -34,7 +29,5 @@
     },
     "extra": {
         "contao-manager-plugin": "Terminal42\\FineUploaderBundle\\ContaoManager\\Plugin"
-    },
-    "prefer-stable": true,
-    "minimum-stability": "dev"
+    }
 }
