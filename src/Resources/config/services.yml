@@ -21,7 +21,7 @@ services:
     terminal42_fineuploader.filesystem:
         class: Terminal42\FineUploaderBundle\Filesystem
         arguments:
-            - "%kernel.root_dir%"
+            - "%kernel.project_dir%"
             - "%terminal42_fineuploader.tmp_path%"
 
     terminal42_fineuploader.uploader:

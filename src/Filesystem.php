@@ -21,7 +21,7 @@ class Filesystem
     /**
      * @var string
      */
-    private $rootDir;
+    private $projectDir;
 
     /**
      * Temporary upload path.
@@ -33,12 +33,12 @@ class Filesystem
     /**
      * Filesystem constructor.
      *
-     * @param string $rootDir
+     * @param string $projectDir
      * @param string $tmpPath
      */
-    public function __construct($rootDir, $tmpPath)
+    public function __construct($projectDir, $tmpPath)
     {
-        $this->rootDir = $rootDir;
+        $this->projectDir = $projectDir;
         $this->tmpPath = $tmpPath;
     }
 
@@ -61,7 +61,7 @@ class Filesystem
      */
     public function fileExists($filePath)
     {
-        return is_file($this->rootDir.'/'.$filePath);
+        return is_file($this->projectDir.'/'.$filePath);
     }
 
     /**
@@ -88,7 +88,7 @@ class Filesystem
         $file = new File($this->getTmpPath().'/'.$fileName);
 
         foreach ($files as $filePath) {
-            $file->append(file_get_contents($this->rootDir.'/'.$filePath), '');
+            $file->append(file_get_contents($this->projectDir.'/'.$filePath), '');
             Files::getInstance()->delete($filePath);
         }
 
@@ -170,7 +170,7 @@ class Filesystem
         $pathinfo = pathinfo($filePath);
         $name = $pathinfo['filename'];
 
-        $allFiles = scan($this->rootDir.'/'.$folder);
+        $allFiles = scan($this->projectDir.'/'.$folder);
 
         // Find the files with the same extension
         $files = preg_grep(
