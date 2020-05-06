@@ -75,15 +75,15 @@ gulp.task('styles', function () {
 
 // Watch task
 gulp.task('watch', function () {
-    gulp.watch(['src/Resources/public/**/*.js'], ['scripts']);
-    gulp.watch(['src/Resources/public/**/*.css'], ['styles']);
+    gulp.watch(['src/Resources/public/**/*.js'], gulp.series('scripts'));
+    gulp.watch(['src/Resources/public/**/*.css'], gulp.series('styles'));
 });
 
 // Build task
-gulp.task('build', ['copy-fineuploader', 'copy-sortable', 'scripts', 'styles']);
+gulp.task('build', gulp.parallel('copy-fineuploader', 'copy-sortable', 'scripts', 'styles'));
 
 // Build by default
-gulp.task('default', ['build']);
+gulp.task('default', gulp.series('build'));
 
 // Build and watch task
-gulp.task('build:watch', ['build', 'watch']);
+gulp.task('build:watch', gulp.series('build', 'watch'));

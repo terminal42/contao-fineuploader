@@ -9,7 +9,7 @@
         "autoprefixer": "^6.3.6",
         "fine-uploader": "^5.10.0",
         "sortablejs": "^1.4.2",
-        "gulp": "^3.9.1",
+        "gulp": "^4.0.2",
         "gulp-clean-css": "^2.0.3",
         "gulp-postcss": "^6.1.1",
         "gulp-rename": "^1.2.2",
