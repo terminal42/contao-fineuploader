@@ -43,7 +43,15 @@ class FileUploadListener
         $widget   = $event->getWidget();
         $filePath = $this->uploader->upload($event->getRequest(), $widget);
 
-        // @todo - $filePath can return null
+        if ($filePath === null) {
+            $event->setResponse(new JsonResponse([
+                'success' => false,
+                'error' => $GLOBALS['TL_LANG']['ERR']['general'],
+                'preventRetry' => true,
+            ]));
+
+            return;
+        }
 
         // Validate the image dimensions for the frontend widget
         if ($widget instanceof FrontendWidget) {
