@@ -1,18 +1,3 @@
-/*!
-* Fine Uploader
-*
-* Copyright 2013-present, Widen Enterprises, Inc.
-*
-* Version: 5.10.0
-*
-* Homepage: http://fineuploader.com
-*
-* Repository: git://github.com/FineUploader/fine-uploader.git
-*
-* Licensed only under the MIT license (http://fineuploader.com/licensing).
-*/ 
-
-
 /* ---------------------------------------
 /* Fine Uploader Styles
 /* ---------------------------------------
@@ -367,4 +352,3 @@ INPUT.qq-edit-filename.qq-editing {
 .qq-uploader DIALOG::backdrop {
     background-color: rgba(0, 0, 0, 0.7);
 }
-/*! 2016-06-16 */
