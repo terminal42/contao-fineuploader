@@ -83,6 +83,7 @@
             var config = {
                 element: this.uploader,
                 debug: !!this.settings.debug,
+                template: this.container.querySelector('script[type="text/template"][id^="qq-template"]'),
                 request: {
                     endpoint: root.location.href,
                     inputName: this.field.name + '_fineuploader',

@@ -24,7 +24,7 @@
         window.addEvent('domready', function() {
             var template = document.getElementById('<?= $this->id ?>-fineuploader-template');
             template.grab(new Element('script', {
-                id: 'qq-template',
+                id: 'qq-template-<?= $this->id ?>',
                 type: 'text/template',
                 html: template.get('html')
             }), 'after');
