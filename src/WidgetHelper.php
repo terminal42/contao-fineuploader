@@ -183,7 +183,7 @@ class WidgetHelper
         $values = [];
 
         // Generate the values
-        foreach ($this->generateValue((array) $widget->value) as $id => $path) {
+        foreach ($this->generateValue((array) array_filter($widget->value)) as $id => $path) {
             $values[$id] = $this->generateItemTemplate($widget, $id, $path);
         }
 
