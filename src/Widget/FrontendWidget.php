@@ -69,7 +69,7 @@ class FrontendWidget extends BaseWidget
      */
     public function getValuesTemplate()
     {
-        return new FrontendTemplate($this->itemTemplate ?: 'fineuploader_values_frontend');
+        return new FrontendTemplate($this->valuesTemplate ?: 'fineuploader_values_frontend');
     }
 
     /**

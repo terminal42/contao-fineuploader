@@ -71,6 +71,6 @@ class BackendWidget extends BaseWidget
      */
     public function getValuesTemplate()
     {
-        return new BackendTemplate($this->itemTemplate ?: 'fineuploader_values_backend');
+        return new BackendTemplate($this->valuesTemplate ?: 'fineuploader_values_backend');
     }
 }
