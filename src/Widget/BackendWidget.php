@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle\Widget;
 
 use Contao\BackendTemplate;
@@ -8,13 +18,14 @@ use Contao\Config;
 class BackendWidget extends BaseWidget
 {
     /**
-     * Template
+     * Template.
+     *
      * @var string
      */
     protected $strTemplate = 'fineuploader_backend';
 
     /**
-     * Initialize the widget
+     * Initialize the widget.
      *
      * @param array $attributes
      */
@@ -29,7 +40,7 @@ class BackendWidget extends BaseWidget
     }
 
     /**
-     * Generate the widget and return it as string
+     * Generate the widget and return it as string.
      *
      * @param array $attributes
      *
@@ -44,7 +55,7 @@ class BackendWidget extends BaseWidget
     }
 
     /**
-     * Get the item template
+     * Get the item template.
      *
      * @return BackendTemplate
      */
@@ -54,7 +65,7 @@ class BackendWidget extends BaseWidget
     }
 
     /**
-     * Get the values template
+     * Get the values template.
      *
      * @return BackendTemplate
      */

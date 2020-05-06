@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle\Widget;
 
 use Contao\CoreBundle\Exception\ResponseException;
@@ -8,20 +18,21 @@ use Contao\FrontendTemplate;
 class FrontendWidget extends BaseWidget
 {
     /**
-     * Template
+     * Template.
+     *
      * @var string
      */
     protected $strTemplate = 'fineuploader_frontend';
 
     /**
-     * The CSS class prefix
+     * The CSS class prefix.
      *
      * @var string
      */
     protected $strPrefix = 'widget widget-fineuploader';
 
     /**
-     * Initialize the widget
+     * Initialize the widget.
      *
      * @param array $attributes
      *
@@ -36,47 +47,13 @@ class FrontendWidget extends BaseWidget
             $this
         );
 
-        if ($response !== null) {
+        if (null !== $response) {
             throw new ResponseException($response);
         }
     }
 
     /**
-     * Store the file information in the session
-     *
-     * @param mixed $input
-     *
-     * @return mixed
-     */
-    protected function validator($input)
-    {
-        $return = parent::validator($input);
-
-        // Add files to the session
-        $this->getWidgetHelper()->addFilesToSession($this->strName, array_filter((array)$return));
-
-        return $return;
-    }
-
-    /**
-     * Include the assets
-     *
-     * @param bool $frontendAssets
-     */
-    protected function includeAssets($frontendAssets = true)
-    {
-        $manager = $this->getAssetsManager();
-        $assets  = $manager->getBasicAssets();
-
-        if ($frontendAssets) {
-            $assets = array_merge($assets, $manager->getFrontendAssets($this->sortable && $this->multiple));
-        }
-
-        $manager->includeAssets($assets);
-    }
-
-    /**
-     * Get the item template
+     * Get the item template.
      *
      * @return FrontendTemplate
      */
@@ -86,12 +63,42 @@ class FrontendWidget extends BaseWidget
     }
 
     /**
-     * Get the values template
+     * Get the values template.
      *
      * @return FrontendTemplate
      */
     public function getValuesTemplate()
     {
         return new FrontendTemplate($this->itemTemplate ?: 'fineuploader_values_frontend');
+    }
+
+    /**
+     * Store the file information in the session.
+     */
+    protected function validator($input)
+    {
+        $return = parent::validator($input);
+
+        // Add files to the session
+        $this->getWidgetHelper()->addFilesToSession($this->strName, array_filter((array) $return));
+
+        return $return;
+    }
+
+    /**
+     * Include the assets.
+     *
+     * @param bool $frontendAssets
+     */
+    protected function includeAssets($frontendAssets = true): void
+    {
+        $manager = $this->getAssetsManager();
+        $assets = $manager->getBasicAssets();
+
+        if ($frontendAssets) {
+            $assets = array_merge($assets, $manager->getFrontendAssets($this->sortable && $this->multiple));
+        }
+
+        $manager->includeAssets($assets);
     }
 }

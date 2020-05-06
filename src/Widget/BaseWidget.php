@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle\Widget;
 
 use Contao\System;
@@ -14,7 +24,8 @@ use Terminal42\FineUploaderBundle\WidgetHelper;
 abstract class BaseWidget extends Widget
 {
     /**
-     * Submit user input
+     * Submit user input.
+     *
      * @var bool
      */
     protected $blnSubmitInput = true;
@@ -30,7 +41,7 @@ abstract class BaseWidget extends Widget
     protected $uploaderConfig;
 
     /**
-     * Initialize the object
+     * Initialize the object.
      *
      * @param array $attributes
      */
@@ -39,7 +50,7 @@ abstract class BaseWidget extends Widget
         parent::__construct($attributes);
 
         $this->container = System::getContainer();
-        $request         = $this->container->get('request_stack')->getCurrentRequest();
+        $request = $this->container->get('request_stack')->getCurrentRequest();
 
         // Set the default attributes
         $this->setDefaultAttributes();
@@ -51,19 +62,18 @@ abstract class BaseWidget extends Widget
     }
 
     /**
-     * Set the widget property
+     * Set the widget property.
      *
      * @param string $key
-     * @param mixed  $value
      *
      * @throws \InvalidArgumentException
      */
-    public function __set($key, $value)
+    public function __set($key, $value): void
     {
         switch ($key) {
             case 'imageSize':
             case 'uploaderConfig':
-                if (!is_array($value)) {
+                if (!\is_array($value)) {
                     throw new \InvalidArgumentException(sprintf('The "%s" must be an array', $key));
                 }
 
@@ -84,7 +94,7 @@ abstract class BaseWidget extends Widget
                 }
                 break;
 
-            /** @noinspection PhpMissingBreakStatementInspection */
+            /* @noinspection PhpMissingBreakStatementInspection */
             case 'mandatory':
                 if ($value) {
                     $this->arrAttributes['required'] = 'required';
@@ -93,13 +103,14 @@ abstract class BaseWidget extends Widget
                 }
             // DO NOT BREAK HERE
 
+            // no break
             default:
                 parent::__set($key, $value);
         }
     }
 
     /**
-     * Parse the template file and return it as string
+     * Parse the template file and return it as string.
      *
      * @param array $attributes An optional attributes array
      *
@@ -115,9 +126,67 @@ abstract class BaseWidget extends Widget
     }
 
     /**
-     * Set the default attributes
+     * Get the uploader config.
+     *
+     * @return UploaderConfig
      */
-    protected function setDefaultAttributes()
+    public function getUploaderConfig()
+    {
+        if (null === $this->uploaderConfig) {
+            $this->uploaderConfig = $this->getConfigGenerator()->generateFromWidgetAttributes($this->arrConfiguration);
+        }
+
+        return $this->uploaderConfig;
+    }
+
+    /**
+     * Parse the values and return them as HTML string.
+     *
+     * @return string
+     */
+    public function parseValues()
+    {
+        return $this->getWidgetHelper()->generateValuesTemplate($this)->parse();
+    }
+
+    /**
+     * Get the widget configuration.
+     *
+     * @return array
+     */
+    public function getConfiguration()
+    {
+        return $this->arrConfiguration;
+    }
+
+    /**
+     * Required by \Contao\Widget class. Use the parse() method instead.
+     *
+     * @throws \BadMethodCallException
+     */
+    public function generate(): void
+    {
+        throw new \BadMethodCallException('Use the parse() method instead');
+    }
+
+    /**
+     * Get the item template.
+     *
+     * @return Template
+     */
+    abstract public function getItemTemplate();
+
+    /**
+     * Get the values template.
+     *
+     * @return Template
+     */
+    abstract public function getValuesTemplate();
+
+    /**
+     * Set the default attributes.
+     */
+    protected function setDefaultAttributes(): void
     {
         $this->decodeEntities = true;
 
@@ -138,21 +207,7 @@ abstract class BaseWidget extends Widget
     }
 
     /**
-     * Get the uploader config
-     *
-     * @return UploaderConfig
-     */
-    public function getUploaderConfig()
-    {
-        if ($this->uploaderConfig === null) {
-            $this->uploaderConfig = $this->getConfigGenerator()->generateFromWidgetAttributes($this->arrConfiguration);
-        }
-
-        return $this->uploaderConfig;
-    }
-
-    /**
-     * Return an array if the "multiple" attribute is set
+     * Return an array if the "multiple" attribute is set.
      *
      * @param string $input
      *
@@ -164,27 +219,7 @@ abstract class BaseWidget extends Widget
     }
 
     /**
-     * Parse the values and return them as HTML string
-     *
-     * @return string
-     */
-    public function parseValues()
-    {
-        return $this->getWidgetHelper()->generateValuesTemplate($this)->parse();
-    }
-
-    /**
-     * Get the widget configuration
-     *
-     * @return array
-     */
-    public function getConfiguration()
-    {
-        return $this->arrConfiguration;
-    }
-
-    /**
-     * Get the config generator
+     * Get the config generator.
      *
      * @return ConfigGenerator
      */
@@ -194,7 +229,7 @@ abstract class BaseWidget extends Widget
     }
 
     /**
-     * Get the widget helper
+     * Get the widget helper.
      *
      * @return WidgetHelper
      */
@@ -204,7 +239,7 @@ abstract class BaseWidget extends Widget
     }
 
     /**
-     * Get the assets manager
+     * Get the assets manager.
      *
      * @return AssetsManager
      */
@@ -212,28 +247,4 @@ abstract class BaseWidget extends Widget
     {
         return $this->container->get('terminal42_fineuploader.assets_manager');
     }
-
-    /**
-     * Required by \Contao\Widget class. Use the parse() method instead
-     *
-     * @throws \BadMethodCallException
-     */
-    public function generate()
-    {
-        throw new \BadMethodCallException('Use the parse() method instead');
-    }
-
-    /**
-     * Get the item template
-     *
-     * @return Template
-     */
-    abstract public function getItemTemplate();
-
-    /**
-     * Get the values template
-     *
-     * @return Template
-     */
-    abstract public function getValuesTemplate();
 }

@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -37,11 +47,6 @@ class BackendListener
 
     /**
      * BackendListener constructor.
-     *
-     * @param AssetsManager  $assetsManager
-     * @param Logger         $logger
-     * @param BackendHandler $requestHandler
-     * @param RequestStack   $requestStack
      */
     public function __construct(
         AssetsManager $assetsManager,
@@ -49,10 +54,10 @@ class BackendListener
         BackendHandler $requestHandler,
         RequestStack $requestStack
     ) {
-        $this->assetsManager  = $assetsManager;
-        $this->logger         = $logger;
+        $this->assetsManager = $assetsManager;
+        $this->logger = $logger;
         $this->requestHandler = $requestHandler;
-        $this->requestStack   = $requestStack;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -60,20 +65,20 @@ class BackendListener
      *
      * @param string $table
      */
-    public function onLoadDataContainer($table)
+    public function onLoadDataContainer($table): void
     {
         $request = $this->requestStack->getCurrentRequest();
 
         // Return if the scope is not backend or the DCA has no fields
-        if ($request === null
-            || $request->attributes->get('_scope') !== ContaoCoreBundle::SCOPE_BACKEND
-            || !is_array($GLOBALS['TL_DCA'][$table]['fields'])
+        if (null === $request
+            || ContaoCoreBundle::SCOPE_BACKEND !== $request->attributes->get('_scope')
+            || !\is_array($GLOBALS['TL_DCA'][$table]['fields'])
         ) {
             return;
         }
 
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] as $field) {
-            if (isset($field['inputType']) && $field['inputType'] === 'fineUploader') {
+            if (isset($field['inputType']) && 'fineUploader' === $field['inputType']) {
                 $this->assetsManager->includeAssets(
                     array_merge($this->assetsManager->getBasicAssets(), $this->assetsManager->getBackendAssets())
                 );
@@ -83,14 +88,13 @@ class BackendListener
     }
 
     /**
-     * Dispatch an AJAX request in the backend
+     * Dispatch an AJAX request in the backend.
      *
-     * @param string        $action
-     * @param DataContainer $dc
+     * @param string $action
      *
      * @throws ResponseException
      */
-    public function onExecutePostActions($action, DataContainer $dc)
+    public function onExecutePostActions($action, DataContainer $dc): void
     {
         try {
             $response = $this->dispatchAction($action, $dc);
@@ -104,26 +108,25 @@ class BackendListener
             $response = new Response('Bad Request', 400);
         }
 
-        if ($response !== null) {
+        if (null !== $response) {
             throw new ResponseException($response);
         }
     }
 
     /**
-     * Dispatch the action
+     * Dispatch the action.
      *
-     * @param string        $action
-     * @param DataContainer $dc
+     * @param string $action
      *
      * @return Response|null
      */
     private function dispatchAction($action, DataContainer $dc)
     {
-        if ($action === 'fineuploader_upload') {
+        if ('fineuploader_upload' === $action) {
             return $this->requestHandler->handleUploadRequest($this->requestStack->getCurrentRequest(), $dc);
         }
 
-        if ($action === 'fineuploader_reload') {
+        if ('fineuploader_reload' === $action) {
             return $this->requestHandler->handleReloadRequest($this->requestStack->getCurrentRequest(), $dc);
         }
 

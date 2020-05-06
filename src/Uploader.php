@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle;
 
 use Contao\Dbafs;
@@ -28,9 +38,6 @@ class Uploader
 
     /**
      * Uploader constructor.
-     * @param ChunkUploader $chunkUploader
-     * @param Filesystem $fs
-     * @param Session $session
      */
     public function __construct(ChunkUploader $chunkUploader, Filesystem $fs, Session $session)
     {
@@ -40,18 +47,15 @@ class Uploader
     }
 
     /**
-     * Upload the file
-     *
-     * @param Request    $request
-     * @param BaseWidget $widget
+     * Upload the file.
      *
      * @return string|null
      */
     public function upload(Request $request, BaseWidget $widget)
     {
         $uploader = new FileUpload($widget->name);
-        $config   = $widget->getUploaderConfig();
-        $isChunk  = $config->isChunkingEnabled() && $request->request->has('qqpartindex');
+        $config = $widget->getUploaderConfig();
+        $isChunk = $config->isChunkingEnabled() && $request->request->has('qqpartindex');
 
         // Convert the $_FILES array to Contao format
         $this->convertGlobalFilesArray($request, $widget, $isChunk);
@@ -60,7 +64,7 @@ class Uploader
         $this->configureUploader($uploader, $config, $isChunk);
 
         // Run the upload
-        if (($result = $this->runUpload($uploader, $widget, $request->attributes->get('_scope'))) === null) {
+        if (null === ($result = $this->runUpload($uploader, $widget, $request->attributes->get('_scope')))) {
             return null;
         }
 
@@ -69,7 +73,7 @@ class Uploader
         // Handle the chunk
         if ($isChunk) {
             $filePath = $this->chunkUploader->handleChunk($request, $widget, $filePath);
-            $isChunk  = !$this->chunkUploader->isLastChunk($request);
+            $isChunk = !$this->chunkUploader->isLastChunk($request);
         }
 
         // Validate and move the file immediately
@@ -81,11 +85,38 @@ class Uploader
     }
 
     /**
-     * Run the upload
+     * Store a single file.
      *
-     * @param FileUpload $uploader
-     * @param BaseWidget $widget
-     * @param string     $scope
+     * @param string $file
+     *
+     * @return string
+     */
+    public function storeFile(UploaderConfig $config, $file)
+    {
+        // Move the temporary file
+        if (!\Contao\Validator::isStringUuid($file) && $this->fs->fileExists($file) && $config->isStoreFileEnabled()) {
+            $file = $this->fs->moveTmpFile($file, $config->getUploadFolder(), $config->isDoNotOverwriteEnabled());
+
+            // Add the file to database file system
+            if ($config->isAddToDbafsEnabled()
+                && null !== ($model = Dbafs::addResource($file))
+            ) {
+                $file = $model->uuid;
+            }
+        }
+
+        // Convert uuid to binary format
+        if (\Contao\Validator::isStringUuid($file)) {
+            $file = StringUtil::uuidToBin($file);
+        }
+
+        return $file;
+    }
+
+    /**
+     * Run the upload.
+     *
+     * @param string $scope
      *
      * @return array|null
      */
@@ -111,7 +142,7 @@ class Uploader
         }
 
         // Add an error if the result is incorrect
-        if (!is_array($result) || count($result) < 1) {
+        if (!\is_array($result) || \count($result) < 1) {
             $widget->addError($GLOBALS['TL_LANG']['MSC']['fineuploader.error']);
             $result = null;
         }
@@ -120,43 +151,11 @@ class Uploader
     }
 
     /**
-     * Store a single file
+     * Configure the uploader.
      *
-     * @param UploaderConfig $config
-     * @param string         $file
-     *
-     * @return string
+     * @param bool $isChunk
      */
-    public function storeFile(UploaderConfig $config, $file)
-    {
-        // Move the temporary file
-        if (!\Contao\Validator::isStringUuid($file) && $this->fs->fileExists($file) && $config->isStoreFileEnabled()) {
-            $file = $this->fs->moveTmpFile($file, $config->getUploadFolder(), $config->isDoNotOverwriteEnabled());
-
-            // Add the file to database file system
-            if ($config->isAddToDbafsEnabled()
-                && ($model = Dbafs::addResource($file)) !== null
-            ) {
-                $file = $model->uuid;
-            }
-        }
-
-        // Convert uuid to binary format
-        if (\Contao\Validator::isStringUuid($file)) {
-            $file = StringUtil::uuidToBin($file);
-        }
-
-        return $file;
-    }
-
-    /**
-     * Configure the uploader
-     *
-     * @param FileUpload     $uploader
-     * @param UploaderConfig $config
-     * @param bool           $isChunk
-     */
-    private function configureUploader(FileUpload $uploader, UploaderConfig $config, $isChunk)
+    private function configureUploader(FileUpload $uploader, UploaderConfig $config, $isChunk): void
     {
         // Add the "chunk" extension to upload types
         if ($isChunk) {
@@ -185,13 +184,11 @@ class Uploader
     }
 
     /**
-     * Convert the global files array to Contao format
+     * Convert the global files array to Contao format.
      *
-     * @param Request    $request
-     * @param BaseWidget $widget
-     * @param bool       $isChunk
+     * @param bool $isChunk
      */
-    private function convertGlobalFilesArray(Request $request, BaseWidget $widget, $isChunk)
+    private function convertGlobalFilesArray(Request $request, BaseWidget $widget, $isChunk): void
     {
         $name = $widget->name.'_fineuploader';
 
@@ -200,11 +197,11 @@ class Uploader
         }
 
         $file = [
-            'name'     => [$_FILES[$name]['name']],
-            'type'     => [$_FILES[$name]['type']],
+            'name' => [$_FILES[$name]['name']],
+            'type' => [$_FILES[$name]['type']],
             'tmp_name' => [$_FILES[$name]['tmp_name']],
-            'error'    => [$_FILES[$name]['error']],
-            'size'     => [$_FILES[$name]['size']],
+            'error' => [$_FILES[$name]['error']],
+            'size' => [$_FILES[$name]['size']],
         ];
 
         // Replace the comma character (#22)

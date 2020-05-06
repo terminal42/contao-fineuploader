@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle\RequestHandler;
 
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -23,7 +33,6 @@ class BackendHandler
 
     /**
      * BackendHandler constructor.
-     * @param EventDispatcherInterface $eventDispatcher
      */
     public function __construct(EventDispatcherInterface $eventDispatcher)
     {
@@ -31,10 +40,7 @@ class BackendHandler
     }
 
     /**
-     * Handle upload request
-     *
-     * @param Request       $request
-     * @param DataContainer $dc
+     * Handle upload request.
      *
      * @return JsonResponse
      *
@@ -48,19 +54,17 @@ class BackendHandler
         $widget = new $GLOBALS['BE_FFL']['fineUploader'](
             [
                 'strTable' => $dc->table,
-                'id'       => $dc->id,
-                'name'     => $request->request->get('name'),
-            ], $dc
+                'id' => $dc->id,
+                'name' => $request->request->get('name'),
+            ],
+            $dc
         );
 
         return $this->getUploadResponse($this->eventDispatcher, $request, $widget);
     }
 
     /**
-     * Handle reload widget request
-     *
-     * @param Request       $request
-     * @param DataContainer $dc
+     * Handle reload widget request.
      *
      * @return Response
      *
@@ -69,12 +73,12 @@ class BackendHandler
      */
     public function handleReloadRequest(Request $request, DataContainer $dc)
     {
-        $id    = $request->query->get('id');
+        $id = $request->query->get('id');
         $field = $dc->field = $request->request->get('name');
 
         // Handle the keys in "edit multiple" mode
-        if ($request->query->get('act') === 'editAll') {
-            $id    = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', $field);
+        if ('editAll' === $request->query->get('act')) {
+            $id = preg_replace('/.*_([0-9a-zA-Z]+)$/', '$1', $field);
             $field = preg_replace('/(.*)_[0-9a-zA-Z]+$/', '$1', $field);
         }
 
@@ -92,11 +96,11 @@ class BackendHandler
         $attributes = $dca['fields'][$field]['eval'];
 
         // Add some extra attributes required by the widget
-        $attributes['id']           = $dc->field;
-        $attributes['name']         = $dc->field;
-        $attributes['value']        = $this->parseValue($request->request->get('value'));
-        $attributes['strTable']     = $dc->table;
-        $attributes['strField']     = $field;
+        $attributes['id'] = $dc->field;
+        $attributes['name'] = $dc->field;
+        $attributes['value'] = $this->parseValue($request->request->get('value'));
+        $attributes['strTable'] = $dc->table;
+        $attributes['strField'] = $field;
         $attributes['activeRecord'] = $dc->activeRecord;
 
         /** @var BackendWidget $widget */
@@ -106,43 +110,39 @@ class BackendHandler
     }
 
     /**
-     * Trigger the load callback
+     * Trigger the load callback.
      *
-     * @param array         $dca
-     * @param DataContainer $dc
-     * @param string        $field
-     * @param int           $id
+     * @param string $field
+     * @param int    $id
      *
      * @throws \InvalidArgumentException
      */
-    private function triggerLoadCallback(array $dca, DataContainer $dc, $field, $id)
+    private function triggerLoadCallback(array $dca, DataContainer $dc, $field, $id): void
     {
         $value = null;
         $db = Database::getInstance();
 
         // Load the value
-        if ($dca['config']['dataContainer'] === 'File') {
+        if ('File' === $dca['config']['dataContainer']) {
             $value = $GLOBALS['TL_CONFIG'][$field];
         } elseif ($id > 0 && $db->tableExists($dc->table)) {
             $row = $db->prepare(sprintf('SELECT * FROM %s WHERE id=?', $dc->table))->execute($id);
 
             // The record does not exist
             if ($row->numRows < 1) {
-                throw new \InvalidArgumentException(
-                    sprintf('A record with the ID "%s" does not exist in table "%s"', $id, $dc->table)
-                );
+                throw new \InvalidArgumentException(sprintf('A record with the ID "%s" does not exist in table "%s"', $id, $dc->table));
             }
 
-            $value            = $row->$field;
+            $value = $row->$field;
             $dc->activeRecord = $row;
         }
 
         // Trigger the callbacks
-        if (is_array($dca['fields'][$field]['load_callback'])) {
+        if (\is_array($dca['fields'][$field]['load_callback'])) {
             foreach ($dca['fields'][$field]['load_callback'] as $callback) {
-                if (is_array($callback)) {
+                if (\is_array($callback)) {
                     $value = System::importStatic($callback[0])->{$callback[1]}($value, $dc);
-                } elseif (is_callable($callback)) {
+                } elseif (\is_callable($callback)) {
                     $value = $callback($value, $dc);
                 }
             }

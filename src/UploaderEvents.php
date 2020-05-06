@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle;
 
 final class UploaderEvents
@@ -11,7 +21,7 @@ final class UploaderEvents
      *
      * @var string
      */
-    const FILE_UPLOAD = 'terminal42_fineuploader.file_upload';
+    public const FILE_UPLOAD = 'terminal42_fineuploader.file_upload';
 
     /**
      * The widget reload event occurs when the file upload is done
@@ -21,5 +31,5 @@ final class UploaderEvents
      *
      * @var string
      */
-    const WIDGET_RELOAD = 'terminal42_fineuploader.widget_reload';
+    public const WIDGET_RELOAD = 'terminal42_fineuploader.widget_reload';
 }

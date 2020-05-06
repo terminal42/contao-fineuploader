@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle;
 
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
@@ -13,8 +23,6 @@ class Validator
 
     /**
      * Validator constructor.
-     *
-     * @param Uploader $uploader
      */
     public function __construct(Uploader $uploader)
     {
@@ -22,10 +30,9 @@ class Validator
     }
 
     /**
-     * Validate the widget input
+     * Validate the widget input.
      *
-     * @param BaseWidget $widget
-     * @param string     $input
+     * @param string $input
      *
      * @return array|string
      */
@@ -37,7 +44,7 @@ class Validator
         }
 
         // Single file
-        if (strpos($input, ',') === false) {
+        if (false === strpos($input, ',')) {
             return $this->validateSingleFile($widget, $input);
         }
 
@@ -45,9 +52,7 @@ class Validator
     }
 
     /**
-     * Validate an empty value
-     *
-     * @param BaseWidget $widget
+     * Validate an empty value.
      *
      * @return array|string
      */
@@ -66,10 +71,9 @@ class Validator
     }
 
     /**
-     * Validate the single file
+     * Validate the single file.
      *
-     * @param BaseWidget $widget
-     * @param string     $input
+     * @param string $input
      *
      * @return string
      */
@@ -79,10 +83,7 @@ class Validator
     }
 
     /**
-     * Validate the multiple files
-     *
-     * @param BaseWidget $widget
-     * @param array      $inputs
+     * Validate the multiple files.
      *
      * @return array
      */
@@ -92,7 +93,7 @@ class Validator
 
         // Limit the number of uploads
         if ($config->getLimit() > 0) {
-            $inputs = array_slice($inputs, 0, $config->getLimit());
+            $inputs = \array_slice($inputs, 0, $config->getLimit());
         }
 
         // Store the files

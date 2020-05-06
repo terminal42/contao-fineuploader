@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle\EventListener;
 
 use Contao\Config;
@@ -18,7 +28,6 @@ class FileUploadListener
 
     /**
      * FileUploadListener constructor.
-     * @param Uploader $uploader
      */
     public function __construct(Uploader $uploader)
     {
@@ -26,16 +35,14 @@ class FileUploadListener
     }
 
     /**
-     * On file upload
-     *
-     * @param FileUploadEvent $event
+     * On file upload.
      */
-    public function onFileUpload(FileUploadEvent $event)
+    public function onFileUpload(FileUploadEvent $event): void
     {
-        $widget   = $event->getWidget();
+        $widget = $event->getWidget();
         $filePath = $this->uploader->upload($event->getRequest(), $widget);
 
-        if ($filePath === null) {
+        if (null === $filePath) {
             $event->setResponse(new JsonResponse([
                 'success' => false,
                 'error' => $GLOBALS['TL_LANG']['ERR']['general'],
@@ -52,8 +59,8 @@ class FileUploadListener
 
         if ($widget->hasErrors()) {
             $response = [
-                'success'      => false,
-                'error'        => $widget->getErrorAsString(),
+                'success' => false,
+                'error' => $widget->getErrorAsString(),
                 'preventRetry' => true,
             ];
         } else {
@@ -64,17 +71,16 @@ class FileUploadListener
     }
 
     /**
-     * Validate the image dimensions
+     * Validate the image dimensions.
      *
-     * @param FrontendWidget $widget
-     * @param string         $filePath
+     * @param string $filePath
      */
-    private function validateImageDimensions(FrontendWidget $widget, $filePath)
+    private function validateImageDimensions(FrontendWidget $widget, $filePath): void
     {
         $file = new File($filePath);
 
         if ($file->isImage) {
-            $maxWidth  = Config::get('imageWidth');
+            $maxWidth = Config::get('imageWidth');
             $maxHeight = Config::get('imageHeight');
 
             // Image exceeds maximum image width

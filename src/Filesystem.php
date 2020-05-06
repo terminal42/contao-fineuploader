@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle;
 
 use Contao\Config;
@@ -14,13 +24,15 @@ class Filesystem
     private $rootDir;
 
     /**
-     * Temporary upload path
+     * Temporary upload path.
+     *
      * @var string
      */
     private $tmpPath;
 
     /**
      * Filesystem constructor.
+     *
      * @param string $rootDir
      * @param string $tmpPath
      */
@@ -31,7 +43,7 @@ class Filesystem
     }
 
     /**
-     * Get the temporary path
+     * Get the temporary path.
      *
      * @return string
      */
@@ -41,7 +53,7 @@ class Filesystem
     }
 
     /**
-     * Return true if the file exists
+     * Return true if the file exists.
      *
      * @param string $filePath
      *
@@ -53,7 +65,7 @@ class Filesystem
     }
 
     /**
-     * Return true if the file temporary exists
+     * Return true if the file temporary exists.
      *
      * @param string $file
      *
@@ -65,9 +77,8 @@ class Filesystem
     }
 
     /**
-     * Merge multiple temporary files into one
+     * Merge multiple temporary files into one.
      *
-     * @param array  $files
      * @param string $fileName
      *
      * @return File
@@ -87,7 +98,7 @@ class Filesystem
     }
 
     /**
-     * Get the temporary file name
+     * Get the temporary file name.
      *
      * @param string $file
      *
@@ -99,15 +110,15 @@ class Filesystem
     }
 
     /**
-     * Move the temporary file to its destination
+     * Move the temporary file to its destination.
      *
      * @param string $file
      * @param string $destination
      * @param bool   $doNotOverwrite
      *
-     * @return string
-     *
      * @throws \Exception
+     *
+     * @return string
      */
     public function moveTmpFile($file, $destination, $doNotOverwrite = false)
     {
@@ -116,7 +127,7 @@ class Filesystem
         }
 
         // The file is not temporary
-        if (stripos($file, $this->tmpPath) === false) {
+        if (false === stripos($file, $this->tmpPath)) {
             return $file;
         }
 
@@ -128,7 +139,7 @@ class Filesystem
         }
 
         $files = Files::getInstance();
-        $files->mkdir(dirname($new));
+        $files->mkdir(\dirname($new));
 
         // Try to rename the file
         if (!$files->rename($file, $new)) {
@@ -142,7 +153,7 @@ class Filesystem
     }
 
     /**
-     * Get the new file name if it already exists in the folder
+     * Get the new file name if it already exists in the folder.
      *
      * @param string $filePath
      * @param string $folder
@@ -155,9 +166,9 @@ class Filesystem
             return $filePath;
         }
 
-        $offset   = 1;
+        $offset = 1;
         $pathinfo = pathinfo($filePath);
-        $name     = $pathinfo['filename'];
+        $name = $pathinfo['filename'];
 
         $allFiles = scan($this->rootDir.'/'.$folder);
 
@@ -169,8 +180,8 @@ class Filesystem
 
         foreach ($files as $file) {
             if (preg_match('/__[0-9]+\.'.preg_quote($pathinfo['extension'], '/').'$/', $file)) {
-                $file   = str_replace('.'.$pathinfo['extension'], '', $file);
-                $value  = (int)substr($file, (strrpos($file, '_') + 1));
+                $file = str_replace('.'.$pathinfo['extension'], '', $file);
+                $value = (int) substr($file, (strrpos($file, '_') + 1));
                 $offset = max($offset, $value);
             }
         }

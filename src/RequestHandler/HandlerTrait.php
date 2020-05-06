@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle\RequestHandler;
 
 use Contao\Input;
@@ -9,19 +19,15 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Terminal42\FineUploaderBundle\Event\FileUploadEvent;
 use Terminal42\FineUploaderBundle\Event\WidgetReloadEvent;
 use Terminal42\FineUploaderBundle\UploaderEvents;
-use Terminal42\FineUploaderBundle\Event\FileUploadEvent;
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 trait HandlerTrait
 {
     /**
-     * Get the file upload response
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param Request                  $request
-     * @param BaseWidget               $widget
+     * Get the file upload response.
      *
      * @return JsonResponse
      */
@@ -37,11 +43,7 @@ trait HandlerTrait
     }
 
     /**
-     * Get the widget reload response
-     *
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param Request                  $request
-     * @param BaseWidget               $widget
+     * Get the widget reload response.
      *
      * @return Response
      */
@@ -57,14 +59,13 @@ trait HandlerTrait
     }
 
     /**
-     * Validate the request
+     * Validate the request.
      *
-     * @param Request $request
-     * @param string  $scope
+     * @param string $scope
      *
      * @throws \RuntimeException
      */
-    protected function validateRequest(Request $request, $scope)
+    protected function validateRequest(Request $request, $scope): void
     {
         if ($request->attributes->get('_scope') !== $scope) {
             throw new \RuntimeException(sprintf('This method can be executed only in the %s scope', $scope));
@@ -72,9 +73,9 @@ trait HandlerTrait
     }
 
     /**
-     * Parse the value by converting UUIDs to binary data
+     * Parse the value by converting UUIDs to binary data.
      *
-     * @param string                   $value
+     * @param string $value
      *
      * @return string
      */

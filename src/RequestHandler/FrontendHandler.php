@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle\RequestHandler;
 
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -28,8 +38,6 @@ class FrontendHandler
 
     /**
      * FrontendHandler constructor.
-     * @param EventDispatcherInterface $eventDispatcher
-     * @param Logger $logger
      */
     public function __construct(EventDispatcherInterface $eventDispatcher, Logger $logger)
     {
@@ -38,10 +46,7 @@ class FrontendHandler
     }
 
     /**
-     * Handle widget initialization request
-     *
-     * @param Request        $request
-     * @param FrontendWidget $widget
+     * Handle widget initialization request.
      *
      * @return Response|null
      */
@@ -73,35 +78,7 @@ class FrontendHandler
     }
 
     /**
-     * Dispatch the request
-     *
-     * @param Request        $request
-     * @param FrontendWidget $widget
-     *
-     * @return JsonResponse|null
-     */
-    private function dispatchRequest(Request $request, FrontendWidget $widget)
-    {
-        $response = null;
-
-        // File upload
-        if ($request->request->get('action') === 'fineuploader_upload') {
-            $response = $this->handleUploadRequest($request, $widget);
-        }
-
-        // Widget reload
-        if ($request->request->get('action') === 'fineuploader_reload') {
-            $response = $this->handleReloadRequest($request, $widget);
-        }
-
-        return $response;
-    }
-
-    /**
-     * Handle upload request
-     *
-     * @param Request        $request
-     * @param FrontendWidget $widget
+     * Handle upload request.
      *
      * @return JsonResponse
      *
@@ -115,10 +92,7 @@ class FrontendHandler
     }
 
     /**
-     * Handle reload request
-     *
-     * @param Request        $request
-     * @param FrontendWidget $widget
+     * Handle reload request.
      *
      * @return Response
      *
@@ -132,5 +106,27 @@ class FrontendHandler
         $widget->value = $this->parseValue($request->request->get('value'));
 
         return $this->getReloadResponse($this->eventDispatcher, $request, $widget);
+    }
+
+    /**
+     * Dispatch the request.
+     *
+     * @return JsonResponse|null
+     */
+    private function dispatchRequest(Request $request, FrontendWidget $widget)
+    {
+        $response = null;
+
+        // File upload
+        if ('fineuploader_upload' === $request->request->get('action')) {
+            $response = $this->handleUploadRequest($request, $widget);
+        }
+
+        // Widget reload
+        if ('fineuploader_reload' === $request->request->get('action')) {
+            $response = $this->handleReloadRequest($request, $widget);
+        }
+
+        return $response;
     }
 }

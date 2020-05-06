@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle\Event;
 
 use Symfony\Component\EventDispatcher\Event;
@@ -26,16 +36,12 @@ class FileUploadEvent extends Event
 
     /**
      * FileUploadEvent constructor.
-     *
-     * @param Request      $request
-     * @param JsonResponse $response
-     * @param BaseWidget   $widget
      */
     public function __construct(Request $request, JsonResponse $response, BaseWidget $widget)
     {
-        $this->request  = $request;
+        $this->request = $request;
         $this->response = $response;
-        $this->widget   = $widget;
+        $this->widget = $widget;
     }
 
     /**
@@ -46,10 +52,7 @@ class FileUploadEvent extends Event
         return $this->request;
     }
 
-    /**
-     * @param Request $request
-     */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): void
     {
         $this->request = $request;
     }
@@ -62,10 +65,7 @@ class FileUploadEvent extends Event
         return $this->response;
     }
 
-    /**
-     * @param JsonResponse $response
-     */
-    public function setResponse(JsonResponse $response)
+    public function setResponse(JsonResponse $response): void
     {
         $this->response = $response;
     }
@@ -78,10 +78,7 @@ class FileUploadEvent extends Event
         return $this->widget;
     }
 
-    /**
-     * @param BaseWidget $widget
-     */
-    public function setWidget(BaseWidget $widget)
+    public function setWidget(BaseWidget $widget): void
     {
         $this->widget = $widget;
     }

@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle;
 
 use Contao\File;
@@ -22,8 +32,6 @@ class ChunkUploader
 
     /**
      * ChunkUploader constructor.
-     * @param Filesystem $fs
-     * @param Session $session
      */
     public function __construct(Filesystem $fs, Session $session)
     {
@@ -32,19 +40,17 @@ class ChunkUploader
     }
 
     /**
-     * Handle the chunk by storing it in the session for further merge
+     * Handle the chunk by storing it in the session for further merge.
      *
-     * @param Request    $request
-     * @param BaseWidget $widget
-     * @param string     $filePath
+     * @param string $filePath
      *
      * @return string
      */
     public function handleChunk(Request $request, BaseWidget $widget, $filePath)
     {
-        $fileName            = $request->request->get('qqfilename');
-        $sessionKey          = $this->getSessionKey($widget);
-        $chunks              = $this->session->get($sessionKey);
+        $fileName = $request->request->get('qqfilename');
+        $sessionKey = $this->getSessionKey($widget);
+        $chunks = $this->session->get($sessionKey);
         $chunks[$fileName][] = $filePath;
 
         // This is the last chunking request, merge the chunks and create the final file
@@ -62,11 +68,27 @@ class ChunkUploader
     }
 
     /**
-     * Merge the chunks
+     * Return true if this is the last chunk.
      *
-     * @param BaseWidget $widget
-     * @param array      $chunks
-     * @param string     $fileName
+     * @return bool
+     */
+    public function isLastChunk(Request $request)
+    {
+        return $request->request->getInt('qqpartindex') === $request->request->getInt('qqtotalparts') - 1;
+    }
+
+    /**
+     * Clear the session from chunks.
+     */
+    public function clearSession(BaseWidget $widget): void
+    {
+        $this->session->remove($this->getSessionKey($widget));
+    }
+
+    /**
+     * Merge the chunks.
+     *
+     * @param string $fileName
      *
      * @return string
      */
@@ -86,14 +108,11 @@ class ChunkUploader
     }
 
     /**
-     * Validate the file
-     *
-     * @param File       $file
-     * @param BaseWidget $widget
+     * Validate the file.
      */
-    private function validateFile(File $file, BaseWidget $widget)
+    private function validateFile(File $file, BaseWidget $widget): void
     {
-        $config       = $widget->getUploaderConfig();
+        $config = $widget->getUploaderConfig();
         $minSizeLimit = $config->getMinSizeLimit();
 
         // Validate the minimum size limit
@@ -110,31 +129,7 @@ class ChunkUploader
     }
 
     /**
-     * Return true if this is the last chunk
-     *
-     * @param Request $request
-     *
-     * @return bool
-     */
-    public function isLastChunk(Request $request)
-    {
-        return $request->request->getInt('qqpartindex') === $request->request->getInt('qqtotalparts') - 1;
-    }
-
-    /**
-     * Clear the session from chunks
-     *
-     * @param BaseWidget $widget
-     */
-    public function clearSession(BaseWidget $widget)
-    {
-        $this->session->remove($this->getSessionKey($widget));
-    }
-
-    /**
-     * Get the session key
-     *
-     * @param BaseWidget $widget
+     * Get the session key.
      *
      * @return string
      */

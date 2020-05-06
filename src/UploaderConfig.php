@@ -1,121 +1,149 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle;
 
 class UploaderConfig
 {
     /**
-     * Debug mode
+     * Debug mode.
+     *
      * @var bool
      */
     private $debug = false;
 
     /**
-     * Allowed extensions
+     * Allowed extensions.
+     *
      * @var array
      */
     private $extensions = [];
 
     /**
-     * Limit
+     * Limit.
+     *
      * @var int
      */
     private $limit;
 
     /**
-     * Minimum file size
+     * Minimum file size.
+     *
      * @var int
      */
     private $minSizeLimit;
 
     /**
-     * Maximum file size
+     * Maximum file size.
+     *
      * @var int
      */
     private $maxSizeLimit;
 
     /**
-     * Maximum image width
+     * Maximum image width.
+     *
      * @var int
      */
     private $maxImageWidth;
 
     /**
-     * Maximum image height
+     * Maximum image height.
+     *
      * @var int
      */
     private $maxImageHeight;
 
     /**
-     * Maximum number of connections
+     * Maximum number of connections.
+     *
      * @var int
      */
     private $maxConnections;
 
     /**
-     * Allow chunking
+     * Allow chunking.
+     *
      * @var bool
      */
     private $chunking = false;
 
     /**
-     * Chunk size
+     * Chunk size.
+     *
      * @var int
      */
     private $chunkSize;
 
     /**
-     * Allow concurrent connections
+     * Allow concurrent connections.
+     *
      * @var bool
      */
     private $concurrent = false;
 
     /**
-     * Allow direct upload
+     * Allow direct upload.
+     *
      * @var bool
      */
     private $directUpload = false;
 
     /**
-     * Store file
+     * Store file.
+     *
      * @var bool
      */
     private $storeFile = false;
 
     /**
-     * Do not overwrite file
+     * Do not overwrite file.
+     *
      * @var bool
      */
     private $doNotOverwrite = false;
 
     /**
-     * Add to database file system
+     * Add to database file system.
+     *
      * @var bool
      */
     private $addToDbafs = false;
 
     /**
-     * Upload folder
+     * Upload folder.
+     *
      * @var string
      */
     private $uploadFolder;
 
     /**
-     * Upload button title
+     * Upload button title.
+     *
      * @var string
      */
     private $uploadButtonTitle;
 
     /**
-     * Labels
+     * Labels.
+     *
      * @var array
      */
     private $labels = [];
 
     /**
-     * Return true if debug mode is enabled
+     * Return true if debug mode is enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function isDebugEnabled()
     {
@@ -123,7 +151,7 @@ class UploaderConfig
     }
 
     /**
-     * Enable debug
+     * Enable debug.
      *
      * @return UploaderConfig
      */
@@ -135,7 +163,7 @@ class UploaderConfig
     }
 
     /**
-     * Disable debug
+     * Disable debug.
      *
      * @return UploaderConfig
      */
@@ -147,7 +175,7 @@ class UploaderConfig
     }
 
     /**
-     * Get the allowed extensions
+     * Get the allowed extensions.
      *
      * @return array
      */
@@ -157,9 +185,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the allowed extensions
-     *
-     * @param array $extensions
+     * Set the allowed extensions.
      *
      * @return UploaderConfig
      */
@@ -171,7 +197,7 @@ class UploaderConfig
     }
 
     /**
-     * Get the file limit
+     * Get the file limit.
      *
      * @return int
      */
@@ -181,7 +207,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the file limit
+     * Set the file limit.
      *
      * @param int $limit
      *
@@ -189,13 +215,13 @@ class UploaderConfig
      */
     public function setLimit($limit)
     {
-        $this->limit = (int)$limit;
+        $this->limit = (int) $limit;
 
         return $this;
     }
 
     /**
-     * Get the minimum file size limit
+     * Get the minimum file size limit.
      *
      * @return int
      */
@@ -205,7 +231,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the minimum file size limit
+     * Set the minimum file size limit.
      *
      * @param int $minSizeLimit
      *
@@ -213,13 +239,13 @@ class UploaderConfig
      */
     public function setMinSizeLimit($minSizeLimit)
     {
-        $this->minSizeLimit = (int)$minSizeLimit;
+        $this->minSizeLimit = (int) $minSizeLimit;
 
         return $this;
     }
 
     /**
-     * Get the maximum file size limit
+     * Get the maximum file size limit.
      *
      * @return int
      */
@@ -229,7 +255,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the maximum file size limit
+     * Set the maximum file size limit.
      *
      * @param int $maxSizeLimit
      *
@@ -237,13 +263,13 @@ class UploaderConfig
      */
     public function setMaxSizeLimit($maxSizeLimit)
     {
-        $this->maxSizeLimit = (int)$maxSizeLimit;
+        $this->maxSizeLimit = (int) $maxSizeLimit;
 
         return $this;
     }
 
     /**
-     * Get the maximum image width
+     * Get the maximum image width.
      *
      * @return int
      */
@@ -253,7 +279,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the maximum image width
+     * Set the maximum image width.
      *
      * @param int $maxImageWidth
      *
@@ -261,13 +287,13 @@ class UploaderConfig
      */
     public function setMaxImageWidth($maxImageWidth)
     {
-        $this->maxImageWidth = (int)$maxImageWidth;
+        $this->maxImageWidth = (int) $maxImageWidth;
 
         return $this;
     }
 
     /**
-     * Get the maximum image height
+     * Get the maximum image height.
      *
      * @return int
      */
@@ -277,7 +303,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the maximum image height
+     * Set the maximum image height.
      *
      * @param int $maxImageHeight
      *
@@ -285,13 +311,13 @@ class UploaderConfig
      */
     public function setMaxImageHeight($maxImageHeight)
     {
-        $this->maxImageHeight = (int)$maxImageHeight;
+        $this->maxImageHeight = (int) $maxImageHeight;
 
         return $this;
     }
 
     /**
-     * Get the maximum number of connections
+     * Get the maximum number of connections.
      *
      * @return int
      */
@@ -301,7 +327,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the maximum number of connections
+     * Set the maximum number of connections.
      *
      * @param int $maxConnections
      *
@@ -309,15 +335,15 @@ class UploaderConfig
      */
     public function setMaxConnections($maxConnections)
     {
-        $this->maxConnections = (int)$maxConnections;
+        $this->maxConnections = (int) $maxConnections;
 
         return $this;
     }
 
     /**
-     * Return true if chunking is enabled
+     * Return true if chunking is enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function isChunkingEnabled()
     {
@@ -325,7 +351,7 @@ class UploaderConfig
     }
 
     /**
-     * Enable chunking
+     * Enable chunking.
      *
      * @return UploaderConfig
      */
@@ -337,7 +363,7 @@ class UploaderConfig
     }
 
     /**
-     * Disable chunking
+     * Disable chunking.
      *
      * @return UploaderConfig
      */
@@ -349,7 +375,7 @@ class UploaderConfig
     }
 
     /**
-     * Get the chunk size
+     * Get the chunk size.
      *
      * @return int
      */
@@ -359,7 +385,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the chunk size
+     * Set the chunk size.
      *
      * @param int $chunkSize
      *
@@ -367,15 +393,15 @@ class UploaderConfig
      */
     public function setChunkSize($chunkSize)
     {
-        $this->chunkSize = (int)$chunkSize;
+        $this->chunkSize = (int) $chunkSize;
 
         return $this;
     }
 
     /**
-     * Return true if the concurrent connections are enabled
+     * Return true if the concurrent connections are enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function isConcurrentEnabled()
     {
@@ -383,7 +409,7 @@ class UploaderConfig
     }
 
     /**
-     * Enable the concurrent connections
+     * Enable the concurrent connections.
      *
      * @return UploaderConfig
      */
@@ -395,7 +421,7 @@ class UploaderConfig
     }
 
     /**
-     * Disable the concurrent connections
+     * Disable the concurrent connections.
      *
      * @return UploaderConfig
      */
@@ -407,9 +433,9 @@ class UploaderConfig
     }
 
     /**
-     * Return true if the direct upload is enabled
+     * Return true if the direct upload is enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function isDirectUploadEnabled()
     {
@@ -417,7 +443,7 @@ class UploaderConfig
     }
 
     /**
-     * Enable the direct upload
+     * Enable the direct upload.
      *
      * @return UploaderConfig
      */
@@ -429,7 +455,7 @@ class UploaderConfig
     }
 
     /**
-     * Disable the direct upload
+     * Disable the direct upload.
      *
      * @return UploaderConfig
      */
@@ -441,9 +467,9 @@ class UploaderConfig
     }
 
     /**
-     * Return true if the store file is enabled
+     * Return true if the store file is enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function isStoreFileEnabled()
     {
@@ -451,7 +477,7 @@ class UploaderConfig
     }
 
     /**
-     * Enable the store file
+     * Enable the store file.
      *
      * @return UploaderConfig
      */
@@ -463,7 +489,7 @@ class UploaderConfig
     }
 
     /**
-     * Disable the store file
+     * Disable the store file.
      *
      * @return UploaderConfig
      */
@@ -475,9 +501,9 @@ class UploaderConfig
     }
 
     /**
-     * Return true if the do not overwrite file is enabled
+     * Return true if the do not overwrite file is enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function isDoNotOverwriteEnabled()
     {
@@ -485,7 +511,7 @@ class UploaderConfig
     }
 
     /**
-     * Enable the do not overwrite file
+     * Enable the do not overwrite file.
      *
      * @return UploaderConfig
      */
@@ -497,7 +523,7 @@ class UploaderConfig
     }
 
     /**
-     * Disable the do not overwrite file
+     * Disable the do not overwrite file.
      *
      * @return UploaderConfig
      */
@@ -509,9 +535,9 @@ class UploaderConfig
     }
 
     /**
-     * Return true if the add file to database file system is enabled
+     * Return true if the add file to database file system is enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAddToDbafsEnabled()
     {
@@ -519,7 +545,7 @@ class UploaderConfig
     }
 
     /**
-     * Enable the add file to database file system
+     * Enable the add file to database file system.
      *
      * @return UploaderConfig
      */
@@ -531,7 +557,7 @@ class UploaderConfig
     }
 
     /**
-     * Disable the add file to database file system
+     * Disable the add file to database file system.
      *
      * @return UploaderConfig
      */
@@ -543,7 +569,7 @@ class UploaderConfig
     }
 
     /**
-     * Get the upload folder
+     * Get the upload folder.
      *
      * @return string
      */
@@ -553,7 +579,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the upload folder
+     * Set the upload folder.
      *
      * @param string $uploadFolder
      *
@@ -567,7 +593,7 @@ class UploaderConfig
     }
 
     /**
-     * Get the upload button title
+     * Get the upload button title.
      *
      * @return string
      */
@@ -577,7 +603,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the upload button title
+     * Set the upload button title.
      *
      * @param string $uploadButtonTitle
      */
@@ -589,7 +615,7 @@ class UploaderConfig
     }
 
     /**
-     * Get the labels
+     * Get the labels.
      *
      * @return array
      */
@@ -599,9 +625,7 @@ class UploaderConfig
     }
 
     /**
-     * Set the labels
-     *
-     * @param array $labels
+     * Set the labels.
      *
      * @return UploaderConfig
      */

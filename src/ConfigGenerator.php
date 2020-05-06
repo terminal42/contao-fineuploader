@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle;
 
 use Contao\Config;
@@ -15,6 +25,7 @@ class ConfigGenerator
 
     /**
      * ConfigGenerator constructor.
+     *
      * @param bool $debug
      */
     public function __construct($debug)
@@ -23,9 +34,7 @@ class ConfigGenerator
     }
 
     /**
-     * Generate the configuration from widget attributes
-     *
-     * @param array $attributes
+     * Generate the configuration from widget attributes.
      *
      * @return UploaderConfig
      */
@@ -51,12 +60,36 @@ class ConfigGenerator
     }
 
     /**
-     * Set the config from attributes
+     * Generate the configuration array ready to use for JavaScript uploader setup.
      *
-     * @param UploaderConfig $config
-     * @param array          $attributes
+     * @return array
      */
-    private function setConfigFromAttributes(UploaderConfig $config, array $attributes)
+    public function generateJavaScriptConfig(UploaderConfig $config)
+    {
+        $return = [
+            'debug' => $config->isDebugEnabled(),
+            'extensions' => $config->getExtensions(),
+            'maxConnections' => $config->getMaxConnections(),
+            'limit' => $config->getLimit(),
+            'minSizeLimit' => $config->getMinSizeLimit(),
+            'sizeLimit' => $config->getMaxSizeLimit(),
+            'uploadButtonTitle' => $config->getUploadButtonTitle(),
+        ];
+
+        // Enable the chunking
+        if ($config->isChunkingEnabled()) {
+            $return['chunking'] = true;
+            $return['chunkSize'] = $config->getChunkSize();
+            $return['concurrent'] = $config->isConcurrentEnabled();
+        }
+
+        return $return;
+    }
+
+    /**
+     * Set the config from attributes.
+     */
+    private function setConfigFromAttributes(UploaderConfig $config, array $attributes): void
     {
         foreach ($attributes as $k => $v) {
             switch ($k) {
@@ -142,18 +175,17 @@ class ConfigGenerator
     }
 
     /**
-     * Set the upload folder
+     * Set the upload folder.
      *
-     * @param UploaderConfig $config
-     * @param string         $folder Can be a regular path or UUID
+     * @param string $folder Can be a regular path or UUID
      */
-    private function setUploadFolder(UploaderConfig $config, $folder)
+    private function setUploadFolder(UploaderConfig $config, $folder): void
     {
         if (\Contao\Validator::isUuid($folder)) {
             $model = FilesModel::findByUuid($folder);
 
             // Set the path from model
-            if ($model !== null) {
+            if (null !== $model) {
                 $config->setUploadFolder($model->path);
             }
         } else {
@@ -162,49 +194,20 @@ class ConfigGenerator
     }
 
     /**
-     * Generate the configuration array ready to use for JavaScript uploader setup
-     *
-     * @param UploaderConfig $config
-     *
-     * @return array
-     */
-    public function generateJavaScriptConfig(UploaderConfig $config)
-    {
-        $return = [
-            'debug'             => $config->isDebugEnabled(),
-            'extensions'        => $config->getExtensions(),
-            'maxConnections'    => $config->getMaxConnections(),
-            'limit'             => $config->getLimit(),
-            'minSizeLimit'      => $config->getMinSizeLimit(),
-            'sizeLimit'         => $config->getMaxSizeLimit(),
-            'uploadButtonTitle' => $config->getUploadButtonTitle(),
-        ];
-
-        // Enable the chunking
-        if ($config->isChunkingEnabled()) {
-            $return['chunking']   = true;
-            $return['chunkSize']  = $config->getChunkSize();
-            $return['concurrent'] = $config->isConcurrentEnabled();
-        }
-
-        return $return;
-    }
-
-    /**
-     * Generate the labels
+     * Generate the labels.
      *
      * @return array
      */
     private function generateLabels()
     {
         $properties = [
-            'text'       => [
+            'text' => [
                 'formatProgress',
                 'failUpload',
                 'waitingForResponse',
                 'paused',
             ],
-            'messages'   => [
+            'messages' => [
                 'typeError',
                 'sizeError',
                 'minSizeError',
@@ -219,7 +222,7 @@ class ConfigGenerator
                 'onLeave',
                 'unsupportedBrowserIos8Safari',
             ],
-            'retry'      => [
+            'retry' => [
                 'autoRetryNote',
             ],
             'deleteFile' => [
@@ -227,7 +230,7 @@ class ConfigGenerator
                 'deletingStatusText',
                 'deletingFailedText',
             ],
-            'paste'      => [
+            'paste' => [
                 'namePromptMessage',
             ],
         ];

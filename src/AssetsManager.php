@@ -1,5 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
+/*
+ * FineUploader Bundle for Contao Open Source CMS.
+ *
+ * @copyright  Copyright (c) 2020, terminal42 gmbh
+ * @author     terminal42 <https://terminal42.ch>
+ * @license    MIT
+ */
+
 namespace Terminal42\FineUploaderBundle;
 
 class AssetsManager
@@ -20,17 +30,16 @@ class AssetsManager
     }
 
     /**
-     * Include the assets
-     *
-     * @param array $assets
+     * Include the assets.
      */
-    public function includeAssets(array $assets)
+    public function includeAssets(array $assets): void
     {
         foreach ($assets as $asset) {
             switch (pathinfo($asset, PATHINFO_EXTENSION)) {
                 case 'css':
                     $GLOBALS['TL_CSS'][] = $asset;
                     break;
+
                 case 'js':
                     $GLOBALS['TL_JAVASCRIPT'][] = $asset;
                     break;
@@ -39,7 +48,7 @@ class AssetsManager
     }
 
     /**
-     * Get the basic assets
+     * Get the basic assets.
      *
      * @return array
      */
@@ -53,7 +62,7 @@ class AssetsManager
     }
 
     /**
-     * Get the backend assets
+     * Get the backend assets.
      *
      * @return array
      */
@@ -66,7 +75,7 @@ class AssetsManager
     }
 
     /**
-     * Get the frontend assets
+     * Get the frontend assets.
      *
      * @param bool $sortable
      *
@@ -88,7 +97,7 @@ class AssetsManager
     }
 
     /**
-     * Get the asset path
+     * Get the asset path.
      *
      * @param string $path
      *
