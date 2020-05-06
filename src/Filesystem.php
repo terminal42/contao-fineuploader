@@ -183,6 +183,6 @@ class Filesystem
             }
         }
 
-        return str_replace($name, $name.'__'.++$offset, $filePath);
+        return str_replace($name.'.', $name.'__'.++$offset.'.', $filePath);
     }
 }
