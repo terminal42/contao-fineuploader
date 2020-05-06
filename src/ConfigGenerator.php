@@ -2,7 +2,9 @@
 
 namespace Terminal42\FineUploaderBundle;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Config;
+use Contao\FilesModel;
+use Contao\FrontendUser;
 
 class ConfigGenerator
 {
@@ -12,20 +14,12 @@ class ConfigGenerator
     private $debug;
 
     /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-    /**
      * ConfigGenerator constructor.
-     *
-     * @param bool                     $debug
-     * @param ContaoFrameworkInterface $framework
+     * @param bool $debug
      */
-    public function __construct($debug, ContaoFrameworkInterface $framework)
+    public function __construct($debug)
     {
-        $this->debug     = $debug;
-        $this->framework = $framework;
+        $this->debug = $debug;
     }
 
     /**
@@ -50,7 +44,7 @@ class ConfigGenerator
 
         // Set the upload folder to the default one if not set yet
         if (!$config->getUploadFolder()) {
-            $this->setUploadFolder($config, $this->framework->getAdapter('\Contao\Config')->get('uploadPath'));
+            $this->setUploadFolder($config, Config::get('uploadPath'));
         }
 
         return $config;
@@ -72,8 +66,7 @@ class ConfigGenerator
 
                 case 'useHomeDir':
                     if ($v && FE_USER_LOGGED_IN) {
-                        /** @var \Contao\FrontendUser $user */
-                        $user = $this->framework->getAdapter('\Contao\FrontendUser');
+                        $user = FrontendUser::getInstance();
 
                         if ($user->assignDir && $user->homeDir) {
                             $this->setUploadFolder($config, $user->homeDir);
@@ -156,8 +149,8 @@ class ConfigGenerator
      */
     private function setUploadFolder(UploaderConfig $config, $folder)
     {
-        if ($this->framework->getAdapter('\Contao\Validator')->isUuid($folder)) {
-            $model = $this->framework->getAdapter('\Contao\FilesModel')->findByUuid($folder);
+        if (\Contao\Validator::isUuid($folder)) {
+            $model = FilesModel::findByUuid($folder);
 
             // Set the path from model
             if ($model !== null) {

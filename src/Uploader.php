@@ -2,7 +2,8 @@
 
 namespace Terminal42\FineUploaderBundle;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Dbafs;
+use Contao\StringUtil;
 use Haste\Util\FileUpload;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -16,11 +17,6 @@ class Uploader
     private $chunkUploader;
 
     /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-    /**
      * @var Filesystem
      */
     private $fs;
@@ -32,22 +28,15 @@ class Uploader
 
     /**
      * Uploader constructor.
-     *
-     * @param ChunkUploader            $chunkUploader
-     * @param ContaoFrameworkInterface $framework
-     * @param Filesystem               $fs
-     * @param Session                  $session
+     * @param ChunkUploader $chunkUploader
+     * @param Filesystem $fs
+     * @param Session $session
      */
-    public function __construct(
-        ChunkUploader $chunkUploader,
-        ContaoFrameworkInterface $framework,
-        Filesystem $fs,
-        Session $session
-    ) {
+    public function __construct(ChunkUploader $chunkUploader, Filesystem $fs, Session $session)
+    {
         $this->chunkUploader = $chunkUploader;
-        $this->framework     = $framework;
-        $this->fs            = $fs;
-        $this->session       = $session;
+        $this->fs = $fs;
+        $this->session = $session;
     }
 
     /**
@@ -140,24 +129,21 @@ class Uploader
      */
     public function storeFile(UploaderConfig $config, $file)
     {
-        /** @var \Contao\Validator $validator */
-        $validator = $this->framework->getAdapter('\Contao\Validator');
-
         // Move the temporary file
-        if (!$validator->isStringUuid($file) && $this->fs->fileExists($file) && $config->isStoreFileEnabled()) {
+        if (!\Contao\Validator::isStringUuid($file) && $this->fs->fileExists($file) && $config->isStoreFileEnabled()) {
             $file = $this->fs->moveTmpFile($file, $config->getUploadFolder(), $config->isDoNotOverwriteEnabled());
 
             // Add the file to database file system
             if ($config->isAddToDbafsEnabled()
-                && ($model = $this->framework->getAdapter('\Contao\Dbafs')->addResource($file)) !== null
+                && ($model = Dbafs::addResource($file)) !== null
             ) {
                 $file = $model->uuid;
             }
         }
 
         // Convert uuid to binary format
-        if ($validator->isStringUuid($file)) {
-            $file = $this->framework->getAdapter('\Contao\StringUtil')->uuidToBin($file);
+        if (\Contao\Validator::isStringUuid($file)) {
+            $file = StringUtil::uuidToBin($file);
         }
 
         return $file;

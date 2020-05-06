@@ -2,19 +2,14 @@
 
 namespace Terminal42\FineUploaderBundle;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\File;
+use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 class ChunkUploader
 {
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
     /**
      * @var Filesystem
      */
@@ -27,16 +22,13 @@ class ChunkUploader
 
     /**
      * ChunkUploader constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     * @param Filesystem               $fs
-     * @param Session                  $session
+     * @param Filesystem $fs
+     * @param Session $session
      */
-    public function __construct(ContaoFrameworkInterface $framework, Filesystem $fs, Session $session)
+    public function __construct(Filesystem $fs, Session $session)
     {
-        $this->framework = $framework;
-        $this->fs        = $fs;
-        $this->session   = $session;
+        $this->fs = $fs;
+        $this->session = $session;
     }
 
     /**
@@ -106,24 +98,14 @@ class ChunkUploader
 
         // Validate the minimum size limit
         if ($minSizeLimit > 0 && $file->size < $minSizeLimit) {
-            $widget->addError(
-                sprintf(
-                    $GLOBALS['TL_LANG']['ERR']['minFileSize'],
-                    $this->framework->getAdapter('\Contao\System')->getReadableSize($minSizeLimit)
-                )
-            );
+            $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['minFileSize'], System::getReadableSize($minSizeLimit)));
         }
 
         $maxSizeLimit = $config->getMaxSizeLimit();
 
         // Validate the maximum size limit
         if ($maxSizeLimit > 0 && $file->size > $maxSizeLimit) {
-            $widget->addError(
-                sprintf(
-                    $GLOBALS['TL_LANG']['ERR']['maxFileSize'],
-                    $this->framework->getAdapter('\Contao\System')->getReadableSize($maxSizeLimit)
-                )
-            );
+            $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['maxFileSize'], System::getReadableSize($maxSizeLimit)));
         }
     }
 

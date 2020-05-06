@@ -2,16 +2,12 @@
 
 namespace Terminal42\FineUploaderBundle;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Config;
 use Contao\File;
+use Contao\Files;
 
 class Filesystem
 {
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
     /**
      * @var string
      */
@@ -25,16 +21,13 @@ class Filesystem
 
     /**
      * Filesystem constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     * @param string                   $rootDir
-     * @param string                   $tmpPath
+     * @param string $rootDir
+     * @param string $tmpPath
      */
-    public function __construct(ContaoFrameworkInterface $framework, $rootDir, $tmpPath)
+    public function __construct($rootDir, $tmpPath)
     {
-        $this->framework = $framework;
-        $this->rootDir   = dirname($rootDir);
-        $this->tmpPath   = $tmpPath;
+        $this->rootDir = $rootDir;
+        $this->tmpPath = $tmpPath;
     }
 
     /**
@@ -85,7 +78,7 @@ class Filesystem
 
         foreach ($files as $filePath) {
             $file->append(file_get_contents($this->rootDir.'/'.$filePath), '');
-            $this->framework->createInstance('\Contao\Files')->delete($filePath);
+            Files::getInstance()->delete($filePath);
         }
 
         $file->close();
@@ -134,8 +127,7 @@ class Filesystem
             $new = $destination.'/'.$this->getFileName(basename($file), $destination);
         }
 
-        /** @var \Contao\Files $files */
-        $files = $this->framework->createInstance('\Contao\Files');
+        $files = Files::getInstance();
         $files->mkdir(dirname($new));
 
         // Try to rename the file
@@ -144,7 +136,7 @@ class Filesystem
         }
 
         // Set the default CHMOD
-        $files->chmod($new, $this->framework->getAdapter('\Contao\Config')->get('defaultFileChmod'));
+        $files->chmod($new, Config::get('defaultFileChmod'));
 
         return $new;
     }

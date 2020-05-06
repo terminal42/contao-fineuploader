@@ -2,7 +2,7 @@
 
 namespace Terminal42\FineUploaderBundle\EventListener;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Config;
 use Contao\File;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Terminal42\FineUploaderBundle\Event\FileUploadEvent;
@@ -12,25 +12,17 @@ use Terminal42\FineUploaderBundle\Widget\FrontendWidget;
 class FileUploadListener
 {
     /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-    /**
      * @var Uploader
      */
     private $uploader;
 
     /**
      * FileUploadListener constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     * @param Uploader                 $uploader
+     * @param Uploader $uploader
      */
-    public function __construct(ContaoFrameworkInterface $framework, Uploader $uploader)
+    public function __construct(Uploader $uploader)
     {
-        $this->framework = $framework;
-        $this->uploader  = $uploader;
+        $this->uploader = $uploader;
     }
 
     /**
@@ -82,10 +74,8 @@ class FileUploadListener
         $file = new File($filePath);
 
         if ($file->isImage) {
-            /** @var \Contao\Config $config */
-            $config    = $this->framework->createInstance('\Contao\Config');
-            $maxWidth  = $config->get('imageWidth');
-            $maxHeight = $config->get('imageHeight');
+            $maxWidth  = Config::get('imageWidth');
+            $maxHeight = Config::get('imageHeight');
 
             // Image exceeds maximum image width
             if ($file->width > $maxWidth) {

@@ -2,21 +2,19 @@
 
 namespace Terminal42\FineUploaderBundle;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Controller;
 use Contao\File;
 use Contao\FilesModel;
+use Contao\Image;
 use Contao\Model\Collection;
+use Contao\StringUtil;
+use Contao\System;
 use Contao\Template;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 class WidgetHelper
 {
-    /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
     /**
      * @var Filesystem
      */
@@ -29,16 +27,13 @@ class WidgetHelper
 
     /**
      * WidgetHelper constructor.
-     *
-     * @param ContaoFrameworkInterface $framework
-     * @param Filesystem               $fs
-     * @param Session                  $session
+     * @param Filesystem $fs
+     * @param Session $session
      */
-    public function __construct(ContaoFrameworkInterface $framework, Filesystem $fs, Session $session)
+    public function __construct(Filesystem $fs, Session $session)
     {
-        $this->framework = $framework;
-        $this->fs        = $fs;
-        $this->session   = $session;
+        $this->fs = $fs;
+        $this->session = $session;
     }
 
     /**
@@ -54,14 +49,12 @@ class WidgetHelper
             return [];
         }
 
-        /** @var \Contao\Validator $validator */
-        $validator = $this->framework->getAdapter('\Contao\Validator');
         $uuids     = [];
         $tmpFiles  = [];
 
         // Split the files into UUIDs and temporary ones
         foreach ($value as $file) {
-            if ($validator->isBinaryUuid($file)) {
+            if (\Contao\Validator::isBinaryUuid($file)) {
                 $uuids[] = $file;
             } else {
                 $tmpFiles[] = $file;
@@ -86,14 +79,11 @@ class WidgetHelper
      */
     private function generateDatabaseFiles(array $uuids)
     {
-        if (($fileModels = $this->framework->getAdapter('\Contao\FilesModel')->findMultipleByUuids($uuids)) === null) {
+        if (($fileModels = FilesModel::findMultipleByUuids($uuids)) === null) {
             return [];
         }
 
         $files = [];
-
-        /** @var \Contao\StringUtil $stringUtil */
-        $stringUtil = $this->framework->getAdapter('\Contao\StringUtil');
 
         /**
          * @var Collection $fileModels
@@ -105,7 +95,7 @@ class WidgetHelper
                 continue;
             }
 
-            $files[$stringUtil->binToUuid($fileModel->uuid)] = $fileModel->path;
+            $files[StringUtil::binToUuid($fileModel->uuid)] = $fileModel->path;
         }
 
         return $files;
@@ -149,13 +139,10 @@ class WidgetHelper
             throw new \InvalidArgumentException(sprintf('The file "%s" does not exist', $filePath));
         }
 
-        /** @var \Contao\Image $imageAdapter */
-        $imageAdapter = $this->framework->getAdapter('\Contao\Image');
-
-        $file               = new File($filePath, true);
+        $file               = new File($filePath);
         $template->file     = $file;
-        $template->icon     = $imageAdapter->getHtml($imageAdapter->getPath($file->icon), $file->extension);
-        $template->size     = $this->framework->getAdapter('\Contao\System')->getReadableSize($file->size);
+        $template->icon     = Image::getHtml(Image::getPath($file->icon), $file->extension);
+        $template->size     = System::getReadableSize($file->size);
         $template->addImage = false;
 
         // Add the image data
@@ -171,7 +158,7 @@ class WidgetHelper
                 $attributes = array_merge($attributes, $imageAttributes);
             }
 
-            $this->framework->getAdapter('\Contao\Controller')->addImageToTemplate($template, $attributes);
+            Controller::addImageToTemplate($template, $attributes);
         }
     }
 
@@ -187,28 +174,19 @@ class WidgetHelper
         $sessionKey   = 'FILES';
         $sessionFiles = $this->session->get($sessionKey);
 
-        /**
-         * @var \Contao\FilesModel $filesModelAdapter
-         * @var \Contao\StringUtil $stringUtil
-         * @var \Contao\Validator  $validator
-         */
-        $filesModelAdapter = $this->framework->getAdapter('\Contao\FilesModel');
-        $stringUtil        = $this->framework->getAdapter('\Contao\StringUtil');
-        $validator         = $this->framework->getAdapter('\Contao\Validator');
-
         foreach ($files as $filePath) {
             $model = null;
 
             // Get the file model
-            if ($validator->isUuid($filePath)) {
-                if (($model = $filesModelAdapter->findByUuid($filePath)) === null) {
+            if (\Contao\Validator::isUuid($filePath)) {
+                if (($model = FilesModel::findByUuid($filePath)) === null) {
                     continue;
                 }
 
                 $filePath = $model->path;
             }
 
-            $file = new File($filePath, true);
+            $file = new File($filePath);
 
             $sessionFiles[$name.'_'.$count++] = [
                 'name'     => $file->name,
@@ -217,7 +195,7 @@ class WidgetHelper
                 'error'    => 0,
                 'size'     => $file->size,
                 'uploaded' => true,
-                'uuid'     => ($model !== null) ? $stringUtil->binToUuid($model->uuid) : '',
+                'uuid'     => ($model !== null) ? StringUtil::binToUuid($model->uuid) : '',
             ];
         }
 

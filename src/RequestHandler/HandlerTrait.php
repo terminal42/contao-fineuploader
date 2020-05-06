@@ -2,7 +2,9 @@
 
 namespace Terminal42\FineUploaderBundle\RequestHandler;
 
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Input;
+use Contao\StringUtil;
+use Contao\Validator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -72,25 +74,17 @@ trait HandlerTrait
     /**
      * Parse the value by converting UUIDs to binary data
      *
-     * @param ContaoFrameworkInterface $framework
      * @param string                   $value
      *
      * @return string
      */
-    protected function parseValue(ContaoFrameworkInterface $framework, $value)
+    protected function parseValue($value)
     {
-        $value = trimsplit(',', $framework->getAdapter('\Contao\Input')->decodeEntities($value));
-
-        /**
-         * @var \Contao\Validator  $validator
-         * @var \Contao\StringUtil $stringUtil
-         */
-        $validator  = $framework->getAdapter('\Contao\Validator');
-        $stringUtil = $framework->getAdapter('\Contao\StringUtil');
+        $value = StringUtil::trimsplit(',', Input::decodeEntities($value));
 
         foreach ($value as $k => $v) {
-            if ($validator->isUuid($v) && !is_file(TL_ROOT.'/'.$v)) {
-                $value[$k] = $stringUtil->uuidToBin($v);
+            if (Validator::isUuid($v) && !is_file(TL_ROOT.'/'.$v)) {
+                $value[$k] = StringUtil::uuidToBin($v);
             }
         }
 

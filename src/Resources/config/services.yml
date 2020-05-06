@@ -11,19 +11,16 @@ services:
         class: Terminal42\FineUploaderBundle\ConfigGenerator
         arguments:
             - "%kernel.debug%"
-            - "@contao.framework"
 
     terminal42_fineuploader.chunk_uploader:
         class: Terminal42\FineUploaderBundle\ChunkUploader
         arguments:
-            - "@contao.framework"
             - "@terminal42_fineuploader.filesystem"
             - "@session"
 
     terminal42_fineuploader.filesystem:
         class: Terminal42\FineUploaderBundle\Filesystem
         arguments:
-            - "@contao.framework"
             - "%kernel.root_dir%"
             - "%terminal42_fineuploader.tmp_path%"
 
@@ -31,7 +28,6 @@ services:
         class: Terminal42\FineUploaderBundle\Uploader
         arguments:
             - "@terminal42_fineuploader.chunk_uploader"
-            - "@contao.framework"
             - "@terminal42_fineuploader.filesystem"
             - "@session"
 
@@ -43,7 +39,6 @@ services:
     terminal42_fineuploader.widget_helper:
         class: Terminal42\FineUploaderBundle\WidgetHelper
         arguments:
-            - "@contao.framework"
             - "@terminal42_fineuploader.filesystem"
             - "@session"
 
@@ -52,13 +47,11 @@ services:
         class: Terminal42\FineUploaderBundle\RequestHandler\BackendHandler
         arguments:
             - "@event_dispatcher"
-            - "@contao.framework"
 
     terminal42_fineuploader.request.frontend_handler:
         class: Terminal42\FineUploaderBundle\RequestHandler\FrontendHandler
         arguments:
             - "@event_dispatcher"
-            - "@contao.framework"
             - "@monolog.logger.contao"
 
     # Listeners
@@ -73,7 +66,6 @@ services:
     terminal42_fineuploader.listener.file_upload:
         class: Terminal42\FineUploaderBundle\EventListener\FileUploadListener
         arguments:
-            - "@contao.framework"
             - "@terminal42_fineuploader.uploader"
         tags:
             - { name: kernel.event_listener, event: terminal42_fineuploader.file_upload, method: onFileUpload }

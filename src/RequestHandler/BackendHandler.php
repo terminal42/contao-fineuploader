@@ -3,7 +3,7 @@
 namespace Terminal42\FineUploaderBundle\RequestHandler;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
+use Contao\Database;
 use Contao\DataContainer;
 use Contao\System;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -22,20 +22,12 @@ class BackendHandler
     private $eventDispatcher;
 
     /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-    /**
      * BackendHandler constructor.
-     *
      * @param EventDispatcherInterface $eventDispatcher
-     * @param ContaoFrameworkInterface $framework
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, ContaoFrameworkInterface $framework)
+    public function __construct(EventDispatcherInterface $eventDispatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
-        $this->framework       = $framework;
     }
 
     /**
@@ -102,7 +94,7 @@ class BackendHandler
         // Add some extra attributes required by the widget
         $attributes['id']           = $dc->field;
         $attributes['name']         = $dc->field;
-        $attributes['value']        = $this->parseValue($this->framework, $request->request->get('value'));
+        $attributes['value']        = $this->parseValue($request->request->get('value'));
         $attributes['strTable']     = $dc->table;
         $attributes['strField']     = $field;
         $attributes['activeRecord'] = $dc->activeRecord;
@@ -126,9 +118,7 @@ class BackendHandler
     private function triggerLoadCallback(array $dca, DataContainer $dc, $field, $id)
     {
         $value = null;
-
-        /** @var \Contao\Database $db */
-        $db = $this->framework->createInstance('\Contao\Database');
+        $db = Database::getInstance();
 
         // Load the value
         if ($dca['config']['dataContainer'] === 'File') {

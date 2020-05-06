@@ -3,7 +3,6 @@
 namespace Terminal42\FineUploaderBundle\RequestHandler;
 
 use Contao\CoreBundle\ContaoCoreBundle;
-use Contao\CoreBundle\Framework\ContaoFrameworkInterface;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
@@ -23,30 +22,19 @@ class FrontendHandler
     private $eventDispatcher;
 
     /**
-     * @var ContaoFrameworkInterface
-     */
-    private $framework;
-
-    /**
      * @var Logger
      */
     private $logger;
 
     /**
      * FrontendHandler constructor.
-     *
      * @param EventDispatcherInterface $eventDispatcher
-     * @param ContaoFrameworkInterface $framework
-     * @param Logger                   $logger
+     * @param Logger $logger
      */
-    public function __construct(
-        EventDispatcherInterface $eventDispatcher,
-        ContaoFrameworkInterface $framework,
-        Logger $logger
-    ) {
+    public function __construct(EventDispatcherInterface $eventDispatcher, Logger $logger)
+    {
         $this->eventDispatcher = $eventDispatcher;
-        $this->framework       = $framework;
-        $this->logger          = $logger;
+        $this->logger = $logger;
     }
 
     /**
@@ -141,7 +129,7 @@ class FrontendHandler
         $this->validateRequest($request, ContaoCoreBundle::SCOPE_FRONTEND);
 
         // Set the value from request
-        $widget->value = $this->parseValue($this->framework, $request->request->get('value'));
+        $widget->value = $this->parseValue($request->request->get('value'));
 
         return $this->getReloadResponse($this->eventDispatcher, $request, $widget);
     }
