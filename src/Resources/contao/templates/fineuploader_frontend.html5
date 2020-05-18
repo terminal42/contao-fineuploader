@@ -1,0 +1,49 @@
+<?php $this->extend('form_row'); ?>
+
+<?php $this->block('label'); ?>
+<?php if ($this->label): ?>
+    <label for="ctrl_<?= $this->id ?>"<?php if ($this->class): ?> class="<?= $this->class ?>"<?php endif; ?>>
+        <?php if ($this->mandatory): ?>
+            <span class="invisible"><?= $this->mandatoryField ?> </span><?= $this->label ?><span class="mandatory">*</span>
+        <?php else: ?>
+            <?= $this->label ?>
+        <?php endif; ?>
+    </label>
+<?php endif; ?>
+<?php $this->endblock(); ?>
+
+<?php $this->block('field'); ?>
+<?php if ($this->hasErrors()): ?>
+    <p class="error"><?= $this->getErrorAsString() ?></p>
+<?php endif; ?>
+
+<div id="fineuploader-widget-<?= $this->id ?>" class="fineuploader-wrapper">
+    <div class="fineuploader-container" data-fineuploader="ajax-container">
+        <?= $this->parseValues() ?>
+    </div>
+
+    <script type="text/template" id="qq-template-<?= $this->id ?>">
+        <?php
+        // Temporarily set the debug mode to false to avoid debug template tags like <!-- TEMPLATE START: ... -->
+        $debug = \Contao\Config::get('debugMode'); \Contao\Config::set('debugMode', false);
+        ?>
+        <?php $this->insert('fineuploader_uploader', $this->arrConfiguration) ?>
+        <?php \Contao\Config::set('debugMode', $debug); ?>
+    </script>
+
+    <div id="<?= $this->id ?>-fineuploader" class="upload-container" data-fineuploader="uploader"></div>
+
+    <?php $this->includeAssets(); ?>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            new ContaoFineUploaderFrontend(
+                document.getElementById('fineuploader-widget-<?= $this->id ?>'),
+                <?= json_encode($this->jsConfig) ?>,
+                {errorMessage: '<?= $GLOBALS['TL_LANG']['ERR']['general'] ?>'}
+            );
+        });
+    </script>
+</div>
+
+<?php $this->endblock(); ?>

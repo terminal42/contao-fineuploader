@@ -1,0 +1,18 @@
+<div class="fineuploader-item <?php if ($this->addImage && !$this->isDownloads): ?>image<?php else: ?>file<?php endif; ?>">
+    <?php if ($this->addImage && !$this->isDownloads): ?>
+        <figure class="image">
+            <?= $this->insert('picture_default', $this->picture) ?>
+        </figure>
+        <div class="content">
+            <div class="info">
+                <span class="path"><?= $this->file->name ?></span> <span class="details">(<span class="size"><?= $this->size ?></span>, <span class="dimensions"><?= $this->file->width ?>x<?= $this->file->height ?> px</span>)</span>
+            </div>
+            <a href="#" class="delete" title="<?= specialchars($GLOBALS['TL_LANG']['MSC']['delete']) ?>" data-fineuploader="delete" data-delete-id="<?= $this->id ?>"><?= $GLOBALS['TL_LANG']['MSC']['delete'] ?></a>
+        </div>
+    <?php else: ?>
+        <div class="content">
+            <?= $this->icon ?> <span class="name"><?= $this->file->name ?></span> <span class="details">(<span class="extension"><?= strtoupper($this->file->extension) ?></span>, <span class="size"><?= $this->size ?></span>)</span>
+        </div>
+        <a href="#" class="delete" title="<?= specialchars($GLOBALS['TL_LANG']['MSC']['delete']) ?>" data-fineuploader="delete" data-delete-id="<?= $this->id ?>"><?= $GLOBALS['TL_LANG']['MSC']['delete'] ?></a>
+    <?php endif; ?>
+</div>
