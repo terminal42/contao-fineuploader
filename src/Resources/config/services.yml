@@ -1,0 +1,76 @@
+services:
+    _defaults:
+        public: true
+
+    terminal42_fineuploader.assets_manager:
+        class: Terminal42\FineUploaderBundle\AssetsManager
+        arguments:
+            - "%kernel.debug%"
+
+    terminal42_fineuploader.config_generator:
+        class: Terminal42\FineUploaderBundle\ConfigGenerator
+        arguments:
+            - "%kernel.debug%"
+
+    terminal42_fineuploader.chunk_uploader:
+        class: Terminal42\FineUploaderBundle\ChunkUploader
+        arguments:
+            - "@terminal42_fineuploader.filesystem"
+            - "@session"
+
+    terminal42_fineuploader.filesystem:
+        class: Terminal42\FineUploaderBundle\Filesystem
+        arguments:
+            - "%kernel.project_dir%"
+            - "%terminal42_fineuploader.tmp_path%"
+
+    terminal42_fineuploader.uploader:
+        class: Terminal42\FineUploaderBundle\Uploader
+        arguments:
+            - "@terminal42_fineuploader.chunk_uploader"
+            - "@terminal42_fineuploader.filesystem"
+            - "@session"
+
+    terminal42_fineuploader.validator:
+        class: Terminal42\FineUploaderBundle\Validator
+        arguments:
+            - "@terminal42_fineuploader.uploader"
+
+    terminal42_fineuploader.widget_helper:
+        class: Terminal42\FineUploaderBundle\WidgetHelper
+        arguments:
+            - "@terminal42_fineuploader.filesystem"
+            - "@session"
+
+    # Request handlers
+    terminal42_fineuploader.request.backend_handler:
+        class: Terminal42\FineUploaderBundle\RequestHandler\BackendHandler
+        arguments:
+            - "@event_dispatcher"
+
+    terminal42_fineuploader.request.frontend_handler:
+        class: Terminal42\FineUploaderBundle\RequestHandler\FrontendHandler
+        arguments:
+            - "@event_dispatcher"
+            - "@monolog.logger.contao"
+
+    # Listeners
+    terminal42_fineuploader.listener.backend:
+        class: Terminal42\FineUploaderBundle\EventListener\BackendListener
+        arguments:
+            - "@terminal42_fineuploader.assets_manager"
+            - "@monolog.logger.contao"
+            - "@terminal42_fineuploader.request.backend_handler"
+            - "@request_stack"
+
+    terminal42_fineuploader.listener.file_upload:
+        class: Terminal42\FineUploaderBundle\EventListener\FileUploadListener
+        arguments:
+            - "@terminal42_fineuploader.uploader"
+        tags:
+            - { name: kernel.event_listener, event: terminal42_fineuploader.file_upload, method: onFileUpload }
+
+    terminal42_fineuploader.listener.widget_reload:
+        class: Terminal42\FineUploaderBundle\EventListener\WidgetReloadListener
+        tags:
+            - { name: kernel.event_listener, event: terminal42_fineuploader.widget_reload, method: onWidgetReload }
