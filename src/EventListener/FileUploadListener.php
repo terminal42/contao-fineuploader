@@ -87,12 +87,12 @@ class FileUploadListener
 
             // Image exceeds maximum image width
             if ($maxWidth > 0 && $file->width > $maxWidth) {
-                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], '', $maxWidth));
+                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], basename($filePath), $maxWidth));
             }
 
             // Image exceeds maximum image height
             if ($maxHeight > 0 && $file->height > $maxHeight) {
-                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], '', $maxHeight));
+                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], basename($filePath), $maxHeight));
             }
         }
     }
