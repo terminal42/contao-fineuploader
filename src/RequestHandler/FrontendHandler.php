@@ -65,10 +65,13 @@ class FrontendHandler
         try {
             $response = $this->dispatchRequest($request, $widget);
         } catch (\Exception $e) {
+            $caller = $e->getTrace()[1];
+            $func = $caller['class'].'::'.$caller['function'];
+
             $this->logger->log(
                 LogLevel::ERROR,
                 $e->getMessage(),
-                ['contao' => new ContaoContext(($e->getTrace())[1]['function'], TL_ERROR)]
+                ['contao' => new ContaoContext($func, TL_ERROR)]
             );
 
             $response = new Response('Bad Request', 400);
