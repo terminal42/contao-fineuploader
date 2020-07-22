@@ -55,7 +55,19 @@ class FileUploadListener
         }
 
         if (Validator::isUuid($filePath)) {
-            $filePath = FilesModel::findByUuid($filePath)->path;
+            $fileModel = FilesModel::findByUuid($filePath);
+
+            if (null === $fileModel) {
+                $event->setResponse(new JsonResponse([
+                    'success' => false,
+                    'error' => $GLOBALS['TL_LANG']['ERR']['general'],
+                    'preventRetry' => true,
+                ]));
+    
+                return;
+            }
+
+            $filePath = $fileModel->path;
         }
 
         // Validate the image dimensions for the frontend widget
