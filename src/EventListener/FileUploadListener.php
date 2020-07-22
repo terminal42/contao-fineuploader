@@ -80,16 +80,18 @@ class FileUploadListener
         $file = new File($filePath);
 
         if ($file->isImage) {
-            $maxWidth = Config::get('imageWidth');
-            $maxHeight = Config::get('imageHeight');
+            $config = $widget->getUploaderConfig();
+
+            $maxWidth = $config->getMaxImageWidth() ?: Config::get('imageWidth');
+            $maxHeight = $config->getMaxImageHeight() ?: Config::get('imageHeight');
 
             // Image exceeds maximum image width
-            if ($file->width > $maxWidth) {
+            if ($maxWidth > 0 && $file->width > $maxWidth) {
                 $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], '', $maxWidth));
             }
 
             // Image exceeds maximum image height
-            if ($file->height > $maxHeight) {
+            if ($maxHeight > 0 && $file->height > $maxHeight) {
                 $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], '', $maxHeight));
             }
         }
