@@ -14,6 +14,8 @@ namespace Terminal42\FineUploaderBundle\EventListener;
 
 use Contao\Config;
 use Contao\File;
+use Contao\FilesModel;
+use Contao\Validator;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Terminal42\FineUploaderBundle\Event\FileUploadEvent;
 use Terminal42\FineUploaderBundle\Uploader;
@@ -50,6 +52,22 @@ class FileUploadListener
             ]));
 
             return;
+        }
+
+        if (Validator::isUuid($filePath)) {
+            $fileModel = FilesModel::findByUuid($filePath);
+
+            if (null === $fileModel) {
+                $event->setResponse(new JsonResponse([
+                    'success' => false,
+                    'error' => $GLOBALS['TL_LANG']['ERR']['general'],
+                    'preventRetry' => true,
+                ]));
+    
+                return;
+            }
+
+            $filePath = $fileModel->path;
         }
 
         // Validate the image dimensions for the frontend widget
