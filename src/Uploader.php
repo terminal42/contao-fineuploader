@@ -78,7 +78,7 @@ class Uploader
 
         // Validate and move the file immediately
         if ($config->isDirectUploadEnabled() && !$isChunk) {
-            $filePath = $this->storeFile($config, $result);
+            $filePath = $this->storeFile($config, $filePath);
         }
 
         return $filePath;
