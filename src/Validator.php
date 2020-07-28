@@ -43,6 +43,11 @@ class Validator
             return $this->validateEmptyValue($widget);
         }
 
+        // Validate multiple files if input is an array (could be the case e.g. when terminal42/contao-mp_forms extension is used)
+        if (is_array($input)) {
+            return $this->validateMultipleFiles($widget, array_filter($input));
+        }
+
         // Single file
         if (false === strpos($input, ',')) {
             return $this->validateSingleFile($widget, $input);
