@@ -111,6 +111,7 @@ class ConfigGenerator
                     $config->setExtensions(trimsplit(',', $v));
                     break;
 
+                case 'mSize':
                 case 'uploaderLimit':
                     $config->setLimit($v);
                     break;
