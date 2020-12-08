@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * FineUploader Bundle for Contao Open Source CMS.
  *
