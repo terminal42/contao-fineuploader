@@ -4,18 +4,23 @@
     "keywords": ["contao", "uploader", "fineuploader", "chunking"],
     "type": "contao-bundle",
     "license": "MIT",
-    "authors": [
-        {
-            "name": "terminal42 gmbh",
-            "homepage": "https://terminal42.ch"
-        }
-    ],
+    "authors": [{
+        "name": "terminal42 gmbh",
+        "homepage": "https://www.terminal42.ch"
+    }],
+    "funding": [{
+        "type": "github",
+        "url": "https://github.com/terminal42"
+    }, {
+        "type": "other",
+        "url": "https://ko-fi.com/terminal42"
+    }],
     "support": {
         "issues": "https://github.com/terminal42/contao-fineuploader/issues",
         "source": "https://github.com/terminla42/contao-fineuploader"
     },
     "require": {
-        "php": ">=7.1",
+        "php": "^7.1 || ^8.0",
         "contao/core-bundle": "^4.4",
         "codefog/contao-haste": "^4.17"
     },
