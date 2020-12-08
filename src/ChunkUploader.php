@@ -55,7 +55,7 @@ class ChunkUploader
 
         // This is the last chunking request, merge the chunks and create the final file
         if ($this->isLastChunk($request)) {
-            $chunks = $this->mergeChunks($widget, $chunks[$fileName], $fileName);
+            $filePath = $this->mergeChunks($widget, $chunks[$fileName], $fileName);
 
             // Unset the file session after merging the chunks
             unset($chunks[$fileName]);
@@ -99,7 +99,7 @@ class ChunkUploader
             $fileName = $this->fs->getTmpFileName($fileName);
         }
 
-        $file = $this->fs->mergeTmpFiles($chunks[$fileName], $fileName);
+        $file = $this->fs->mergeTmpFiles($chunks, $fileName);
 
         // Validate the file
         $this->validateFile($file, $widget);
