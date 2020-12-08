@@ -94,7 +94,11 @@ class Uploader
     public function storeFile(UploaderConfig $config, $file)
     {
         // Move the temporary file
-        if (!\Contao\Validator::isStringUuid($file) && $this->fs->fileExists($file) && $config->isStoreFileEnabled()) {
+        if (!\Contao\Validator::isStringUuid($file)
+            && $this->fs->fileExists($file)
+            && $config->isStoreFileEnabled()
+            && $config->getUploadFolder()
+        ) {
             $file = $this->fs->moveTmpFile($file, $config->getUploadFolder(), $config->isDoNotOverwriteEnabled());
 
             // Add the file to database file system
