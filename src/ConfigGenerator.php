@@ -112,6 +112,11 @@ class ConfigGenerator
                     break;
 
                 case 'mSize':
+                    if (isset($attributes['multiple']) && $attributes['multiple']) {
+                        $config->setLimit($v);
+                    }
+                    break;
+
                 case 'uploaderLimit':
                     $config->setLimit($v);
                     break;
