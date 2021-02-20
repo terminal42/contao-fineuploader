@@ -119,8 +119,6 @@ class WidgetHelper
     public function addFilesToSession($name, array $files): void
     {
         $count = 0;
-        $sessionKey = 'FILES';
-        $sessionFiles = $this->session->get($sessionKey);
 
         foreach ($files as $filePath) {
             $model = null;
@@ -136,7 +134,7 @@ class WidgetHelper
 
             $file = new File($filePath);
 
-            $sessionFiles[$name.'_'.$count++] = [
+            $_SESSION['FILES'][$name.'_'.$count++] = [
                 'name' => $file->name,
                 'type' => $file->mime,
                 'tmp_name' => TL_ROOT.'/'.$file->path,
@@ -146,8 +144,6 @@ class WidgetHelper
                 'uuid' => (null !== $model) ? StringUtil::binToUuid($model->uuid) : '',
             ];
         }
-
-        $this->session->set($sessionKey, $sessionFiles);
     }
 
     /**
