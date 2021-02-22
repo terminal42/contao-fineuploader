@@ -40,7 +40,6 @@ services:
         class: Terminal42\FineUploaderBundle\WidgetHelper
         arguments:
             - "@terminal42_fineuploader.filesystem"
-            - "@session"
 
     # Request handlers
     terminal42_fineuploader.request.backend_handler:

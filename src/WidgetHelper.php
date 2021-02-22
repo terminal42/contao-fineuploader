@@ -20,7 +20,6 @@ use Contao\Model\Collection;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Template;
-use Symfony\Component\HttpFoundation\Session\Session;
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 class WidgetHelper
@@ -31,17 +30,11 @@ class WidgetHelper
     private $fs;
 
     /**
-     * @var Session
-     */
-    private $session;
-
-    /**
      * WidgetHelper constructor.
      */
-    public function __construct(Filesystem $fs, Session $session)
+    public function __construct(Filesystem $fs)
     {
         $this->fs = $fs;
-        $this->session = $session;
     }
 
     /**
