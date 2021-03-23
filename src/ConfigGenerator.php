@@ -74,6 +74,7 @@ class ConfigGenerator
             'minSizeLimit' => $config->getMinSizeLimit(),
             'sizeLimit' => $config->getMaxSizeLimit(),
             'uploadButtonTitle' => $config->getUploadButtonTitle(),
+            'messages' => $config->getLabels()['messages'],
         ];
 
         // Enable the chunking
