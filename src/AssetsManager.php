@@ -4,21 +4,18 @@ declare(strict_types=1);
 
 namespace Terminal42\FineUploaderBundle;
 
+use Symfony\Component\Asset\Packages;
+
 class AssetsManager
 {
     /**
-     * @var bool
+     * @var Packages
      */
-    private $debug;
+    private $packages;
 
-    /**
-     * AssetsManager constructor.
-     *
-     * @param bool $debug
-     */
-    public function __construct($debug)
+    public function __construct(Packages $packages)
     {
-        $this->debug = $debug;
+        $this->packages = $packages;
     }
 
     /**
@@ -46,11 +43,7 @@ class AssetsManager
      */
     public function getBasicAssets()
     {
-        return [
-            $this->getAssetPath('fine-uploader/fine-uploader.js'),
-            $this->getAssetPath('handler/handler.css'),
-            $this->getAssetPath('handler/handler.js'),
-        ];
+        return [];
     }
 
     /**
@@ -61,8 +54,8 @@ class AssetsManager
     public function getBackendAssets()
     {
         return [
-            $this->getAssetPath('backend/backend.css'),
-            $this->getAssetPath('backend/backend.js'),
+            $this->packages->getUrl('backend.css', 'terminal42_fine_uploader'),
+            $this->packages->getUrl('backend.js', 'terminal42_fine_uploader'),
         ];
     }
 
@@ -76,32 +69,15 @@ class AssetsManager
     public function getFrontendAssets($sortable = false)
     {
         $assets = [
-            $this->getAssetPath('frontend/frontend.css'),
-            $this->getAssetPath('frontend/frontend.js'),
+            $this->packages->getUrl('frontend.css', 'terminal42_fine_uploader'),
+            $this->packages->getUrl('frontend.js', 'terminal42_fine_uploader'),
         ];
 
         // Include the sortable library
         if ($sortable) {
-            $assets[] = $this->getAssetPath('sortable/sortable.js');
+            $assets[] = $this->packages->getUrl('sortable.js', 'terminal42_fine_uploader');
         }
 
         return $assets;
-    }
-
-    /**
-     * Get the asset path.
-     *
-     * @param string $path
-     *
-     * @return string
-     */
-    private function getAssetPath($path)
-    {
-        if (!$this->debug) {
-            $info = pathinfo($path);
-            $path = $info['dirname'].'/'.$info['filename'].'.min.'.$info['extension'];
-        }
-
-        return 'bundles/terminal42fineuploader/'.$path;
     }
 }

@@ -5,7 +5,7 @@ services:
     terminal42_fineuploader.assets_manager:
         class: Terminal42\FineUploaderBundle\AssetsManager
         arguments:
-            - "%kernel.debug%"
+            - "@assets.packages"
 
     terminal42_fineuploader.config_generator:
         class: Terminal42\FineUploaderBundle\ConfigGenerator

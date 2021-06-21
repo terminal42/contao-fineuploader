@@ -6,15 +6,18 @@
     },
     "license": "MIT",
     "dependencies": {
-        "autoprefixer": "^6.3.6",
         "fine-uploader": "^5.10.0",
-        "sortablejs": "^1.4.2",
-        "gulp": "^4.0.2",
-        "gulp-clean-css": "^2.0.3",
-        "gulp-postcss": "^6.1.1",
-        "gulp-rename": "^1.2.2",
-        "gulp-sourcemaps": "^1.6.0",
-        "gulp-uglify": "^1.5.3",
-        "gulp-util": "^3.0.7"
-    }
+        "sortablejs": "^1.4.2"
+    },
+    "devDependencies": {
+        "@babel/preset-env": "^7.14.5",
+        "@symfony/webpack-encore": "^1.5.0",
+        "autoprefixer": "^10.2.6",
+        "core-js": "^3.15.0",
+        "file-loader": "^6.0.0",
+        "postcss-loader": "^5.0.0"
+    },
+    "browserslist": [
+        "defaults"
+    ]
 }

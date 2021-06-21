@@ -1,7 +1,1 @@
-(function() {
-    "use strict";
-    var match = /(\{.*\})/.exec(document.body.innerHTML);
-    if (match) {
-        parent.postMessage(match[1], "*");
-    }
-}());
+!function(){"use strict";var e=/(\{.*\})/.exec(document.body.innerHTML);e&&parent.postMessage(e[1],"*")}();

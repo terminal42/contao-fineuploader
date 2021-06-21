@@ -9,7 +9,7 @@
 
 .fineuploader-wrapper .fineuploader-item .delete {
     padding-left: 20px;
-    background: url("/system/themes/flexible/icons/delete.svg") no-repeat left top;
+    background: url("/vendor/contao/core-bundle/src/Resources/contao/themes/flexible/icons/delete.svg") no-repeat left top;
     background-size: auto 15px;
     color: #c33;
 }
@@ -195,7 +195,7 @@
     padding-left: 22px;
     line-height: 19px;
     list-style-type: none;
-    background: url("/system/themes/flexible/icons/loading.svg") no-repeat left 2px;
+    background: url("/vendor/contao/core-bundle/src/Resources/contao/themes/flexible/icons/loading.svg") no-repeat left 2px;
     background-size: auto 15px;
 }
 
@@ -204,11 +204,11 @@
 }
 
 .fineuploader-wrapper .qq-upload-list li.qq-upload-success {
-    background-image: url("/system/themes/flexible/icons/ok.svg");
+    background-image: url("/vendor/contao/core-bundle/src/Resources/contao/themes/flexible/icons/ok.svg");
     color: #589b0e;
 }
 
 .fineuploader-wrapper .qq-upload-list li.qq-upload-fail {
-    background-image: url("/system/themes/flexible/icons/delete.svg");
+    background-image: url("/vendor/contao/core-bundle/src/Resources/contao/themes/flexible/icons/delete.svg");
     color: #c33;
 }
