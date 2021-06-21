@@ -141,6 +141,11 @@
                 };
             }
 
+            // Set the messages
+            if (this.settings.messages) {
+                config.messages = this.settings.messages;
+            }
+
             // Call the config callback
             if (typeof this.settings.configCallback === 'function') {
                 this.settings.configCallback(config);
