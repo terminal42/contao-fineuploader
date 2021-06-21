@@ -2,14 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * FineUploader Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- */
-
 namespace Terminal42\FineUploaderBundle\EventListener;
 
 use Contao\CoreBundle\ContaoCoreBundle;
@@ -45,15 +37,8 @@ class BackendListener
      */
     private $requestStack;
 
-    /**
-     * BackendListener constructor.
-     */
-    public function __construct(
-        AssetsManager $assetsManager,
-        Logger $logger,
-        BackendHandler $requestHandler,
-        RequestStack $requestStack
-    ) {
+    public function __construct(AssetsManager $assetsManager, Logger $logger, BackendHandler $requestHandler, RequestStack $requestStack)
+    {
         $this->assetsManager = $assetsManager;
         $this->logger = $logger;
         $this->requestHandler = $requestHandler;
@@ -70,7 +55,8 @@ class BackendListener
         $request = $this->requestStack->getCurrentRequest();
 
         // Return if the scope is not backend or the DCA has no fields
-        if (null === $request
+        if (
+            null === $request
             || ContaoCoreBundle::SCOPE_BACKEND !== $request->attributes->get('_scope')
             || !\is_array($GLOBALS['TL_DCA'][$table]['fields'])
         ) {
@@ -102,7 +88,7 @@ class BackendListener
             $this->logger->log(
                 LogLevel::ERROR,
                 $e->getMessage(),
-                ['contao' => new ContaoContext(($e->getTrace())[1]['function'], TL_ERROR)]
+                ['contao' => new ContaoContext($e->getTrace()[1]['function'], TL_ERROR)]
             );
 
             $response = new Response('Bad Request', 400);

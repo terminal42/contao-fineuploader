@@ -4,29 +4,34 @@
     "keywords": ["contao", "uploader", "fineuploader", "chunking"],
     "type": "contao-bundle",
     "license": "MIT",
-    "authors": [{
-        "name": "terminal42 gmbh",
-        "homepage": "https://www.terminal42.ch"
-    }],
-    "funding": [{
-        "type": "github",
-        "url": "https://github.com/terminal42"
-    }, {
-        "type": "other",
-        "url": "https://ko-fi.com/terminal42"
-    }],
+    "authors": [
+        {
+            "name": "terminal42 gmbh",
+            "homepage": "https://www.terminal42.ch"
+        }
+    ],
+    "funding": [
+        {
+            "type": "github",
+            "url": "https://github.com/terminal42"
+        },
+        {
+            "type": "other",
+            "url": "https://ko-fi.com/terminal42"
+        }
+    ],
     "support": {
         "issues": "https://github.com/terminal42/contao-fineuploader/issues",
         "source": "https://github.com/terminal42/contao-fineuploader"
     },
     "require": {
-        "php": "^7.1 || ^8.0",
-        "contao/core-bundle": "^4.4",
+        "php": "^7.2 || ^8.0",
+        "contao/core-bundle": "^4.9",
         "codefog/contao-haste": "^4.17"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "contao/php-cs-fixer": "^2.2"
+        "contao/easy-coding-standard": "^3.0"
     },
     "conflict": {
         "contao/manager-plugin": "<2.0 || >=3.0"
@@ -38,5 +43,10 @@
     },
     "extra": {
         "contao-manager-plugin": "Terminal42\\FineUploaderBundle\\ContaoManager\\Plugin"
+    },
+    "scripts": {
+        "cs-fixer": [
+            "vendor/bin/ecs check src/ --fix --ansi"
+        ]
     }
 }

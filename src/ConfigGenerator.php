@@ -2,19 +2,12 @@
 
 declare(strict_types=1);
 
-/*
- * FineUploader Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- */
-
 namespace Terminal42\FineUploaderBundle;
 
 use Contao\Config;
 use Contao\FilesModel;
 use Contao\FrontendUser;
+use Contao\Validator;
 
 class ConfigGenerator
 {
@@ -188,7 +181,7 @@ class ConfigGenerator
      */
     private function setUploadFolder(UploaderConfig $config, $folder): void
     {
-        if (\Contao\Validator::isUuid($folder)) {
+        if (Validator::isUuid($folder)) {
             $model = FilesModel::findByUuid($folder);
 
             // Set the path from model

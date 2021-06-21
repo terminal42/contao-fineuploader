@@ -2,14 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * FineUploader Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- */
-
 namespace Terminal42\FineUploaderBundle;
 
 use Contao\Controller;
@@ -20,6 +12,7 @@ use Contao\Model\Collection;
 use Contao\StringUtil;
 use Contao\System;
 use Contao\Template;
+use Contao\Validator;
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 class WidgetHelper
@@ -53,7 +46,7 @@ class WidgetHelper
 
         // Split the files into UUIDs and temporary ones
         foreach ($value as $file) {
-            if (\Contao\Validator::isBinaryUuid($file)) {
+            if (Validator::isBinaryUuid($file)) {
                 $uuids[] = $file;
             } else {
                 $tmpFiles[] = $file;
@@ -117,7 +110,7 @@ class WidgetHelper
             $model = null;
 
             // Get the file model
-            if (\Contao\Validator::isUuid($filePath)) {
+            if (Validator::isUuid($filePath)) {
                 if (null === ($model = FilesModel::findByUuid($filePath))) {
                     continue;
                 }
@@ -134,7 +127,7 @@ class WidgetHelper
                 'error' => 0,
                 'size' => $file->size,
                 'uploaded' => true,
-                'uuid' => (null !== $model) ? StringUtil::binToUuid($model->uuid) : '',
+                'uuid' => null !== $model ? StringUtil::binToUuid($model->uuid) : '',
             ];
         }
     }

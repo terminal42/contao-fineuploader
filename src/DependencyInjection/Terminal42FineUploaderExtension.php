@@ -2,14 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * FineUploader Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- */
-
 namespace Terminal42\FineUploaderBundle\DependencyInjection;
 
 use Symfony\Component\Config\FileLocator;
@@ -26,7 +18,7 @@ class Terminal42FineUploaderExtension extends Extension
     {
         $loader = new YamlFileLoader(
             $container,
-            new FileLocator(__DIR__.'/../Resources/config')
+            new FileLocator(__DIR__.'/../../config')
         );
 
         $loader->load('parameters.yml');

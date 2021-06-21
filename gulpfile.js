@@ -17,7 +17,7 @@ gulp.task('copy-fineuploader', function () {
         ['node_modules/fine-uploader/fine-uploader/**/*'],
         {'base': 'node_modules/fine-uploader/fine-uploader'}
     )
-        .pipe(gulp.dest('src/Resources/public/fine-uploader'));
+        .pipe(gulp.dest('public/fine-uploader'));
 });
 
 // Copy the Sortable
@@ -32,16 +32,16 @@ gulp.task('copy-sortable', function () {
         .pipe(rename(function (path) {
             path.basename = path.basename.toLowerCase();
         }))
-        .pipe(gulp.dest('src/Resources/public/sortable'));
+        .pipe(gulp.dest('public/sortable'));
 });
 
 // Prepare JavaScript files
 gulp.task('scripts', function () {
     return gulp.src(
         [
-            'src/Resources/public/backend/backend.js',
-            'src/Resources/public/frontend/frontend.js',
-            'src/Resources/public/handler/handler.js'
+            'public/backend/backend.js',
+            'public/frontend/frontend.js',
+            'public/handler/handler.js'
         ],
         {'base': '.'}
     )
@@ -57,9 +57,9 @@ gulp.task('scripts', function () {
 // Prepare CSS files
 gulp.task('styles', function () {
     return gulp.src([
-            'src/Resources/public/backend/backend.css',
-            'src/Resources/public/frontend/frontend.css',
-            'src/Resources/public/handler/handler.css'
+            'public/backend/backend.css',
+            'public/frontend/frontend.css',
+            'public/handler/handler.css'
         ],
         {'base': '.'}
     )
@@ -75,8 +75,8 @@ gulp.task('styles', function () {
 
 // Watch task
 gulp.task('watch', function () {
-    gulp.watch(['src/Resources/public/**/*.js'], gulp.series('scripts'));
-    gulp.watch(['src/Resources/public/**/*.css'], gulp.series('styles'));
+    gulp.watch(['public/**/*.js'], gulp.series('scripts'));
+    gulp.watch(['public/**/*.css'], gulp.series('styles'));
 });
 
 // Build task

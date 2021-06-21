@@ -2,14 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * FineUploader Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- */
-
 namespace Terminal42\FineUploaderBundle;
 
 use Contao\Config;
@@ -181,7 +173,7 @@ class Filesystem
         foreach ($files as $file) {
             if (preg_match('/__[0-9]+\.'.preg_quote($pathinfo['extension'], '/').'$/', $file)) {
                 $file = str_replace('.'.$pathinfo['extension'], '', $file);
-                $value = (int) substr($file, (strrpos($file, '_') + 1));
+                $value = (int) substr($file, strrpos($file, '_') + 1);
                 $offset = max($offset, $value);
             }
         }

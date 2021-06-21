@@ -2,18 +2,11 @@
 
 declare(strict_types=1);
 
-/*
- * FineUploader Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- */
-
 namespace Terminal42\FineUploaderBundle;
 
 use Contao\Dbafs;
 use Contao\StringUtil;
+use Contao\Validator;
 use Haste\Util\FileUpload;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -94,7 +87,8 @@ class Uploader
     public function storeFile(UploaderConfig $config, $file)
     {
         // Move the temporary file
-        if (!\Contao\Validator::isStringUuid($file)
+        if (
+            !Validator::isStringUuid($file)
             && $this->fs->fileExists($file)
             && $config->isStoreFileEnabled()
             && $config->getUploadFolder()
@@ -102,7 +96,8 @@ class Uploader
             $file = $this->fs->moveTmpFile($file, $config->getUploadFolder(), $config->isDoNotOverwriteEnabled());
 
             // Add the file to database file system
-            if ($config->isAddToDbafsEnabled()
+            if (
+                $config->isAddToDbafsEnabled()
                 && null !== ($model = Dbafs::addResource($file))
             ) {
                 $file = $model->uuid;
@@ -110,7 +105,7 @@ class Uploader
         }
 
         // Convert uuid to binary format
-        if (\Contao\Validator::isStringUuid($file)) {
+        if (Validator::isStringUuid($file)) {
             $file = StringUtil::uuidToBin($file);
         }
 

@@ -2,14 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * FineUploader Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- */
-
 namespace Terminal42\FineUploaderBundle\RequestHandler;
 
 use Contao\Input;
@@ -31,11 +23,8 @@ trait HandlerTrait
      *
      * @return JsonResponse
      */
-    protected function getUploadResponse(
-        EventDispatcherInterface $eventDispatcher,
-        Request $request,
-        BaseWidget $widget
-    ) {
+    protected function getUploadResponse(EventDispatcherInterface $eventDispatcher, Request $request, BaseWidget $widget)
+    {
         $event = new FileUploadEvent($request, new JsonResponse(), $widget);
         $eventDispatcher->dispatch($event, UploaderEvents::FILE_UPLOAD);
 
@@ -47,11 +36,8 @@ trait HandlerTrait
      *
      * @return Response
      */
-    protected function getReloadResponse(
-        EventDispatcherInterface $eventDispatcher,
-        Request $request,
-        BaseWidget $widget
-    ) {
+    protected function getReloadResponse(EventDispatcherInterface $eventDispatcher, Request $request, BaseWidget $widget)
+    {
         $event = new WidgetReloadEvent($request, new Response(), $widget);
         $eventDispatcher->dispatch($event, UploaderEvents::WIDGET_RELOAD);
 

@@ -2,14 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * FineUploader Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- */
-
 namespace Terminal42\FineUploaderBundle;
 
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
@@ -44,7 +36,7 @@ class Validator
         }
 
         // Validate multiple files if input is an array (could be the case e.g. when terminal42/contao-mp_forms extension is used)
-        if (is_array($input)) {
+        if (\is_array($input)) {
             return $this->validateMultipleFiles($widget, array_filter($input));
         }
 
