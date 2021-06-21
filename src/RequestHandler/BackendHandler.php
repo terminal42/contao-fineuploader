@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Terminal42\FineUploaderBundle\RequestHandler;
 
-use Contao\CoreBundle\ContaoCoreBundle;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\Database;
 use Contao\DataContainer;
 use Contao\System;
@@ -24,11 +24,17 @@ class BackendHandler
     private $eventDispatcher;
 
     /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    /**
      * BackendHandler constructor.
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher)
+    public function __construct(EventDispatcherInterface $eventDispatcher, ScopeMatcher $scopeMatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**
@@ -40,7 +46,7 @@ class BackendHandler
      */
     public function handleUploadRequest(Request $request, DataContainer $dc)
     {
-        $this->validateRequest($request, ContaoCoreBundle::SCOPE_BACKEND);
+        $this->validateRequest($request);
 
         /** @var BackendWidget $widget */
         $widget = new $GLOBALS['BE_FFL']['fineUploader'](
@@ -138,6 +144,16 @@ class BackendHandler
                     $value = $callback($value, $dc);
                 }
             }
+        }
+    }
+
+    /**
+     * Validate the request.
+     */
+    private function validateRequest(Request $request): void
+    {
+        if (!$this->scopeMatcher->isBackendRequest($request)) {
+            throw new \RuntimeException('This method can be executed only in the backend scope');
         }
     }
 }

@@ -45,20 +45,6 @@ trait HandlerTrait
     }
 
     /**
-     * Validate the request.
-     *
-     * @param string $scope
-     *
-     * @throws \RuntimeException
-     */
-    protected function validateRequest(Request $request, $scope): void
-    {
-        if ($request->attributes->get('_scope') !== $scope) {
-            throw new \RuntimeException(sprintf('This method can be executed only in the %s scope', $scope));
-        }
-    }
-
-    /**
      * Parse the value by converting UUIDs to binary data.
      *
      * @param string $value

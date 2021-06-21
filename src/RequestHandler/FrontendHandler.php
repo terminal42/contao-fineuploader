@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Terminal42\FineUploaderBundle\RequestHandler;
 
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -29,12 +29,18 @@ class FrontendHandler
     private $logger;
 
     /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    /**
      * FrontendHandler constructor.
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, Logger $logger)
+    public function __construct(EventDispatcherInterface $eventDispatcher, Logger $logger, ScopeMatcher $scopeMatcher)
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**
@@ -82,7 +88,7 @@ class FrontendHandler
      */
     public function handleUploadRequest(Request $request, FrontendWidget $widget)
     {
-        $this->validateRequest($request, ContaoCoreBundle::SCOPE_FRONTEND);
+        $this->validateRequest($request);
 
         return $this->getUploadResponse($this->eventDispatcher, $request, $widget);
     }
@@ -96,7 +102,7 @@ class FrontendHandler
      */
     public function handleReloadRequest(Request $request, FrontendWidget $widget)
     {
-        $this->validateRequest($request, ContaoCoreBundle::SCOPE_FRONTEND);
+        $this->validateRequest($request);
 
         // Set the value from request
         $widget->value = $this->parseValue($request->request->get('value'));
@@ -124,5 +130,15 @@ class FrontendHandler
         }
 
         return $response;
+    }
+
+    /**
+     * Validate the request.
+     */
+    private function validateRequest(Request $request): void
+    {
+        if (!$this->scopeMatcher->isFrontendRequest($request)) {
+            throw new \RuntimeException('This method can be executed only in the frontend scope');
+        }
     }
 }

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace Terminal42\FineUploaderBundle\EventListener;
 
-use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Monolog\ContaoContext;
+use Contao\CoreBundle\Routing\ScopeMatcher;
 use Contao\DataContainer;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
@@ -37,12 +37,18 @@ class BackendListener
      */
     private $requestStack;
 
-    public function __construct(AssetsManager $assetsManager, Logger $logger, BackendHandler $requestHandler, RequestStack $requestStack)
+    /**
+     * @var ScopeMatcher
+     */
+    private $scopeMatcher;
+
+    public function __construct(AssetsManager $assetsManager, Logger $logger, BackendHandler $requestHandler, RequestStack $requestStack, ScopeMatcher $scopeMatcher)
     {
         $this->assetsManager = $assetsManager;
         $this->logger = $logger;
         $this->requestHandler = $requestHandler;
         $this->requestStack = $requestStack;
+        $this->scopeMatcher = $scopeMatcher;
     }
 
     /**
@@ -57,7 +63,7 @@ class BackendListener
         // Return if the scope is not backend or the DCA has no fields
         if (
             null === $request
-            || ContaoCoreBundle::SCOPE_BACKEND !== $request->attributes->get('_scope')
+            || $this->scopeMatcher->isBackendRequest($request)
             || !\is_array($GLOBALS['TL_DCA'][$table]['fields'])
         ) {
             return;
