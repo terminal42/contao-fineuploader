@@ -37,7 +37,7 @@ trait HandlerTrait
         BaseWidget $widget
     ) {
         $event = new FileUploadEvent($request, new JsonResponse(), $widget);
-        $eventDispatcher->dispatch(UploaderEvents::FILE_UPLOAD, $event);
+        $eventDispatcher->dispatch($event, UploaderEvents::FILE_UPLOAD);
 
         return $event->getResponse();
     }
@@ -53,7 +53,7 @@ trait HandlerTrait
         BaseWidget $widget
     ) {
         $event = new WidgetReloadEvent($request, new Response(), $widget);
-        $eventDispatcher->dispatch(UploaderEvents::WIDGET_RELOAD, $event);
+        $eventDispatcher->dispatch($event, UploaderEvents::WIDGET_RELOAD);
 
         return $event->getResponse();
     }
