@@ -2,14 +2,6 @@
 
 declare(strict_types=1);
 
-/*
- * FineUploader Bundle for Contao Open Source CMS.
- *
- * @copyright  Copyright (c) 2020, terminal42 gmbh
- * @author     terminal42 <https://terminal42.ch>
- * @license    MIT
- */
-
 $GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,maxConnections,extensions,minlength,maxlength,maxWidth,maxHeight,uploadButtonLabel,chunking,multiple;{store_legend:hide},storeFile,addToDbafs;{expert_legend:hide},class,fSize';
 $GLOBALS['TL_DCA']['tl_form_field']['palettes']['__selector__'][] = 'chunking';
 $GLOBALS['TL_DCA']['tl_form_field']['subpalettes']['chunking'] = 'chunkSize,concurrent';

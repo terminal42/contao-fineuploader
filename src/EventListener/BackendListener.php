@@ -7,6 +7,7 @@ namespace Terminal42\FineUploaderBundle\EventListener;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\CoreBundle\Monolog\ContaoContext;
 use Contao\CoreBundle\Routing\ScopeMatcher;
+use Contao\CoreBundle\ServiceAnnotation\Hook;
 use Contao\DataContainer;
 use Monolog\Logger;
 use Psr\Log\LogLevel;
@@ -55,6 +56,8 @@ class BackendListener
      * Load the widget assets if they are needed. Load them here so the widget in subpalette can work as well.
      *
      * @param string $table
+     *
+     * @Hook("loadDataContainer")
      */
     public function onLoadDataContainer($table): void
     {
@@ -85,6 +88,8 @@ class BackendListener
      * @param string $action
      *
      * @throws ResponseException
+     *
+     * @Hook("executePostActions")
      */
     public function onExecutePostActions($action, DataContainer $dc): void
     {
