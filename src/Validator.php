@@ -76,7 +76,13 @@ class Validator
      */
     private function validateSingleFile(BaseWidget $widget, $input)
     {
-        return $this->uploader->storeFile($widget->getUploaderConfig(), $input);
+        try {
+            return $this->uploader->storeFile($widget->getUploaderConfig(), $input);
+        } catch (\Exception $e) {
+            $widget->addError($GLOBALS['TL_LANG']['ERR']['emptyUpload']);
+        }
+
+        return $input;
     }
 
     /**
@@ -95,7 +101,11 @@ class Validator
 
         // Store the files
         foreach ($inputs as $k => $v) {
-            $inputs[$k] = $this->uploader->storeFile($config, $v);
+            try {
+                $inputs[$k] = $this->uploader->storeFile($config, $v);
+            } catch (\Exception $e) {
+                $widget->addError($GLOBALS['TL_LANG']['ERR']['emptyUpload']);
+            }
         }
 
         return $inputs;

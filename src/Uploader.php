@@ -86,27 +86,22 @@ class Uploader
      */
     public function storeFile(UploaderConfig $config, $file)
     {
-        // Move the temporary file
-        if (
-            !Validator::isStringUuid($file)
-            && $this->fs->fileExists($file)
-            && $config->isStoreFileEnabled()
-            && $config->getUploadFolder()
-        ) {
-            $file = $this->fs->moveTmpFile($file, $config->getUploadFolder(), $config->isDoNotOverwriteEnabled());
-
-            // Add the file to database file system
-            if (
-                $config->isAddToDbafsEnabled()
-                && null !== ($model = Dbafs::addResource($file))
-            ) {
-                $file = $model->uuid;
-            }
-        }
-
         // Convert uuid to binary format
         if (Validator::isStringUuid($file)) {
             $file = StringUtil::uuidToBin($file);
+        } elseif ($this->fs->fileExists($file)) {
+            // Move the temporary file
+            if ($config->isStoreFileEnabled() && $config->getUploadFolder()) {
+                $file = $this->fs->moveTmpFile($file, $config->getUploadFolder(), $config->isDoNotOverwriteEnabled());
+
+                // Add the file to database file system
+                if ($config->isAddToDbafsEnabled() && null !== ($model = Dbafs::addResource($file))) {
+                    $file = $model->uuid;
+                }
+            }
+        } else {
+            // The file does not exist
+            throw new \Exception(sprintf('The file "%s" does not exist', $file));
         }
 
         return $file;
