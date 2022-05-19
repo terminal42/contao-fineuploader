@@ -120,6 +120,10 @@ class WidgetHelper
 
             $file = new File($filePath);
 
+            if (!$file->exists()) {
+                continue;
+            }
+
             $_SESSION['FILES'][$name.'_'.$count++] = [
                 'name' => $file->name,
                 'type' => $file->mime,
