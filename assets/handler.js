@@ -137,7 +137,7 @@ import { FineUploader } from 'fine-uploader';
             }
 
             // Set the messages
-            if (this.settings.messages) {
+            if (this.settings.messages && !Array.isArray(this.settings.messages)) {
                 config.messages = this.settings.messages;
             }
 
