@@ -136,7 +136,7 @@ class BackendHandler
         }
 
         // Trigger the callbacks
-        if (\is_array($dca['fields'][$field]['load_callback'])) {
+        if (\is_array($dca['fields'][$field]['load_callback'] ?? null)) {
             foreach ($dca['fields'][$field]['load_callback'] as $callback) {
                 if (\is_array($callback)) {
                     $value = System::importStatic($callback[0])->{$callback[1]}($value, $dc);
