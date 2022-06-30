@@ -66,7 +66,7 @@ abstract class BaseWidget extends Widget
             case 'imageSize':
             case 'uploaderConfig':
                 if (!\is_array($value)) {
-                    throw new \InvalidArgumentException(sprintf('The "%s" must be an array', $key));
+                    return;
                 }
 
                 $this->arrConfiguration[$key] = $value;
