@@ -17,7 +17,8 @@ import "./handler.js"
      */
     var defaults = {
         ajaxActionName: 'fineuploader_reload',
-        errorMessage: ''
+        ajaxUrl: null,
+        errorMessage: '',
     };
 
     /**
@@ -112,7 +113,7 @@ import "./handler.js"
 
             var request = new XMLHttpRequest();
 
-            request.open('POST', window.location.href, true);
+            request.open('POST', this.settings.ajaxUrl || window.location.href, true);
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 

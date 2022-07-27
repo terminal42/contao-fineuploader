@@ -2,7 +2,7 @@
   "backend.css": "/bundles/terminal42fineuploader/backend.863151a1.css",
   "backend.js": "/bundles/terminal42fineuploader/backend.ba74541a.js",
   "frontend.css": "/bundles/terminal42fineuploader/frontend.0c99eb7a.css",
-  "frontend.js": "/bundles/terminal42fineuploader/frontend.dc4501eb.js",
+  "frontend.js": "/bundles/terminal42fineuploader/frontend.dc112a59.js",
   "sortable.js": "/bundles/terminal42fineuploader/sortable.bca07fc6.js",
   "fine-uploader/fine-uploader.js.map": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader.js.map",
   "fine-uploader/fine-uploader.min.js.map": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader.min.js.map",
@@ -40,6 +40,6 @@
   "backend.863151a1.css.map": "/bundles/terminal42fineuploader/backend.863151a1.css.map",
   "backend.ba74541a.js.map": "/bundles/terminal42fineuploader/backend.ba74541a.js.map",
   "frontend.0c99eb7a.css.map": "/bundles/terminal42fineuploader/frontend.0c99eb7a.css.map",
-  "frontend.dc4501eb.js.map": "/bundles/terminal42fineuploader/frontend.dc4501eb.js.map",
+  "frontend.dc112a59.js.map": "/bundles/terminal42fineuploader/frontend.dc112a59.js.map",
   "sortable.bca07fc6.js.map": "/bundles/terminal42fineuploader/sortable.bca07fc6.js.map"
 }
