@@ -42,11 +42,25 @@ class UploaderConfig
     private $maxSizeLimit;
 
     /**
+     * Minimum image width.
+     *
+     * @var int
+     */
+    private $minImageWidth;
+
+    /**
      * Maximum image width.
      *
      * @var int
      */
     private $maxImageWidth;
+
+    /**
+     * Minimum image height.
+     *
+     * @var int
+     */
+    private $minImageHeight;
 
     /**
      * Maximum image height.
@@ -261,6 +275,30 @@ class UploaderConfig
     }
 
     /**
+     * Get the minimum image width.
+     *
+     * @return int
+     */
+    public function getMinImageWidth()
+    {
+        return $this->minImageWidth;
+    }
+
+    /**
+     * Set the minimum image width.
+     *
+     * @param int $minImageWidth
+     *
+     * @return UploaderConfig
+     */
+    public function setMinImageWidth($minImageWidth)
+    {
+        $this->minImageWidth = (int) $minImageWidth;
+
+        return $this;
+    }
+
+    /**
      * Get the maximum image width.
      *
      * @return int
@@ -280,6 +318,30 @@ class UploaderConfig
     public function setMaxImageWidth($maxImageWidth)
     {
         $this->maxImageWidth = (int) $maxImageWidth;
+
+        return $this;
+    }
+
+    /**
+     * Get the minimum image height.
+     *
+     * @return int
+     */
+    public function getMinImageHeight()
+    {
+        return $this->minImageHeight;
+    }
+
+    /**
+     * Set the minimum image height.
+     *
+     * @param int $minImageHeight
+     *
+     * @return UploaderConfig
+     */
+    public function setMinImageHeight($minImageHeight)
+    {
+        $this->minImageHeight = (int) $minImageHeight;
 
         return $this;
     }
