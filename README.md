@@ -33,19 +33,21 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = [
         'addToDbafs'        => true,                        // Add files to the database assisted file system
         'doNotOverwrite'    => true,                        // Do not overwrite files in destination folder
         'debug'             => true                         // Enable the debug mode (always true in development environment)
-        
+
         // Validation
         'extensions'        => 'pdf,zip',                   // Allowed extension types
         'minlength'         => 1048000,                     // Minimum file size
         'maxlength'         => 2048000,                     // Maximum file size (ignored if you use chunking!)
+        'minWidth'          => 400,                         // Minimum image width
         'maxWidth'          => 800,                         // Maximum image width
+        'minHeight'         => 300,                         // Minimum image height
         'maxHeight'         => 600,                         // Maximum image height
 
         // Chunking
         'chunking'          => true,                        // Enable chunking
         'chunkSize'         => 2000000,                     // Chunk size in bytes
         'concurrent'        => true                         // Allow multiple chunks to be uploaded simultaneously per file
-        
+
         // Rendering
         'imageSize'         => [160, 120, 'center_center'], // Thumbnail image size that is generated upon image upload
         'isGallery'         => true,                        // Display the widget as image gallery
