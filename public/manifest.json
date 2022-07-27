@@ -1,8 +1,8 @@
 {
   "backend.css": "/bundles/terminal42fineuploader/backend.863151a1.css",
-  "backend.js": "/bundles/terminal42fineuploader/backend.adbfde3e.js",
+  "backend.js": "/bundles/terminal42fineuploader/backend.37ab7b25.js",
   "frontend.css": "/bundles/terminal42fineuploader/frontend.0c99eb7a.css",
-  "frontend.js": "/bundles/terminal42fineuploader/frontend.af3152f2.js",
+  "frontend.js": "/bundles/terminal42fineuploader/frontend.477f08a9.js",
   "sortable.js": "/bundles/terminal42fineuploader/sortable.bca07fc6.js",
   "fine-uploader/fine-uploader.js.map": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader.js.map",
   "fine-uploader/fine-uploader.min.js.map": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader.min.js.map",
@@ -38,8 +38,8 @@
   "fine-uploader/pause.gif": "/bundles/terminal42fineuploader/fine-uploader/pause.gif",
   "fine-uploader/iframe.xss.response.js": "/bundles/terminal42fineuploader/fine-uploader/iframe.xss.response.js",
   "backend.863151a1.css.map": "/bundles/terminal42fineuploader/backend.863151a1.css.map",
-  "backend.adbfde3e.js.map": "/bundles/terminal42fineuploader/backend.adbfde3e.js.map",
+  "backend.37ab7b25.js.map": "/bundles/terminal42fineuploader/backend.37ab7b25.js.map",
   "frontend.0c99eb7a.css.map": "/bundles/terminal42fineuploader/frontend.0c99eb7a.css.map",
-  "frontend.af3152f2.js.map": "/bundles/terminal42fineuploader/frontend.af3152f2.js.map",
+  "frontend.477f08a9.js.map": "/bundles/terminal42fineuploader/frontend.477f08a9.js.map",
   "sortable.bca07fc6.js.map": "/bundles/terminal42fineuploader/sortable.bca07fc6.js.map"
 }

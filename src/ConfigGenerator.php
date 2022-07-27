@@ -66,6 +66,10 @@ class ConfigGenerator
             'limit' => $config->getLimit(),
             'minSizeLimit' => $config->getMinSizeLimit(),
             'sizeLimit' => $config->getMaxSizeLimit(),
+            'minWidth' => $config->getMinImageWidth(),
+            'maxWidth' => $config->getMaxImageWidth(),
+            'minHeight' => $config->getMinImageHeight(),
+            'maxHeight' => $config->getMaxImageHeight(),
             'uploadButtonTitle' => $config->getUploadButtonTitle(),
             'messages' => $config->getLabels()['messages'] ?? [],
         ];
@@ -123,8 +127,16 @@ class ConfigGenerator
                     $config->setMaxSizeLimit($v);
                     break;
 
+                case 'minWidth':
+                    $config->setMinImageWidth($v);
+                    break;
+
                 case 'maxWidth':
                     $config->setMaxImageWidth($v);
+                    break;
+
+                case 'minHeight':
+                    $config->setMinImageHeight($v);
                     break;
 
                 case 'maxHeight':

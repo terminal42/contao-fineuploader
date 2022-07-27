@@ -128,6 +128,21 @@ import { FineUploader } from 'fine-uploader';
                 if (this.settings.sizeLimit) {
                     config.validation.sizeLimit = this.settings.sizeLimit
                 }
+                if (this.settings.minWidth || this.settings.maxWidth || this.settings.minHeight || this.settings.maxHeight) {
+                    config.validation.image = {};
+                }
+                if (this.settings.minWidth) {
+                    config.validation.image.minWidth = this.settings.minWidth
+                }
+                if (this.settings.maxWidth) {
+                    config.validation.image.maxWidth = this.settings.maxWidth
+                }
+                if (this.settings.minHeight) {
+                    config.validation.image.minHeight = this.settings.minHeight
+                }
+                if (this.settings.maxHeight) {
+                    config.validation.image.maxHeight = this.settings.maxHeight
+                }
             }
 
             // Set the upload button title

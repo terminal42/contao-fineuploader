@@ -8,6 +8,8 @@
  * @license    MIT
  */
 
+$GLOBALS['TL_LANG']['ERR']['fileminwidth'] = 'Datei %s benötigt eine Mindestbreite von %d Pixel!';
+$GLOBALS['TL_LANG']['ERR']['fileminheight'] = 'Datei %s benötigt eine Mindesthöhe von %d Pixel!';
 $GLOBALS['TL_LANG']['MSC']['fineuploader.error'] = 'Ein unbekannter Fehler ist aufgetreten.';
 $GLOBALS['TL_LANG']['MSC']['fineuploader.drop'] = 'Datei zum Hochladen hierhin ziehen';
 $GLOBALS['TL_LANG']['MSC']['fineuploader.upload'] = 'Datei hochladen';

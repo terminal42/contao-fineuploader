@@ -92,8 +92,20 @@ class FileUploadListener
         if ($file->isImage) {
             $config = $widget->getUploaderConfig();
 
+            $minWidth = $config->getMinImageWidth() ?: 0;
+            $minHeight = $config->getMinImageHeight() ?: 0;
             $maxWidth = $config->getMaxImageWidth() ?: Config::get('imageWidth');
             $maxHeight = $config->getMaxImageHeight() ?: Config::get('imageHeight');
+
+            // Image deceeds minimum image width
+            if ($minWidth > 0 && $file->width < $minWidth) {
+                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileminwidth'], '', $minWidth));
+            }
+
+            // Image deceeds minimum image height
+            if ($minHeight > 0 && $file->height < $minHeight) {
+                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileminheight'], '', $minHeight));
+            }
 
             // Image exceeds maximum image width
             if ($maxWidth > 0 && $file->width > $maxWidth) {
