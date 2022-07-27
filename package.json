@@ -4,6 +4,9 @@
         "type": "git",
         "url": "git+github.com/terminal42/contao-fineuploader"
     },
+    "scripts": {
+        "build": "node_modules/.bin/encore production"
+    },
     "license": "MIT",
     "dependencies": {
         "fine-uploader": "^5.10.0",
