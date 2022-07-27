@@ -179,6 +179,10 @@ class ConfigGenerator
                     $v ? $config->enableAddToDbafs() : $config->disableAddToDbafs();
                     break;
 
+                case 'labels':
+                    $config->setLabels(array_merge($config->getLabels(), $v));
+                    break;
+
                 case 'debug':
                     $v ? $config->enableDebug() : $config->disableDebug();
                     break;
