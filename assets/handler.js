@@ -16,8 +16,9 @@ import { FineUploader } from 'fine-uploader';
      * Default settings
      */
     var defaults = {
-        // AJAX action name
+        // AJAX
         ajaxActionName: 'fineuploader_upload',
+        ajaxUrl: null,
 
         // Selectors
         ajaxContainerSelector: '[data-fineuploader="ajax-container"]',
@@ -80,7 +81,7 @@ import { FineUploader } from 'fine-uploader';
                 debug: !!this.settings.debug,
                 template: this.container.querySelector('script[type="text/template"][id^="qq-template"]'),
                 request: {
-                    endpoint: root.location.href,
+                    endpoint: this.settings.ajaxUrl || root.location.href,
                     inputName: this.field.name + '_fineuploader',
                     params: {
                         action: this.settings.ajaxActionName,
