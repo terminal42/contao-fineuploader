@@ -66,8 +66,8 @@ class BackendListener
         // Return if the scope is not backend or the DCA has no fields
         if (
             null === $request
+            || !\is_array($GLOBALS['TL_DCA'][$table]['fields'] ?? null)
             || !$this->scopeMatcher->isBackendRequest($request)
-            || !\is_array($GLOBALS['TL_DCA'][$table]['fields'])
         ) {
             return;
         }
