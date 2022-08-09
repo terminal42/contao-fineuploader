@@ -55,8 +55,8 @@ $GLOBALS['TL_DCA']['tl_form_field']['fields']['uploadButtonLabel'] = [
     'label' => &$GLOBALS['TL_LANG']['tl_form_field']['uploadButtonLabel'],
     'exclude' => true,
     'inputType' => 'text',
-    'eval' => ['maxlength' => 64, 'tl_class' => 'clr'],
-    'sql' => "varchar(64) NOT NULL default ''",
+    'eval' => ['maxlength' => 255, 'tl_class' => 'clr'],
+    'sql' => "varchar(255) NOT NULL default ''",
 ];
 
 $GLOBALS['TL_DCA']['tl_form_field']['fields']['maxWidth'] = [
