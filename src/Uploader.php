@@ -7,7 +7,6 @@ namespace Terminal42\FineUploaderBundle;
 use Contao\Dbafs;
 use Contao\StringUtil;
 use Contao\Validator;
-use Haste\Util\FileUpload;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
