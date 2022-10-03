@@ -198,8 +198,8 @@ class Uploader
             'size' => [$_FILES[$name]['size']],
         ];
 
-        // Replace the comma character (#22)
-        $file['name'] = str_replace(',', '_', $file['name']);
+        // Replace the special characters (#22)
+        $file['name'] = str_replace([',', '&'], '_', $file['name']);
 
         // Set the UUID as the filename
         if ($isChunk) {
