@@ -102,6 +102,14 @@ class Filesystem
     }
 
     /**
+     * Standardize the file name and remove the invalid characters.
+     */
+    public function standardizeFileName(string $filename): string
+    {
+        return str_replace([',', '&'], '_', $filename);
+    }
+
+    /**
      * Move the temporary file to its destination.
      *
      * @param string $file

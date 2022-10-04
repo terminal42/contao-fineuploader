@@ -86,6 +86,9 @@ class ChunkUploader
      */
     private function mergeChunks(BaseWidget $widget, array $chunks, $fileName)
     {
+        // Replace the special characters (#22)
+        $fileName = $this->fs->standardizeFileName($fileName);
+
         // Get the new file name if temporary file already exists
         if ($this->fs->tmpFileExists($fileName)) {
             $fileName = $this->fs->getTmpFileName($fileName);

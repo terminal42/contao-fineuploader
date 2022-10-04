@@ -199,7 +199,7 @@ class Uploader
         ];
 
         // Replace the special characters (#22)
-        $file['name'] = str_replace([',', '&'], '_', $file['name']);
+        $file['name'][0] = $this->fs->standardizeFileName($file['name'][0]);
 
         // Set the UUID as the filename
         if ($isChunk) {
