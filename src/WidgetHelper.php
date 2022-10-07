@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Terminal42\FineUploaderBundle;
 
 use Contao\Controller;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\Image;
@@ -17,17 +19,13 @@ use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 class WidgetHelper
 {
-    /**
-     * @var Filesystem
-     */
-    private $fs;
+    private Filesystem $fs;
+    private Studio $studio;
 
-    /**
-     * WidgetHelper constructor.
-     */
-    public function __construct(Filesystem $fs)
+    public function __construct(Filesystem $fs, Studio $studio)
     {
         $this->fs = $fs;
+        $this->studio = $studio;
     }
 
     /**
@@ -82,18 +80,22 @@ class WidgetHelper
 
         // Add the image data
         if ($file->isImage) {
-            $attributes = [
-                'singleSRC' => $file->path,
+            $metaData = new Metadata([
                 'title' => sprintf('%s (%s, %sx%s px)', $file->path, $template->size, $file->width, $file->height),
                 'alt' => $file->name,
-            ];
+            ]);
 
-            // Merge custom image attributes
-            if (null !== $imageAttributes) {
-                $attributes = array_merge($attributes, $imageAttributes);
+            $figure = $this->studio
+                ->createFigureBuilder()
+                ->from($file->path)
+                ->setMetadata($metaData)
+                ->setSize($imageAttributes['size'] ?? null)
+                ->buildIfResourceExists()
+            ;
+
+            if ($figure !== null) {
+                $figure->applyLegacyTemplateData($template);
             }
-
-            Controller::addImageToTemplate($template, $attributes);
         }
     }
 

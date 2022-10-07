@@ -7,6 +7,7 @@ namespace Terminal42\FineUploaderBundle;
 use Contao\Config;
 use Contao\FilesModel;
 use Contao\FrontendUser;
+use Contao\StringUtil;
 use Contao\Validator;
 
 class ConfigGenerator
@@ -106,7 +107,7 @@ class ConfigGenerator
                     break;
 
                 case 'extensions':
-                    $config->setExtensions(trimsplit(',', $v));
+                    $config->setExtensions(StringUtil::trimsplit(',', $v));
                     break;
 
                 case 'mSize':

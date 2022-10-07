@@ -40,6 +40,7 @@ services:
         class: Terminal42\FineUploaderBundle\WidgetHelper
         arguments:
             - "@terminal42_fineuploader.filesystem"
+            - "@contao.image.studio"
 
     # Request handlers
     terminal42_fineuploader.request.backend_handler:

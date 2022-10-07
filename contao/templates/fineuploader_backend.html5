@@ -14,7 +14,7 @@
         // Temporarily set the debug mode to false to avoid debug template tags like <!-- TEMPLATE START: ... -->
         $debug = \Contao\Config::get('debugMode'); \Contao\Config::set('debugMode', false);
         ?>
-        <?php $this->insert('fineuploader_uploader', $this->arrConfiguration) ?>
+        <?php $template = new \Contao\BackendTemplate('fineuploader_uploader', $this->arrConfiguration); $template->setDebug(false); echo $template->parse(); ?>
         <?php \Contao\Config::set('debugMode', $debug); ?>
     </div>
 
