@@ -47,5 +47,11 @@
         "cs-fixer": [
             "vendor/bin/ecs check src/ --fix --ansi"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "ocramius/package-versions": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

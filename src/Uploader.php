@@ -8,7 +8,7 @@ use Contao\Dbafs;
 use Contao\StringUtil;
 use Contao\Validator;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 class Uploader
@@ -24,18 +24,18 @@ class Uploader
     private $fs;
 
     /**
-     * @var Session
+     * @var RequestStack
      */
-    private $session;
+    private $requestStack;
 
     /**
      * Uploader constructor.
      */
-    public function __construct(ChunkUploader $chunkUploader, Filesystem $fs, Session $session)
+    public function __construct(ChunkUploader $chunkUploader, Filesystem $fs, RequestStack $requestStack)
     {
         $this->chunkUploader = $chunkUploader;
         $this->fs = $fs;
-        $this->session = $session;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -122,14 +122,14 @@ class Uploader
 
             // Collect the errors
             if ($uploader->hasError()) {
-                $errors = $this->session->getFlashBag()->peek(sprintf('contao.%s.error', $scope));
+                $errors = $this->requestStack->getSession()->getFlashBag()->peek(sprintf('contao.%s.error', $scope));
 
                 foreach ($errors as $error) {
                     $widget->addError($error);
                 }
             }
 
-            $this->session->getFlashBag()->clear();
+            $this->requestStack->getSession()->getFlashBag()->clear();
         } catch (\Exception $e) {
             $widget->addError($e->getMessage());
         }

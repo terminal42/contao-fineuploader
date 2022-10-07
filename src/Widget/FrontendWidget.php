@@ -65,19 +65,6 @@ class FrontendWidget extends BaseWidget
     }
 
     /**
-     * Store the file information in the session.
-     */
-    protected function validator($input)
-    {
-        $return = parent::validator($input);
-
-        // Add files to the session
-        $this->getWidgetHelper()->addFilesToSession($this->strName, array_filter((array) $return));
-
-        return $return;
-    }
-
-    /**
      * Include the assets.
      *
      * @param bool $frontendAssets
