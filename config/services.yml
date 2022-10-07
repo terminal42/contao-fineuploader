@@ -16,7 +16,7 @@ services:
         class: Terminal42\FineUploaderBundle\ChunkUploader
         arguments:
             - "@terminal42_fineuploader.filesystem"
-            - "@session"
+            - "@request_stack"
 
     terminal42_fineuploader.filesystem:
         class: Terminal42\FineUploaderBundle\Filesystem
@@ -29,7 +29,7 @@ services:
         arguments:
             - "@terminal42_fineuploader.chunk_uploader"
             - "@terminal42_fineuploader.filesystem"
-            - "@session"
+            - "@request_stack"
 
     terminal42_fineuploader.validator:
         class: Terminal42\FineUploaderBundle\Validator
