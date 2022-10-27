@@ -7,6 +7,8 @@ namespace Terminal42\FineUploaderBundle;
 use Contao\Config;
 use Contao\File;
 use Contao\Files;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 class Filesystem
 {
@@ -170,7 +172,8 @@ class Filesystem
         $pathinfo = pathinfo($filePath);
         $name = $pathinfo['filename'];
 
-        $allFiles = scan($this->projectDir.'/'.$folder);
+        $allFiles = iterator_to_array(Finder::create()->files()->in($this->projectDir.'/'.$folder)->getIterator());
+        $allFiles = array_map(static fn (SplFileInfo $fileInfo) => $fileInfo->getRelativePathname(), $allFiles);
 
         // Find the files with the same extension
         $files = preg_grep(

@@ -25,9 +25,8 @@
         "source": "https://github.com/terminal42/contao-fineuploader"
     },
     "require": {
-        "php": "^7.2 || ^8.0",
-        "contao/core-bundle": "^4.9",
-        "codefog/contao-haste": "^4.17"
+        "php": "^7.4 || ^8.0",
+        "contao/core-bundle": "^4.13 || ^5.0"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
@@ -48,5 +47,11 @@
         "cs-fixer": [
             "vendor/bin/ecs check src/ --fix --ansi"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "ocramius/package-versions": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }

@@ -7,7 +7,7 @@ namespace Terminal42\FineUploaderBundle;
 use Contao\File;
 use Contao\System;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Symfony\Component\HttpFoundation\RequestStack;
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 class ChunkUploader
@@ -18,17 +18,17 @@ class ChunkUploader
     private $fs;
 
     /**
-     * @var Session
+     * @var RequestStack
      */
-    private $session;
+    private $requestStack;
 
     /**
      * ChunkUploader constructor.
      */
-    public function __construct(Filesystem $fs, Session $session)
+    public function __construct(Filesystem $fs, RequestStack $requestStack)
     {
         $this->fs = $fs;
-        $this->session = $session;
+        $this->requestStack = $requestStack;
     }
 
     /**
@@ -42,7 +42,7 @@ class ChunkUploader
     {
         $fileName = $request->request->get('qqfilename');
         $sessionKey = $this->getSessionKey($widget);
-        $chunks = $this->session->get($sessionKey);
+        $chunks = $this->requestStack->getSession()->get($sessionKey);
         $chunks[$fileName][] = $filePath;
 
         // This is the last chunking request, merge the chunks and create the final file
@@ -54,7 +54,7 @@ class ChunkUploader
         }
 
         // Update the session
-        $this->session->set($sessionKey, $chunks);
+        $this->requestStack->getSession()->get($sessionKey, $chunks);
 
         return $filePath;
     }
@@ -74,7 +74,7 @@ class ChunkUploader
      */
     public function clearSession(BaseWidget $widget): void
     {
-        $this->session->remove($this->getSessionKey($widget));
+        $this->requestStack->getSession()->remove($this->getSessionKey($widget));
     }
 
     /**

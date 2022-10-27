@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace Terminal42\FineUploaderBundle;
 
 use Contao\Controller;
+use Contao\CoreBundle\File\Metadata;
+use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\File;
 use Contao\FilesModel;
 use Contao\Image;
@@ -17,17 +19,13 @@ use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 class WidgetHelper
 {
-    /**
-     * @var Filesystem
-     */
-    private $fs;
+    private Filesystem $fs;
+    private Studio $studio;
 
-    /**
-     * WidgetHelper constructor.
-     */
-    public function __construct(Filesystem $fs)
+    public function __construct(Filesystem $fs, Studio $studio)
     {
         $this->fs = $fs;
+        $this->studio = $studio;
     }
 
     /**
@@ -82,57 +80,22 @@ class WidgetHelper
 
         // Add the image data
         if ($file->isImage) {
-            $attributes = [
-                'singleSRC' => $file->path,
+            $metaData = new Metadata([
                 'title' => sprintf('%s (%s, %sx%s px)', $file->path, $template->size, $file->width, $file->height),
                 'alt' => $file->name,
-            ];
+            ]);
 
-            // Merge custom image attributes
-            if (null !== $imageAttributes) {
-                $attributes = array_merge($attributes, $imageAttributes);
+            $figure = $this->studio
+                ->createFigureBuilder()
+                ->from($file->path)
+                ->setMetadata($metaData)
+                ->setSize($imageAttributes['size'] ?? null)
+                ->buildIfResourceExists()
+            ;
+
+            if ($figure !== null) {
+                $figure->applyLegacyTemplateData($template);
             }
-
-            Controller::addImageToTemplate($template, $attributes);
-        }
-    }
-
-    /**
-     * Add the files to the session in order to reproduce Contao uploader behavior.
-     *
-     * @param string $name
-     */
-    public function addFilesToSession($name, array $files): void
-    {
-        $count = 0;
-
-        foreach ($files as $filePath) {
-            $model = null;
-
-            // Get the file model
-            if (Validator::isUuid($filePath)) {
-                if (null === ($model = FilesModel::findByUuid($filePath))) {
-                    continue;
-                }
-
-                $filePath = $model->path;
-            }
-
-            $file = new File($filePath);
-
-            if (!$file->exists()) {
-                continue;
-            }
-
-            $_SESSION['FILES'][$name.'_'.$count++] = [
-                'name' => $file->name,
-                'type' => $file->mime,
-                'tmp_name' => TL_ROOT.'/'.$file->path,
-                'error' => 0,
-                'size' => $file->size,
-                'uploaded' => true,
-                'uuid' => null !== $model ? StringUtil::binToUuid($model->uuid) : '',
-            ];
         }
     }
 

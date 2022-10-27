@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Terminal42\FineUploaderBundle;
 
+use Contao\StringUtil;
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 class Validator
@@ -45,7 +46,7 @@ class Validator
             return $this->validateSingleFile($widget, $input);
         }
 
-        return $this->validateMultipleFiles($widget, array_filter(trimsplit(',', $input)));
+        return $this->validateMultipleFiles($widget, array_filter(StringUtil::trimsplit(',', $input)));
     }
 
     /**
