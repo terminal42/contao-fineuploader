@@ -10,7 +10,7 @@
     </div>
 
     <div id="<?= $this->id ?>-fineuploader-template" style="display:none;">
-        <?= (new \Contao\FrontendTemplate('fineuploader_uploader', $this->arrConfiguration))->setDebug(false)->parse(); ?>
+      <?php $this->insert('fineuploader_uploader', $this->arrConfiguration) ?>
     </div>
 
     <div id="<?= $this->id ?>-fineuploader" class="upload-container" data-fineuploader="uploader"></div>

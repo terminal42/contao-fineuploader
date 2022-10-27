@@ -76,10 +76,16 @@ import { FineUploader } from 'fine-uploader';
          * Initialize the FineUploader
          */
         initFineUploader: function () {
+            var templateElement = this.container.querySelector('script[type="text/template"][id^="qq-template"]');
+
+            // Remove all HTML comments, especially the <!-- TEMPLATE START: … --> Contao debug template comment,
+            // which would cause the FineUploader to not initialize due to an error.
+            templateElement.innerHTML = templateElement.innerHTML.replace(/<!--[\s\S]*?-->/g, '');
+
             var config = {
                 element: this.uploader,
                 debug: !!this.settings.debug,
-                template: this.container.querySelector('script[type="text/template"][id^="qq-template"]'),
+                template: templateElement,
                 request: {
                     endpoint: this.settings.ajaxUrl || root.location.href,
                     inputName: this.field.name + '_fineuploader',

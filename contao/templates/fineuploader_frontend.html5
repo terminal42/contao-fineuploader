@@ -23,7 +23,7 @@
     </div>
 
     <script type="text/template" id="qq-template-<?= $this->id ?>">
-        <?= (new \Contao\FrontendTemplate('fineuploader_uploader', $this->arrConfiguration))->setDebug(false)->parse(); ?>
+        <?php $this->insert('fineuploader_uploader', $this->arrConfiguration) ?>
     </script>
 
     <div id="<?= $this->id ?>-fineuploader" class="upload-container" data-fineuploader="uploader"></div>
