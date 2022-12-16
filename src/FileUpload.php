@@ -30,6 +30,8 @@ class FileUpload extends \Contao\FileUpload
     public function __construct(string $name)
     {
         parent::__construct();
+        
+        System::loadLanguageFile('tl_settings');
 
         $this->setName($name);
 
@@ -161,7 +163,7 @@ class FileUpload extends \Contao\FileUpload
         Config::set('uploadTypes', implode(',', $this->extensions));
 
         $filesizeLabel = $GLOBALS['TL_LANG']['ERR']['filesize'];
-        $GLOBALS['TL_LANG']['ERR']['filesize'] = $GLOBALS['TL_LANG']['ERR']['maxFileSize'];
+        $GLOBALS['TL_LANG']['ERR']['filesize'] = $GLOBALS['TL_LANG']['tl_settings']['maxFileSize'];
 
         // Perform upload
         $result = parent::uploadTo($target);
