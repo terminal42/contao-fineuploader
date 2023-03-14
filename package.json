@@ -9,8 +9,8 @@
     },
     "license": "MIT",
     "dependencies": {
-        "fine-uploader": "^5.10.0",
-        "sortablejs": "^1.4.2"
+        "fine-uploader": "^5.16.2",
+        "sortablejs": "^1.15.0"
     },
     "devDependencies": {
         "@babel/preset-env": "^7.14.5",

@@ -7,15 +7,17 @@ Encore
 
     .addEntry('backend', './assets/backend.js')
     .addEntry('frontend', './assets/frontend.js')
-    .addEntry('sortable', './node_modules/sortablejs/Sortable.js')
 
     .copyFiles({
         from: './node_modules/fine-uploader/fine-uploader',
         to: 'fine-uploader/[path][name].[ext]'
     })
 
-    // When enabled, Webpack "splits" your files into smaller pieces for greater optimization.
-    // .splitEntryChunks()
+    .copyFiles({
+        from: './node_modules/sortablejs',
+        pattern: /Sortable\.min\.js$/,
+        to: 'sortable.[contenthash:8].min.js',
+    })
 
     .disableSingleRuntimeChunk()
     .cleanupOutputBeforeBuild()
@@ -29,12 +31,6 @@ Encore
     })
 
     .enablePostCssLoader()
-
-    // enables Sass/SCSS support
-    //.enableSassLoader()
-
-    // uncomment if you're having problems with a jQuery plugin
-    //.autoProvidejQuery()
 ;
 
 module.exports = Encore.getWebpackConfig();

@@ -75,7 +75,7 @@ class AssetsManager
 
         // Include the sortable library
         if ($sortable) {
-            $assets[] = $this->packages->getUrl('sortable.js', 'terminal42_fine_uploader');
+            $assets[] = $this->packages->getUrl('Sortable.min.js', 'terminal42_fine_uploader');
         }
 
         return $assets;

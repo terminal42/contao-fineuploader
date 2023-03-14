@@ -15,11 +15,6 @@
       "js": [
         "/bundles/terminal42fineuploader/frontend.51895bd5.js"
       ]
-    },
-    "sortable": {
-      "js": [
-        "/bundles/terminal42fineuploader/sortable.bca07fc6.js"
-      ]
     }
   }
 }

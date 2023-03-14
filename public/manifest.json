@@ -3,7 +3,6 @@
   "backend.js": "/bundles/terminal42fineuploader/backend.344b0a31.js",
   "frontend.css": "/bundles/terminal42fineuploader/frontend.7b707fa6.css",
   "frontend.js": "/bundles/terminal42fineuploader/frontend.51895bd5.js",
-  "sortable.js": "/bundles/terminal42fineuploader/sortable.bca07fc6.js",
   "fine-uploader/fine-uploader.js.map": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader.js.map",
   "fine-uploader/fine-uploader.min.js.map": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader.min.js.map",
   "fine-uploader/fine-uploader.core.js.map": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader.core.js.map",
@@ -12,6 +11,7 @@
   "fine-uploader/fine-uploader.js": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader.js",
   "fine-uploader/fine-uploader.core.min.js": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader.core.min.js",
   "fine-uploader/fine-uploader.core.js": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader.core.js",
+  "Sortable.min.js": "/bundles/terminal42fineuploader/sortable.10640a26.min.js",
   "fine-uploader/fine-uploader-gallery.css": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader-gallery.css",
   "fine-uploader/fine-uploader-gallery.min.css": "/bundles/terminal42fineuploader/fine-uploader/fine-uploader-gallery.min.css",
   "fine-uploader/placeholders/waiting-generic.png": "/bundles/terminal42fineuploader/fine-uploader/placeholders/waiting-generic.png",
@@ -40,6 +40,5 @@
   "backend.509b8d0d.css.map": "/bundles/terminal42fineuploader/backend.509b8d0d.css.map",
   "backend.344b0a31.js.map": "/bundles/terminal42fineuploader/backend.344b0a31.js.map",
   "frontend.7b707fa6.css.map": "/bundles/terminal42fineuploader/frontend.7b707fa6.css.map",
-  "frontend.51895bd5.js.map": "/bundles/terminal42fineuploader/frontend.51895bd5.js.map",
-  "sortable.bca07fc6.js.map": "/bundles/terminal42fineuploader/sortable.bca07fc6.js.map"
+  "frontend.51895bd5.js.map": "/bundles/terminal42fineuploader/frontend.51895bd5.js.map"
 }
