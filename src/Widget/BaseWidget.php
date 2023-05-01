@@ -6,6 +6,7 @@ namespace Terminal42\FineUploaderBundle\Widget;
 
 use Contao\System;
 use Contao\Template;
+use Contao\UploadableWidgetInterface;
 use Contao\Widget;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Terminal42\FineUploaderBundle\AssetsManager;
@@ -13,7 +14,7 @@ use Terminal42\FineUploaderBundle\ConfigGenerator;
 use Terminal42\FineUploaderBundle\UploaderConfig;
 use Terminal42\FineUploaderBundle\WidgetHelper;
 
-abstract class BaseWidget extends Widget
+abstract class BaseWidget extends Widget implements UploadableWidgetInterface
 {
     /**
      * Submit user input.
