@@ -34,11 +34,11 @@ class FileUpload extends \Contao\FileUpload
         $this->setName($name);
 
         $this->extensions = StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')));
-        $this->maxFileSize = Config::get('maxFileSize');
-        $this->imageWidth = Config::get('imageWidth');
-        $this->imageHeight = Config::get('imageHeight');
-        $this->gdMaxImgWidth = Config::get('gdMaxImgWidth');
-        $this->gdMaxImgHeight = Config::get('gdMaxImgHeight');
+        $this->maxFileSize = Config::get('maxFileSize') ?? 0;
+        $this->imageWidth = Config::get('imageWidth') ?? 0;
+        $this->imageHeight = Config::get('imageHeight') ?? 0;
+        $this->gdMaxImgWidth = Config::get('gdMaxImgWidth') ?? 0;
+        $this->gdMaxImgHeight = Config::get('gdMaxImgHeight') ?? 0;
     }
 
     public function getName()
