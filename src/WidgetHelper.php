@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Terminal42\FineUploaderBundle;
 
-use Contao\Controller;
 use Contao\CoreBundle\File\Metadata;
 use Contao\CoreBundle\Image\Studio\Studio;
 use Contao\File;
@@ -93,7 +92,7 @@ class WidgetHelper
                 ->buildIfResourceExists()
             ;
 
-            if ($figure !== null) {
+            if (null !== $figure) {
                 $figure->applyLegacyTemplateData($template);
             }
         }

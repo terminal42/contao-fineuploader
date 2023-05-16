@@ -10,8 +10,6 @@ final class UploaderEvents
      * The file upload event occurs when the file is being uploaded.
      *
      * @Event("Terminal42\FineUploaderBundle\Event\FileUploadEvent")
-     *
-     * @var string
      */
     public const FILE_UPLOAD = 'terminal42_fineuploader.file_upload';
 
@@ -20,8 +18,6 @@ final class UploaderEvents
      * and widget has to be reloaded.
      *
      * @Event("Terminal42\FineUploaderBundle\Event\WidgetReloadEvent")
-     *
-     * @var string
      */
     public const WIDGET_RELOAD = 'terminal42_fineuploader.widget_reload';
 }
