@@ -54,7 +54,7 @@ class ChunkUploader
         }
 
         // Update the session
-        $this->requestStack->getSession()->get($sessionKey, $chunks);
+        $this->requestStack->getSession()->set($sessionKey, $chunks);
 
         return $filePath;
     }
