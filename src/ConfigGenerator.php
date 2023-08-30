@@ -98,7 +98,7 @@ class ConfigGenerator
                     break;
 
                 case 'useHomeDir':
-                    if ($v && ($user = System::getContainer()->get('security')->getUser()) instanceof FrontendUser) {
+                    if ($v && ($user = System::getContainer()->get('security.helper')->getUser()) instanceof FrontendUser) {
                         if ($user->assignDir && $user->homeDir) {
                             $this->setUploadFolder($config, $user->homeDir);
                         }
