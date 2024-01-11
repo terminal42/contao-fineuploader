@@ -113,7 +113,7 @@ import "./handler.js"
 
             var request = new XMLHttpRequest();
 
-            request.open('POST', this.settings.ajaxUrl || window.location.href, true);
+            request.open('POST', this.settings.ajaxUrl || this.uploader.field.form.action || window.location.href, true);
             request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             request.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
 

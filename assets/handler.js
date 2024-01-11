@@ -87,7 +87,7 @@ import { FineUploader } from 'fine-uploader';
                 debug: !!this.settings.debug,
                 template: templateElement,
                 request: {
-                    endpoint: this.settings.ajaxUrl || root.location.href,
+                    endpoint: this.settings.ajaxUrl || this.field.form.action || root.location.href,
                     inputName: this.field.name + '_fineuploader',
                     params: {
                         action: this.settings.ajaxActionName,
