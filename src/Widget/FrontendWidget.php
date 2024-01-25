@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace Terminal42\FineUploaderBundle\Widget;
 
+use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\FrontendTemplate;
+use Contao\System;
 
 class FrontendWidget extends BaseWidget
 {
@@ -62,6 +64,20 @@ class FrontendWidget extends BaseWidget
     public function getValuesTemplate()
     {
         return new FrontendTemplate($this->valuesTemplate ?: 'fineuploader_values_frontend');
+    }
+
+    /**
+     * Store the file information in the session to reproduce Contao 4.13 uploader behavior.
+     */
+    protected function validator($input)
+    {
+        $return = parent::validator($input);
+
+        if (version_compare(ContaoCoreBundle::getVersion(), '5@dev', '<')) {
+            $this->getWidgetHelper()->addFilesToSession($this->strName, array_filter((array) $return), $this->storeFile);
+        }
+
+        return $return;
     }
 
     /**
