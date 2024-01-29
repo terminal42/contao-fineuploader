@@ -99,6 +99,45 @@ class WidgetHelper
     }
 
     /**
+     * Add the files to the session in order to reproduce Contao 4.13 uploader behavior.
+     *
+     * @param string $name
+     */
+    public function addFilesToSession($name, array $files, bool $storeFile = true): void
+    {
+        $count = 0;
+
+        foreach ($files as $filePath) {
+            $model = null;
+
+            // Get the file model
+            if (Validator::isUuid($filePath)) {
+                if (null === ($model = FilesModel::findByUuid($filePath))) {
+                    continue;
+                }
+
+                $filePath = $model->path;
+            }
+
+            $file = new File($filePath);
+
+            if (!$file->exists()) {
+                continue;
+            }
+
+            $_SESSION['FILES'][$name.'_'.$count++] = [
+                'name' => $file->name,
+                'type' => $file->mime,
+                'tmp_name' => TL_ROOT.'/'.$file->path,
+                'error' => 0,
+                'size' => $file->size,
+                'uploaded' => $storeFile,
+                'uuid' => null !== $model ? StringUtil::binToUuid($model->uuid) : '',
+            ];
+        }
+    }
+
+    /**
      * Generate the item template.
      *
      * @param string $id
