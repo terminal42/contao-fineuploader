@@ -67,14 +67,6 @@ class FrontendWidget extends BaseWidget
     }
 
     /**
-     * Do not submit input if file will not be stored.
-     */
-    public function submitInput()
-	{
-		return $this->storeFile;
-	}
-
-    /**
      * Store the file information in the session to reproduce Contao 4.13 uploader behavior.
      */
     protected function validator($input)
