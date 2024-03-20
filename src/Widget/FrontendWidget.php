@@ -72,12 +72,17 @@ class FrontendWidget extends BaseWidget
     protected function validator($input)
     {
         $return = parent::validator($input);
+        $files = $this->getWidgetHelper()->getFilesArray($this->strName, array_filter((array) $return), $this->storeFile);
 
         if (version_compare(ContaoCoreBundle::getVersion(), '5@dev', '<')) {
-            $this->getWidgetHelper()->addFilesToSession($this->strName, array_filter((array) $return), $this->storeFile);
+            foreach ($files as $name => $data) {
+                $_SESSION['FILES'][$name] = $data;
+            }
+
+            return $return;
         }
 
-        return $return;
+        return $files;
     }
 
     /**

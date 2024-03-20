@@ -101,14 +101,13 @@ class WidgetHelper
         }
     }
 
-    /**
-     * Add the files to the session in order to reproduce Contao 4.13 uploader behavior.
-     *
-     * @param string $name
+    /** 
+     * Returns an array with all the information per file that Contao expects for the widget's value or the session value.
      */
-    public function addFilesToSession($name, array $files, bool $storeFile = true): void
+    public function getFilesArray($name, array $files, bool $storeFile = true): array
     {
         $count = 0;
+        $return = [];
 
         foreach ($files as $filePath) {
             $model = null;
@@ -128,7 +127,7 @@ class WidgetHelper
                 continue;
             }
 
-            $_SESSION['FILES'][$name.'_'.$count++] = [
+            $return[$name.'_'.$count++] = [
                 'name' => $file->name,
                 'type' => $file->mime,
                 'tmp_name' => Path::join($this->projectDir, $file->path),
@@ -137,6 +136,22 @@ class WidgetHelper
                 'uploaded' => $storeFile,
                 'uuid' => null !== $model ? StringUtil::binToUuid($model->uuid) : '',
             ];
+        }
+
+        return $return;
+    }
+
+    /**
+     * Add the files to the session in order to reproduce Contao 4.13 uploader behavior.
+     *
+     * @param string $name
+     */
+    public function addFilesToSession($name, array $files, bool $storeFile = true): void
+    {
+        $files = $this->getFilesArray($name, $files, $storeFile);
+
+        foreach ($files as $name => $data) {
+            $_SESSION['FILES'][$name] = $data;
         }
     }
 
@@ -225,8 +240,12 @@ class WidgetHelper
         $files = [];
 
         foreach ($tmpFiles as $file) {
+            if (\is_array($file)) {
+                $file = $file['tmp_name'] ?? null;
+            }
+
             // Skip non existing files
-            if (!$this->fs->fileExists($file)) {
+            if (!$file || !$this->fs->fileExists($file)) {
                 continue;
             }
 

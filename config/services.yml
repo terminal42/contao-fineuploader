@@ -75,6 +75,9 @@ services:
             - "@terminal42_fineuploader.uploader"
         tags:
             - { name: kernel.event_listener, event: terminal42_fineuploader.file_upload, method: onFileUpload }
+    
+    terminal42_fineuploader.listener.form_data:
+        class: Terminal42\FineUploaderBundle\EventListener\FormDataListener
 
     terminal42_fineuploader.listener.widget_reload:
         class: Terminal42\FineUploaderBundle\EventListener\WidgetReloadListener
