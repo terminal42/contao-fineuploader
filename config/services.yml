@@ -41,6 +41,7 @@ services:
         arguments:
             - "@terminal42_fineuploader.filesystem"
             - "@contao.image.studio"
+            - "%kernel.project_dir%"
 
     # Request handlers
     terminal42_fineuploader.request.backend_handler:
@@ -48,6 +49,7 @@ services:
         arguments:
             - "@event_dispatcher"
             - "@contao.routing.scope_matcher"
+            - "%kernel.project_dir%"
 
     terminal42_fineuploader.request.frontend_handler:
         class: Terminal42\FineUploaderBundle\RequestHandler\FrontendHandler
@@ -55,6 +57,7 @@ services:
             - "@event_dispatcher"
             - "@monolog.logger.contao"
             - "@contao.routing.scope_matcher"
+            - "%kernel.project_dir%"
 
     # Listeners
     terminal42_fineuploader.listener.backend:

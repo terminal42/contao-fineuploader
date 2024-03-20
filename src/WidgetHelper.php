@@ -14,17 +14,20 @@ use Contao\StringUtil;
 use Contao\System;
 use Contao\Template;
 use Contao\Validator;
+use Symfony\Component\Filesystem\Path;
 use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 
 class WidgetHelper
 {
     private Filesystem $fs;
     private Studio $studio;
+    private string $projectDir;
 
-    public function __construct(Filesystem $fs, Studio $studio)
+    public function __construct(Filesystem $fs, Studio $studio, string $projectDir)
     {
         $this->fs = $fs;
         $this->studio = $studio;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -128,7 +131,7 @@ class WidgetHelper
             $_SESSION['FILES'][$name.'_'.$count++] = [
                 'name' => $file->name,
                 'type' => $file->mime,
-                'tmp_name' => TL_ROOT.'/'.$file->path,
+                'tmp_name' => Path::join($this->projectDir, $file->path),
                 'error' => 0,
                 'size' => $file->size,
                 'uploaded' => $storeFile,

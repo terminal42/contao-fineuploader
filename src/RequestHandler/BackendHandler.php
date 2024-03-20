@@ -29,12 +29,18 @@ class BackendHandler
     private $scopeMatcher;
 
     /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
      * BackendHandler constructor.
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, ScopeMatcher $scopeMatcher)
+    public function __construct(EventDispatcherInterface $eventDispatcher, ScopeMatcher $scopeMatcher, string $projectDir)
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->scopeMatcher = $scopeMatcher;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -96,7 +102,7 @@ class BackendHandler
         // Add some extra attributes required by the widget
         $attributes['id'] = $dc->field;
         $attributes['name'] = $dc->field;
-        $attributes['value'] = $this->parseValue($request->request->get('value'));
+        $attributes['value'] = $this->parseValue($request->request->get('value'), $this->projectDir);
         $attributes['strTable'] = $dc->table;
         $attributes['strField'] = $field;
         $attributes['activeRecord'] = $dc->activeRecord;

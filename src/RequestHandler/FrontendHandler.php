@@ -34,13 +34,19 @@ class FrontendHandler
     private $scopeMatcher;
 
     /**
+     * @var string
+     */
+    private $projectDir;
+
+    /**
      * FrontendHandler constructor.
      */
-    public function __construct(EventDispatcherInterface $eventDispatcher, Logger $logger, ScopeMatcher $scopeMatcher)
+    public function __construct(EventDispatcherInterface $eventDispatcher, Logger $logger, ScopeMatcher $scopeMatcher, string $projectDir)
     {
         $this->eventDispatcher = $eventDispatcher;
         $this->logger = $logger;
         $this->scopeMatcher = $scopeMatcher;
+        $this->projectDir = $projectDir;
     }
 
     /**
@@ -70,7 +76,7 @@ class FrontendHandler
             $this->logger->log(
                 LogLevel::ERROR,
                 $e->getMessage(),
-                ['contao' => new ContaoContext($func, TL_ERROR)]
+                ['contao' => new ContaoContext($func, ContaoContext::ERROR)]
             );
 
             $response = new Response('Bad Request', 400);
@@ -105,7 +111,7 @@ class FrontendHandler
         $this->validateRequest($request);
 
         // Set the value from request
-        $widget->value = $this->parseValue($request->request->get('value'));
+        $widget->value = $this->parseValue($request->request->get('value'), $this->projectDir);
 
         return $this->getReloadResponse($this->eventDispatcher, $request, $widget);
     }

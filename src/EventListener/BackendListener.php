@@ -99,7 +99,7 @@ class BackendListener
             $this->logger->log(
                 LogLevel::ERROR,
                 $e->getMessage(),
-                ['contao' => new ContaoContext($e->getTrace()[1]['function'], TL_ERROR)]
+                ['contao' => new ContaoContext($e->getTrace()[1]['function'], ContaoContext::ERROR)]
             );
 
             $response = new Response('Bad Request', 400);

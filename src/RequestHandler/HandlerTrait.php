@@ -8,6 +8,7 @@ use Contao\Input;
 use Contao\StringUtil;
 use Contao\Validator;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -51,12 +52,12 @@ trait HandlerTrait
      *
      * @return string
      */
-    protected function parseValue($value)
+    protected function parseValue($value, string $projectDir)
     {
         $value = StringUtil::trimsplit(',', Input::decodeEntities($value));
 
         foreach ($value as $k => $v) {
-            if (Validator::isUuid($v) && !is_file(TL_ROOT.'/'.$v)) {
+            if (Validator::isUuid($v) && !is_file(Path::join($projectDir, $v))) {
                 $value[$k] = StringUtil::uuidToBin($v);
             }
         }

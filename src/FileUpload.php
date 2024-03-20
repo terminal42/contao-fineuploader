@@ -161,7 +161,6 @@ class FileUpload extends \Contao\FileUpload
         Config::set('uploadTypes', implode(',', $this->extensions));
 
         $filesizeLabel = $GLOBALS['TL_LANG']['ERR']['filesize'];
-        $GLOBALS['TL_LANG']['ERR']['filesize'] = $GLOBALS['TL_LANG']['ERR']['maxFileSize'];
 
         // Perform upload
         $result = parent::uploadTo($target);
