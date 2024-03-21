@@ -127,15 +127,21 @@ class WidgetHelper
                 continue;
             }
 
-            $return[$name.'_'.$count++] = [
+            $key = $name.'_'.$count++;
+
+            $return[$key] = [
                 'name' => $file->name,
                 'type' => $file->mime,
                 'tmp_name' => Path::join($this->projectDir, $file->path),
                 'error' => 0,
                 'size' => $file->size,
-                'uploaded' => $storeFile,
                 'uuid' => null !== $model ? StringUtil::binToUuid($model->uuid) : '',
             ];
+
+            // Only set the 'uploaded' key if we store the file (https://github.com/contao/contao/pull/7039)
+            if ($storeFile) {
+                $return[$key]['uploaded'] = true;
+            }
         }
 
         return $return;
