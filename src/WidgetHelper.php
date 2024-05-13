@@ -104,8 +104,9 @@ class WidgetHelper
     /** 
      * Returns an array with all the information per file that Contao expects for the widget's value or the session value.
      */
-    public function getFilesArray($name, array $files, bool $storeFile = true): array
+    public function getFilesArray($name, array $files, ?bool $storeFile = null): array
     {
+        $storeFile = $storeFile ?? true;
         $count = 0;
         $return = [];
 
