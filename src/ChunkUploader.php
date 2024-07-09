@@ -78,6 +78,14 @@ class ChunkUploader
     }
 
     /**
+     * Initialize the session parameter (#86).
+     */
+    public function initSession(BaseWidget $widget): void
+    {
+        $this->requestStack->getSession()->set($this->getSessionKey($widget), []);
+    }
+
+    /**
      * Merge the chunks.
      *
      * @param string $fileName

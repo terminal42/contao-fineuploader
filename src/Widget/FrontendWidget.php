@@ -8,6 +8,7 @@ use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\FrontendTemplate;
 use Contao\System;
+use Terminal42\FineUploaderBundle\ChunkUploader;
 
 class FrontendWidget extends BaseWidget
 {
@@ -44,6 +45,18 @@ class FrontendWidget extends BaseWidget
         if (null !== $response) {
             throw new ResponseException($response);
         }
+    }
+
+    public function parse($attributes = null)
+    {
+        // Initiate the session if chunking is enabled (#86).
+        if ($this->getUploaderConfig()->isChunkingEnabled()) {
+            /** @var ChunkUploader $chunkUploader */
+            $chunkUploader = $this->container->get('terminal42_fineuploader.chunk_uploader');
+            $chunkUploader->initSession($this);
+        }
+
+        return parent::parse($attributes);
     }
 
     /**
