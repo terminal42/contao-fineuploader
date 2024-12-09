@@ -75,7 +75,7 @@ class BackendListener
         foreach ($GLOBALS['TL_DCA'][$table]['fields'] as $field) {
             if (isset($field['inputType']) && 'fineUploader' === $field['inputType']) {
                 $this->assetsManager->includeAssets(
-                    array_merge($this->assetsManager->getBasicAssets(), $this->assetsManager->getBackendAssets())
+                    array_merge($this->assetsManager->getBasicAssets(), $this->assetsManager->getBackendAssets()),
                 );
                 break;
             }
@@ -99,7 +99,7 @@ class BackendListener
             $this->logger->log(
                 LogLevel::ERROR,
                 $e->getMessage(),
-                ['contao' => new ContaoContext($e->getTrace()[1]['function'], ContaoContext::ERROR)]
+                ['contao' => new ContaoContext($e->getTrace()[1]['function'], ContaoContext::ERROR)],
             );
 
             $response = new Response('Bad Request', 400);

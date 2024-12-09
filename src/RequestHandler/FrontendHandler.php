@@ -76,7 +76,7 @@ class FrontendHandler
             $this->logger->log(
                 LogLevel::ERROR,
                 $e->getMessage(),
-                ['contao' => new ContaoContext($func, ContaoContext::ERROR)]
+                ['contao' => new ContaoContext($func, ContaoContext::ERROR)],
             );
 
             $response = new Response('Bad Request', 400);

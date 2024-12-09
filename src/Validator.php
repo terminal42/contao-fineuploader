@@ -42,7 +42,7 @@ class Validator
         }
 
         // Single file
-        if (false === strpos($input, ',')) {
+        if (!str_contains($input, ',')) {
             return $this->validateSingleFile($widget, $input);
         }
 
@@ -59,7 +59,7 @@ class Validator
         // Add an error if the field is mandatory
         if ($widget->mandatory) {
             if ($widget->label) {
-                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $widget->label));
+                $widget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['mandatory'], $widget->label));
             } else {
                 $widget->addError($GLOBALS['TL_LANG']['ERR']['mdtryNoLabel']);
             }

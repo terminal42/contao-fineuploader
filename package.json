@@ -5,7 +5,7 @@
         "url": "git+github.com/terminal42/contao-fineuploader"
     },
     "scripts": {
-        "build": "node_modules/.bin/encore production"
+        "build": "NODE_OPTIONS=--openssl-legacy-provider node_modules/.bin/encore production"
     },
     "license": "MIT",
     "dependencies": {
@@ -13,14 +13,10 @@
         "sortablejs": "^1.15.0"
     },
     "devDependencies": {
-        "@babel/preset-env": "^7.14.5",
-        "@symfony/webpack-encore": "^1.5.0",
-        "autoprefixer": "^10.2.6",
-        "core-js": "^3.15.0",
-        "file-loader": "^6.0.0",
-        "postcss-loader": "^5.0.0"
+        "@terminal42/contao-build-tools": "./vendor/terminal42/contao-build-tools/webpack"
     },
     "browserslist": [
         "defaults"
-    ]
+    ],
+    "packageManager": "yarn@1.22.22+sha1.ac34549e6aa8e7ead463a7407e1c7390f61a6610"
 }

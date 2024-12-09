@@ -158,10 +158,8 @@ class UploaderConfig
 
     /**
      * Enable debug.
-     *
-     * @return UploaderConfig
      */
-    public function enableDebug()
+    public function enableDebug(): self
     {
         $this->debug = true;
 
@@ -170,10 +168,8 @@ class UploaderConfig
 
     /**
      * Disable debug.
-     *
-     * @return UploaderConfig
      */
-    public function disableDebug()
+    public function disableDebug(): self
     {
         $this->debug = false;
 
@@ -192,10 +188,8 @@ class UploaderConfig
 
     /**
      * Set the allowed extensions.
-     *
-     * @return UploaderConfig
      */
-    public function setExtensions(array $extensions)
+    public function setExtensions(array $extensions): self
     {
         $this->extensions = $extensions;
 
@@ -216,10 +210,8 @@ class UploaderConfig
      * Set the file limit.
      *
      * @param int $limit
-     *
-     * @return UploaderConfig
      */
-    public function setLimit($limit)
+    public function setLimit($limit): self
     {
         $this->limit = (int) $limit;
 
@@ -240,10 +232,8 @@ class UploaderConfig
      * Set the minimum file size limit.
      *
      * @param int $minSizeLimit
-     *
-     * @return UploaderConfig
      */
-    public function setMinSizeLimit($minSizeLimit)
+    public function setMinSizeLimit($minSizeLimit): self
     {
         $this->minSizeLimit = (int) $minSizeLimit;
 
@@ -264,10 +254,8 @@ class UploaderConfig
      * Set the maximum file size limit.
      *
      * @param int $maxSizeLimit
-     *
-     * @return UploaderConfig
      */
-    public function setMaxSizeLimit($maxSizeLimit)
+    public function setMaxSizeLimit($maxSizeLimit): self
     {
         $this->maxSizeLimit = (int) $maxSizeLimit;
 
@@ -288,10 +276,8 @@ class UploaderConfig
      * Set the minimum image width.
      *
      * @param int $minImageWidth
-     *
-     * @return UploaderConfig
      */
-    public function setMinImageWidth($minImageWidth)
+    public function setMinImageWidth($minImageWidth): self
     {
         $this->minImageWidth = (int) $minImageWidth;
 
@@ -312,10 +298,8 @@ class UploaderConfig
      * Set the maximum image width.
      *
      * @param int $maxImageWidth
-     *
-     * @return UploaderConfig
      */
-    public function setMaxImageWidth($maxImageWidth)
+    public function setMaxImageWidth($maxImageWidth): self
     {
         $this->maxImageWidth = (int) $maxImageWidth;
 
@@ -336,10 +320,8 @@ class UploaderConfig
      * Set the minimum image height.
      *
      * @param int $minImageHeight
-     *
-     * @return UploaderConfig
      */
-    public function setMinImageHeight($minImageHeight)
+    public function setMinImageHeight($minImageHeight): self
     {
         $this->minImageHeight = (int) $minImageHeight;
 
@@ -360,10 +342,8 @@ class UploaderConfig
      * Set the maximum image height.
      *
      * @param int $maxImageHeight
-     *
-     * @return UploaderConfig
      */
-    public function setMaxImageHeight($maxImageHeight)
+    public function setMaxImageHeight($maxImageHeight): self
     {
         $this->maxImageHeight = (int) $maxImageHeight;
 
@@ -384,10 +364,8 @@ class UploaderConfig
      * Set the maximum number of connections.
      *
      * @param int $maxConnections
-     *
-     * @return UploaderConfig
      */
-    public function setMaxConnections($maxConnections)
+    public function setMaxConnections($maxConnections): self
     {
         $this->maxConnections = (int) $maxConnections;
 
@@ -406,10 +384,8 @@ class UploaderConfig
 
     /**
      * Enable chunking.
-     *
-     * @return UploaderConfig
      */
-    public function enableChunking()
+    public function enableChunking(): self
     {
         $this->chunking = true;
 
@@ -418,10 +394,8 @@ class UploaderConfig
 
     /**
      * Disable chunking.
-     *
-     * @return UploaderConfig
      */
-    public function disableChunking()
+    public function disableChunking(): self
     {
         $this->chunking = false;
 
@@ -442,10 +416,8 @@ class UploaderConfig
      * Set the chunk size.
      *
      * @param int $chunkSize
-     *
-     * @return UploaderConfig
      */
-    public function setChunkSize($chunkSize)
+    public function setChunkSize($chunkSize): self
     {
         $this->chunkSize = (int) $chunkSize;
 
@@ -464,10 +436,8 @@ class UploaderConfig
 
     /**
      * Enable the concurrent connections.
-     *
-     * @return UploaderConfig
      */
-    public function enableConcurrent()
+    public function enableConcurrent(): self
     {
         $this->concurrent = true;
 
@@ -476,10 +446,8 @@ class UploaderConfig
 
     /**
      * Disable the concurrent connections.
-     *
-     * @return UploaderConfig
      */
-    public function disableConcurrent()
+    public function disableConcurrent(): self
     {
         $this->concurrent = false;
 
@@ -498,10 +466,8 @@ class UploaderConfig
 
     /**
      * Enable the direct upload.
-     *
-     * @return UploaderConfig
      */
-    public function enableDirectUpload()
+    public function enableDirectUpload(): self
     {
         $this->directUpload = true;
 
@@ -510,10 +476,8 @@ class UploaderConfig
 
     /**
      * Disable the direct upload.
-     *
-     * @return UploaderConfig
      */
-    public function disableDirectUpload()
+    public function disableDirectUpload(): self
     {
         $this->directUpload = false;
 
@@ -532,10 +496,8 @@ class UploaderConfig
 
     /**
      * Enable the store file.
-     *
-     * @return UploaderConfig
      */
-    public function enableStoreFile()
+    public function enableStoreFile(): self
     {
         $this->storeFile = true;
 
@@ -544,10 +506,8 @@ class UploaderConfig
 
     /**
      * Disable the store file.
-     *
-     * @return UploaderConfig
      */
-    public function disableStoreFile()
+    public function disableStoreFile(): self
     {
         $this->storeFile = false;
 
@@ -566,10 +526,8 @@ class UploaderConfig
 
     /**
      * Enable the do not overwrite file.
-     *
-     * @return UploaderConfig
      */
-    public function enableDoNotOverwrite()
+    public function enableDoNotOverwrite(): self
     {
         $this->doNotOverwrite = true;
 
@@ -578,10 +536,8 @@ class UploaderConfig
 
     /**
      * Disable the do not overwrite file.
-     *
-     * @return UploaderConfig
      */
-    public function disableDoNotOverwrite()
+    public function disableDoNotOverwrite(): self
     {
         $this->doNotOverwrite = false;
 
@@ -600,10 +556,8 @@ class UploaderConfig
 
     /**
      * Enable the add file to database file system.
-     *
-     * @return UploaderConfig
      */
-    public function enableAddToDbafs()
+    public function enableAddToDbafs(): self
     {
         $this->addToDbafs = true;
 
@@ -612,10 +566,8 @@ class UploaderConfig
 
     /**
      * Disable the add file to database file system.
-     *
-     * @return UploaderConfig
      */
-    public function disableAddToDbafs()
+    public function disableAddToDbafs(): self
     {
         $this->addToDbafs = false;
 
@@ -636,10 +588,8 @@ class UploaderConfig
      * Set the upload folder.
      *
      * @param string $uploadFolder
-     *
-     * @return UploaderConfig
      */
-    public function setUploadFolder($uploadFolder)
+    public function setUploadFolder($uploadFolder): self
     {
         $this->uploadFolder = $uploadFolder;
 
@@ -661,7 +611,7 @@ class UploaderConfig
      *
      * @param string $uploadButtonTitle
      */
-    public function setUploadButtonTitle($uploadButtonTitle)
+    public function setUploadButtonTitle($uploadButtonTitle): self
     {
         $this->uploadButtonTitle = $uploadButtonTitle;
 
@@ -680,10 +630,8 @@ class UploaderConfig
 
     /**
      * Set the labels.
-     *
-     * @return UploaderConfig
      */
-    public function setLabels(array $labels)
+    public function setLabels(array $labels): self
     {
         $this->labels = $labels;
 

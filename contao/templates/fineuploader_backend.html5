@@ -1,4 +1,4 @@
-<h3><?= $this->generateLabel() . $this->xlabel ?></h3>
+<h3><?= $this->generateLabel().$this->xlabel ?></h3>
 
 <?php if ($this->hasErrors()): ?>
     <p class="error"><?= $this->getErrorAsString() ?></p>

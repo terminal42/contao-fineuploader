@@ -2,18 +2,18 @@
   "entrypoints": {
     "backend": {
       "css": [
-        "/bundles/terminal42fineuploader/backend.509b8d0d.css"
+        "/bundles/terminal42fineuploader/backend.25e1750f.css"
       ],
       "js": [
-        "/bundles/terminal42fineuploader/backend.dd195d4b.js"
+        "/bundles/terminal42fineuploader/backend.dfef6aaf.js"
       ]
     },
     "frontend": {
       "css": [
-        "/bundles/terminal42fineuploader/frontend.7b707fa6.css"
+        "/bundles/terminal42fineuploader/frontend.db6d8302.css"
       ],
       "js": [
-        "/bundles/terminal42fineuploader/frontend.b1bbddd1.js"
+        "/bundles/terminal42fineuploader/frontend.cd97294b.js"
       ]
     }
   }

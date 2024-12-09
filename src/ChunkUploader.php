@@ -120,14 +120,14 @@ class ChunkUploader
 
         // Validate the minimum size limit
         if ($minSizeLimit > 0 && $file->size < $minSizeLimit) {
-            $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['minFileSize'], System::getReadableSize($minSizeLimit)));
+            $widget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['minFileSize'], System::getReadableSize($minSizeLimit)));
         }
 
         $maxSizeLimit = $config->getMaxSizeLimit();
 
         // Validate the maximum size limit
         if ($maxSizeLimit > 0 && $file->size > $maxSizeLimit) {
-            $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], System::getReadableSize($maxSizeLimit)));
+            $widget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filesize'], System::getReadableSize($maxSizeLimit)));
         }
     }
 

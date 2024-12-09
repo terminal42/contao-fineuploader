@@ -14,12 +14,19 @@ use Symfony\Component\Finder\SplFileInfo;
 class FileUpload extends \Contao\FileUpload
 {
     protected bool $doNotOverwrite = false;
+
     protected array $extensions = [];
+
     protected int $minFileSize = 0;
+
     protected int $maxFileSize;
+
     protected int $imageWidth;
+
     protected int $imageHeight;
+
     protected int $gdMaxImgWidth;
+
     protected int $gdMaxImgHeight;
 
     /**
@@ -34,11 +41,11 @@ class FileUpload extends \Contao\FileUpload
         $this->setName($name);
 
         $this->extensions = StringUtil::trimsplit(',', strtolower(Config::get('uploadTypes')));
-        $this->maxFileSize = (int) Config::get('maxFileSize') ?? 0;
-        $this->imageWidth = (int) Config::get('imageWidth') ?? 0;
-        $this->imageHeight = (int) Config::get('imageHeight') ?? 0;
-        $this->gdMaxImgWidth = (int) Config::get('gdMaxImgWidth') ?? 0;
-        $this->gdMaxImgHeight = (int) Config::get('gdMaxImgHeight') ?? 0;
+        $this->maxFileSize = (int) (Config::get('maxFileSize') ?? 0);
+        $this->imageWidth = (int) (Config::get('imageWidth') ?? 0);
+        $this->imageHeight = (int) (Config::get('imageHeight') ?? 0);
+        $this->gdMaxImgWidth = (int) (Config::get('gdMaxImgWidth') ?? 0);
+        $this->gdMaxImgHeight = (int) (Config::get('gdMaxImgHeight') ?? 0);
     }
 
     public function getName()
@@ -149,9 +156,6 @@ class FileUpload extends \Contao\FileUpload
         return $this;
     }
 
-    /**
-     * @inheritdoc
-     */
     public function uploadTo($target): array
     {
         $this->target = $target;
@@ -207,9 +211,6 @@ class FileUpload extends \Contao\FileUpload
         return str_replace($name.'.', $name.'__'.++$offset.'.', $uploadedFile);
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function getFilesFromGlobal(): array
     {
         if (\is_array($_FILES[$this->strName]['name'] ?? null)) {
@@ -230,7 +231,7 @@ class FileUpload extends \Contao\FileUpload
 
             foreach ($files as $k => $file) {
                 if (!$file['error'] && $file['size'] < $this->minFileSize) {
-                    Message::addError(sprintf($GLOBALS['TL_LANG']['ERR']['minFileSize'], $minlength_kb_readable));
+                    Message::addError(\sprintf($GLOBALS['TL_LANG']['ERR']['minFileSize'], $minlength_kb_readable));
                     $this->blnHasError = true;
                     unset($files[$k]);
                 }
@@ -240,9 +241,6 @@ class FileUpload extends \Contao\FileUpload
         return $files;
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function resizeUploadedImage($strImage)
     {
         $imageWidth = Config::get('imageWidth');

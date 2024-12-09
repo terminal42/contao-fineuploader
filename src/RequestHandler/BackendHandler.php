@@ -61,7 +61,7 @@ class BackendHandler
                 'id' => $dc->id,
                 'name' => $request->request->get('name'),
             ],
-            $dc
+            $dc,
         );
 
         return $this->getUploadResponse($this->eventDispatcher, $request, $widget);
@@ -72,7 +72,6 @@ class BackendHandler
      *
      * @return Response
      *
-     * @throw \Exception
      * @throw \RuntimeException
      */
     public function handleReloadRequest(Request $request, DataContainer $dc)
@@ -90,7 +89,7 @@ class BackendHandler
 
         // The field does not exist
         if (!isset($dca['fields'][$field])) {
-            throw new \Exception(sprintf('Field "%s" does not exist in DCA "%s"', $field, $dc->table));
+            throw new \RuntimeException(\sprintf('Field "%s" does not exist in DCA "%s"', $field, $dc->table));
         }
 
         // Call the load_callback
@@ -130,11 +129,11 @@ class BackendHandler
         if ('File' === $dca['config']['dataContainer']) {
             $value = $GLOBALS['TL_CONFIG'][$field];
         } elseif ($id > 0 && $db->tableExists($dc->table)) {
-            $row = $db->prepare(sprintf('SELECT * FROM %s WHERE id=?', $dc->table))->execute($id);
+            $row = $db->prepare(\sprintf('SELECT * FROM %s WHERE id=?', $dc->table))->execute($id);
 
             // The record does not exist
             if ($row->numRows < 1) {
-                throw new \InvalidArgumentException(sprintf('A record with the ID "%s" does not exist in table "%s"', $id, $dc->table));
+                throw new \InvalidArgumentException(\sprintf('A record with the ID "%s" does not exist in table "%s"', $id, $dc->table));
             }
 
             $value = $row->$field;

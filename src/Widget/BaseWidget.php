@@ -87,7 +87,7 @@ abstract class BaseWidget extends Widget implements UploadableWidgetInterface
                 }
                 break;
 
-            /** @noinspection PhpMissingBreakStatementInspection */
+                /** @noinspection PhpMissingBreakStatementInspection */
             case 'mandatory':
                 if ($value) {
                     $this->arrAttributes['required'] = 'required';

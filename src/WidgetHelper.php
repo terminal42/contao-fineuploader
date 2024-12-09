@@ -20,7 +20,9 @@ use Terminal42\FineUploaderBundle\Widget\BaseWidget;
 class WidgetHelper
 {
     private Filesystem $fs;
+
     private Studio $studio;
+
     private string $projectDir;
 
     public function __construct(Filesystem $fs, Studio $studio, string $projectDir)
@@ -64,14 +66,13 @@ class WidgetHelper
      * Add the file data to template.
      *
      * @param string $filePath
-     * @param array  $imageAttributes
      *
      * @throws \InvalidArgumentException
      */
-    public function addFileDataToTemplate(Template $template, $filePath, array $imageAttributes = null): void
+    public function addFileDataToTemplate(Template $template, $filePath, ?array $imageAttributes = null): void
     {
         if (!$this->fs->fileExists($filePath)) {
-            throw new \InvalidArgumentException(sprintf('The file "%s" does not exist', $filePath));
+            throw new \InvalidArgumentException(\sprintf('The file "%s" does not exist', $filePath));
         }
 
         $file = new File($filePath);
@@ -83,7 +84,7 @@ class WidgetHelper
         // Add the image data
         if ($file->isImage) {
             $metaData = new Metadata([
-                'title' => sprintf('%s (%s, %sx%s px)', $file->path, $template->size, $file->width, $file->height),
+                'title' => \sprintf('%s (%s, %sx%s px)', $file->path, $template->size, $file->width, $file->height),
                 'alt' => $file->name,
             ]);
 
@@ -101,12 +102,12 @@ class WidgetHelper
         }
     }
 
-    /** 
+    /**
      * Returns an array with all the information per file that Contao expects for the widget's value or the session value.
      */
     public function getFilesArray($name, array $files, ?bool $storeFile = null): array
     {
-        $storeFile = $storeFile ?? true;
+        $storeFile ??= true;
         $count = 0;
         $return = [];
 

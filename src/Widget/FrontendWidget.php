@@ -7,7 +7,6 @@ namespace Terminal42\FineUploaderBundle\Widget;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\FrontendTemplate;
-use Contao\System;
 use Terminal42\FineUploaderBundle\ChunkUploader;
 
 class FrontendWidget extends BaseWidget
@@ -39,7 +38,7 @@ class FrontendWidget extends BaseWidget
 
         $response = $this->container->get('terminal42_fineuploader.request.frontend_handler')->handleWidgetInitRequest(
             $this->container->get('request_stack')->getCurrentRequest(),
-            $this
+            $this,
         );
 
         if (null !== $response) {

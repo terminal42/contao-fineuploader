@@ -31,7 +31,7 @@
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
-        "contao/easy-coding-standard": "^3.0"
+        "terminal42/contao-build-tools": "dev-main"
     },
     "conflict": {
         "contao/manager-plugin": "<2.0 || >=3.0"
@@ -44,15 +44,12 @@
     "extra": {
         "contao-manager-plugin": "Terminal42\\FineUploaderBundle\\ContaoManager\\Plugin"
     },
-    "scripts": {
-        "cs-fixer": [
-            "vendor/bin/ecs check src/ --fix --ansi"
-        ]
-    },
     "config": {
         "allow-plugins": {
-            "ocramius/package-versions": true,
-            "dealerdirect/phpcodesniffer-composer-installer": true
+            "contao-components/installer": false,
+            "contao/manager-plugin": false,
+            "php-http/discovery": false,
+            "terminal42/contao-build-tools": true
         }
     }
 }

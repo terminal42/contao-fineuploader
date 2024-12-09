@@ -1,5 +1,5 @@
 import "./backend.css"
-import "./handler.js"
+import "./_handler.js"
 
 (function (root, factory) {
     if (typeof define === 'function' && define.amd) {

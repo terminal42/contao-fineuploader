@@ -99,22 +99,22 @@ class FileUploadListener
 
             // Image deceeds minimum image width
             if ($minWidth > 0 && $file->width < $minWidth) {
-                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileminwidth'], '', $minWidth));
+                $widget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileminwidth'], '', $minWidth));
             }
 
             // Image deceeds minimum image height
             if ($minHeight > 0 && $file->height < $minHeight) {
-                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileminheight'], '', $minHeight));
+                $widget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileminheight'], '', $minHeight));
             }
 
             // Image exceeds maximum image width
             if ($maxWidth > 0 && $file->width > $maxWidth) {
-                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], '', $maxWidth));
+                $widget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['filewidth'], '', $maxWidth));
             }
 
             // Image exceeds maximum image height
             if ($maxHeight > 0 && $file->height > $maxHeight) {
-                $widget->addError(sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], '', $maxHeight));
+                $widget->addError(\sprintf($GLOBALS['TL_LANG']['ERR']['fileheight'], '', $maxHeight));
             }
         }
     }

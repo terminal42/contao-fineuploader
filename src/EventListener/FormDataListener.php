@@ -11,10 +11,10 @@ use Contao\FormFieldModel;
 
 class FormDataListener
 {
-    /** 
+    /**
      * @Hook("prepareFormData")
      */
-    public function onPrepareFormData(array &$submittedData, array $labels, array $fields, Form $form, array &$files = null): void
+    public function onPrepareFormData(array &$submittedData, array $labels, array $fields, Form $form, ?array &$files = null): void
     {
         if (version_compare(ContaoCoreBundle::getVersion(), '5@dev', '<')) {
             return;
@@ -27,9 +27,7 @@ class FormDataListener
             }
 
             if (isset($submittedData[$name])) {
-                $submittedData[$name] = array_map(static function(array $file): string {
-                    return $file['tmp_name'];
-                }, $submittedData[$name]);
+                $submittedData[$name] = array_map(static fn (array $file): string => $file['tmp_name'], $submittedData[$name]);
             }
 
             if (isset($files[$name])) {
