@@ -27,15 +27,23 @@ class FormDataListener
             }
 
             if (isset($submittedData[$name])) {
-                $submittedData[$name] = array_map(static fn (array $file): string => $file['tmp_name'], $submittedData[$name]);
+                if (1 === \count($submittedData[$name])) {
+                    $submittedData[$name] = reset($submittedData[$name]);
+                } else {
+                    $submittedData[$name] = array_map(static fn (array $file): string => $file['tmp_name'], $submittedData[$name]);
+                }
             }
 
             if (isset($files[$name])) {
-                foreach ($files[$name] as $key => $file) {
-                    $files[$key] = $file;
-                }
+                if (1 === \count($files[$name])) {
+                    $files[$name] = reset($files[$name]);
+                } else {
+                    foreach ($files[$name] as $key => $file) {
+                        $files[$key] = $file;
+                    }
 
-                unset($files[$name]);
+                    unset($files[$name]);
+                }
             }
         }
     }
