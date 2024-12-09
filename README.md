@@ -3,14 +3,32 @@ FineUploader Bundle for Contao Open Source CMS
 
 This extension integrates the [Fine Uploader](http://fineuploader.com/) by Widen with Contao Open Source CMS.
 
+> [!IMPORTANT]
+> Please be aware that the FineUploader script [is not being developed anymore](https://github.com/FineUploader/fine-uploader/issues/2073),
+we are therefore not planning to add new features or continue to support this extension.
+
+
 Installation
 ------------
 
-Install the package using Composer:
+Choose the installation method that matches your workflow!
 
+### Installation via Contao Manager
+
+Search for `terminal42/contao-fineuploader` in the Contao Manager and add it
+to your installation. Apply changes to update the packages.
+
+### Manual installation
+
+Add a composer dependency for this bundle. Therefore, change in the project root and run the following:
+
+```bash
+composer require terminal42/fineuploader
 ```
-composer require terminal42/contao-fineuploader
-```
+
+Depending on your environment, the command can differ, i.e. starting with `php composer.phar …` if you do not have
+composer installed globally.
+
 
 
 Usage
@@ -62,3 +80,7 @@ $GLOBALS['TL_DCA']['tl_table']['fields']['myupload'] = [
     'sql' => "blob NULL"
 ];
 ```
+
+## License
+
+This bundle is released under the [MIT license](LICENSE)
