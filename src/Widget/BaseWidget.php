@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Terminal42\FineUploaderBundle\Widget;
 
+use Contao\StringUtil;
 use Contao\System;
 use Contao\Template;
 use Contao\UploadableWidgetInterface;
@@ -64,6 +65,15 @@ abstract class BaseWidget extends Widget implements UploadableWidgetInterface
     public function __set($key, $value): void
     {
         switch ($key) {
+            case 'value':
+                $this->varValue = StringUtil::deserialize($value);
+
+                // Handle the special case where value being set is a comma-separated list of files, e.g. in the MP Forms extension
+                if (is_string($this->varValue) && str_contains($this->varValue, ',') && ($this->arrConfiguration['multiple'] ?? false)) {
+                    $this->varValue = StringUtil::trimsplit(',', $value);
+                }
+                break;
+
             case 'imageSize':
             case 'uploaderConfig':
                 if (!\is_array($value)) {
