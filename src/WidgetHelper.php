@@ -48,7 +48,8 @@ class WidgetHelper
 
         // Split the files into UUIDs and temporary ones
         foreach ($value as $file) {
-            if (Validator::isBinaryUuid($file)) {
+            $file = \is_array($file) ? ($file['uuid'] ?? null) : $file;
+            if (Validator::isUuid($file)) {
                 $uuids[] = $file;
             } else {
                 $tmpFiles[] = $file;
