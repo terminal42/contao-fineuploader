@@ -50,7 +50,7 @@ class WidgetHelper
         foreach ($value as $file) {
             if (Validator::isUuid($file)) {
                 $uuids[] = $file;
-            } else if (\is_array($file) && Validator::isUuid($file['uuid'] ?? null)) {
+            } elseif (\is_array($file) && Validator::isUuid($file['uuid'] ?? null)) {
                 $uuids[] = $file['uuid'];
             } else {
                 $tmpFiles[] = $file;
