@@ -104,7 +104,7 @@ import { FineUploader } from 'fine-uploader';
                     onValidateBatch: this.onValidateBatch.bind(this),
                     onStatusChange: this.onStatusChange.bind(this),
                     onComplete: this.onComplete.bind(this)
-                }
+                },
             };
 
             // Set the maximum number of connections
@@ -127,6 +127,7 @@ import { FineUploader } from 'fine-uploader';
 
                 if (this.settings.extensions) {
                     config.validation.allowedExtensions = this.settings.extensions;
+                    config.validation.acceptFiles = this.settings.extensions.map(v => '.' + v).join(',');
                 }
                 if (this.settings.minSizeLimit) {
                     config.validation.minSizeLimit = this.settings.minSizeLimit;
