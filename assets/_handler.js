@@ -104,7 +104,7 @@ import { FineUploader } from 'fine-uploader';
                     onValidateBatch: this.onValidateBatch.bind(this),
                     onStatusChange: this.onStatusChange.bind(this),
                     onComplete: this.onComplete.bind(this)
-                },
+                }
             };
 
             // Set the maximum number of connections
