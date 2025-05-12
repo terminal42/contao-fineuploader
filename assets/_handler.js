@@ -127,6 +127,7 @@ import { FineUploader } from 'fine-uploader';
 
                 if (this.settings.extensions) {
                     config.validation.allowedExtensions = this.settings.extensions;
+                    config.validation.acceptFiles = this.settings.extensions.map(v => '.' + v).join(',');
                 }
                 if (this.settings.minSizeLimit) {
                     config.validation.minSizeLimit = this.settings.minSizeLimit;
