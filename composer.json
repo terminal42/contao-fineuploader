@@ -27,7 +27,7 @@
     "require": {
         "php": "^7.4 || ^8.0",
         "contao/core-bundle": "^4.13 || ^5.0",
-        "symfony/filesystem": "^5.4 || ^6.4"
+        "symfony/filesystem": "^5.4 || ^6.4 || ^7.4"
     },
     "require-dev": {
         "contao/manager-plugin": "^2.0",
