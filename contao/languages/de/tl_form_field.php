@@ -36,3 +36,7 @@ $GLOBALS['TL_LANG']['tl_form_field']['concurrent'] = [
     'Simultanes Hochladen aktivieren',
     'Aktivieren Sie hier den simultanen Dateiupload. Beachten Sie auch die "Maximale Anzahl an Verbindungen" Einstellungsmöglichkeit.',
 ];
+$GLOBALS['TL_LANG']['tl_form_field']['useUploadUrl'] = [
+    'Dedizierte Upload-URL verwenden',
+    'Aktiviere diese Option, um eine dedizierte Upload-URL zu verwenden und Konflikte mit dem Contao-Captcha zu vermeiden.',
+];

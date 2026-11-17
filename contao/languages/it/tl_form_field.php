@@ -48,3 +48,7 @@ $GLOBALS['TL_LANG']['tl_form_field']['maxHeight'] = [
     'Altezza massima (in pixels)',
     'Qui puoi inserire l\'altezza massima di un\'immagine in pixel. Immettere 0 per utilizzare i valori predefiniti del sistema.',
 ];
+$GLOBALS['TL_LANG']['tl_form_field']['useUploadUrl'] = [
+    'Utilizzare un URL di caricamento dedicato',
+    'Attiva questa opzione per utilizzare un URL di caricamento dedicato ed evitare conflitti con il CAPTCHA di Contao.',
+];

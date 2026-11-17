@@ -1,0 +1,3 @@
+terminal42_fineuploader:
+    resource: '../src/Controller'
+    type: annotation

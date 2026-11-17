@@ -19,6 +19,7 @@ import "./_handler.js"
         ajaxActionName: 'fineuploader_reload',
         ajaxUrl: null,
         errorMessage: '',
+        widgetId: 0,
     };
 
     /**
@@ -41,6 +42,11 @@ import "./_handler.js"
             if (options.hasOwnProperty(item)) {
                 this.settings[item] = options[item];
             }
+        }
+
+        if (this.settings.ajaxUrl && this.settings.widgetId) {
+            this.config.ajaxUrl = this.settings.ajaxUrl;
+            this.config.widgetId = this.settings.widgetId;
         }
 
         this.initUploader();
@@ -140,6 +146,7 @@ import "./_handler.js"
                 + '&name=' + this.uploader.field.name
                 + '&value=' + this.uploader.currentValue
                 + '&REQUEST_TOKEN=' + this.uploader.field.form.querySelector('input[name="REQUEST_TOKEN"]').value
+                + '&widget_id=' + this.settings.widgetId
             );
         }
     };
