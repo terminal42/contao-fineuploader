@@ -32,10 +32,8 @@ class FrontendUploadController extends AbstractController
 
         $widgetId = $request->request->get('widget_id');
         $formField = FormFieldModel::findById($widgetId);
-        dump($widgetId);
 
         if (!$formField || $formField->type !== 'fineUploader' || !$formField->useUploadUrl) {
-            dump('henlo', $formField);
             return new Response();
         }
 
