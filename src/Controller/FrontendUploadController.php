@@ -25,8 +25,9 @@ class FrontendUploadController extends AbstractController
 
         $widgetId = $request->request->get('widget_id');
         $formField = FormFieldModel::findById($widgetId);
+        $class = null !== $formField ? ($GLOBALS['TL_FFL'][$formField->type] ?? null) : null;
 
-        if (!$formField || $formField->type !== 'fineUploader') {
+        if (null === $class || !is_a($class, FrontendWidget::class, true)) {
             return new JsonResponse([
                 'success' => false,
                 'error' => $GLOBALS['TL_LANG']['ERR']['general'],
@@ -34,7 +35,7 @@ class FrontendUploadController extends AbstractController
             ]);
         }
 
-        $widget = new FrontendWidget($formField->row());
+        $widget = new $class($formField->row());
 
         return $this->frontendHandler->handleUploadRequest($request, $widget);
     }
