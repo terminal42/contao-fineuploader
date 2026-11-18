@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,maxConnections,extensions,minlength,maxlength,maxWidth,maxHeight,uploadButtonLabel,chunking,multiple,useUploadUrl;{store_legend:hide},storeFile,addToDbafs;{expert_legend:hide},class,fSize';
+$GLOBALS['TL_DCA']['tl_form_field']['palettes']['fineUploader'] = '{type_legend},type,name,label;{fconfig_legend},mandatory,maxConnections,extensions,minlength,maxlength,maxWidth,maxHeight,uploadButtonLabel,chunking,multiple;{store_legend:hide},storeFile,addToDbafs;{expert_legend:hide},class,fSize';
 $GLOBALS['TL_DCA']['tl_form_field']['palettes']['__selector__'][] = 'chunking';
 $GLOBALS['TL_DCA']['tl_form_field']['subpalettes']['chunking'] = 'chunkSize,concurrent';
 
@@ -73,12 +73,4 @@ $GLOBALS['TL_DCA']['tl_form_field']['fields']['maxHeight'] = [
     'inputType' => 'text',
     'eval' => ['rgxp' => 'digit', 'tl_class' => 'w50'],
     'sql' => "smallint(5) unsigned NOT NULL default '0'",
-];
-
-$GLOBALS['TL_DCA']['tl_form_field']['fields']['useUploadUrl'] = [
-    'label' => &$GLOBALS['TL_LANG']['tl_form_field']['useUploadUrl'],
-    'exclude' => true,
-    'inputType' => 'checkbox',
-    'eval' => ['tl_class' => 'clr'],
-    'sql' => "char(1) NOT NULL default '1'",
 ];
