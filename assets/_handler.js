@@ -19,6 +19,7 @@ import { FineUploader } from 'fine-uploader';
         // AJAX
         ajaxActionName: 'fineuploader_upload',
         ajaxUrl: null,
+        widgetId: null,
 
         // Selectors
         ajaxContainerSelector: '[data-fineuploader="ajax-container"]',
@@ -92,7 +93,8 @@ import { FineUploader } from 'fine-uploader';
                     params: {
                         action: this.settings.ajaxActionName,
                         name: this.field.name,
-                        REQUEST_TOKEN: this.field.form.querySelector('input[name="REQUEST_TOKEN"]').value
+                        REQUEST_TOKEN: this.field.form.querySelector('input[name="REQUEST_TOKEN"]').value,
+                        widget_id: this.settings.widgetId,
                     }
                 },
                 failedUploadTextDisplay: {

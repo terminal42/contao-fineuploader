@@ -84,3 +84,10 @@ services:
         class: Terminal42\FineUploaderBundle\EventListener\WidgetReloadListener
         tags:
             - { name: kernel.event_listener, event: terminal42_fineuploader.widget_reload, method: onWidgetReload }
+
+    Terminal42\FineUploaderBundle\Controller\FrontendUploadController:
+        arguments:
+            - "@terminal42_fineuploader.request.frontend_handler"
+        tags: ["controller.service_arguments"]
+        calls:
+            - [ setContainer, [ "@service_container" ] ]
