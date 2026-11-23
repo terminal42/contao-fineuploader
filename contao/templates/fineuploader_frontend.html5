@@ -35,7 +35,13 @@
             new ContaoFineUploaderFrontend(
                 document.getElementById('fineuploader-widget-<?= $this->id ?>'),
                 <?= json_encode($this->jsConfig) ?>,
-                {errorMessage: '<?= $GLOBALS['TL_LANG']['ERR']['general'] ?>'}
+                {
+                    errorMessage: '<?= $GLOBALS['TL_LANG']['ERR']['general'] ?>',
+                    <?php if (is_numeric($this->id)): ?>
+                        ajaxUrl: "<?= $this->route('fineuploader_frontend_upload') ?>",
+                        widgetId: <?= $this->id ?>,
+                    <?php endif; ?>
+                }
             );
         }());
     </script>
