@@ -37,9 +37,9 @@
                 <?= json_encode($this->jsConfig) ?>,
                 {
                     errorMessage: '<?= $GLOBALS['TL_LANG']['ERR']['general'] ?>',
-                    <?php if (is_numeric($this->id)): ?>
-                        ajaxUrl: "<?= $this->route('fineuploader_frontend_upload') ?>",
-                        widgetId: <?= $this->id ?>,
+                    <?php if ($uploadUrl = $this->getUploadUrl()): ?>
+                        ajaxUrl: <?= json_encode($uploadUrl) ?>,
+                        widgetId: <?= (int) $this->id ?>,
                     <?php endif; ?>
                 }
             );

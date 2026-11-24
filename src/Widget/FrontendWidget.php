@@ -7,6 +7,7 @@ namespace Terminal42\FineUploaderBundle\Widget;
 use Contao\CoreBundle\ContaoCoreBundle;
 use Contao\CoreBundle\Exception\ResponseException;
 use Contao\FrontendTemplate;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Terminal42\FineUploaderBundle\ChunkUploader;
 
 class FrontendWidget extends BaseWidget
@@ -66,6 +67,26 @@ class FrontendWidget extends BaseWidget
     public function getItemTemplate()
     {
         return new FrontendTemplate($this->itemTemplate ?: 'fineuploader_item_frontend');
+    }
+
+    /**
+     * Get the signed URL of the dedicated frontend upload route. Returns null if
+     * the widget is not a form generator field (e.g. in ModulePersonalData), in
+     * which case the upload is sent to the current page.
+     */
+    public function getUploadUrl(): string|null
+    {
+        if (!is_numeric($this->id)) {
+            return null;
+        }
+
+        $url = $this->container->get('router')->generate(
+            'fineuploader_frontend_upload',
+            ['widget_id' => (int) $this->id],
+            UrlGeneratorInterface::ABSOLUTE_URL,
+        );
+
+        return $this->container->get('terminal42_fineuploader.uri_signer')->sign($url);
     }
 
     /**

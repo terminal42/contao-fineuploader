@@ -2,6 +2,10 @@ services:
     _defaults:
         public: true
 
+    terminal42_fineuploader.uri_signer:
+        alias: uri_signer
+        public: true
+
     terminal42_fineuploader.assets_manager:
         class: Terminal42\FineUploaderBundle\AssetsManager
         arguments:
@@ -87,7 +91,7 @@ services:
 
     Terminal42\FineUploaderBundle\Controller\FrontendUploadController:
         arguments:
-            - "@terminal42_fineuploader.request.frontend_handler"
+            - "@uri_signer"
         tags: ["controller.service_arguments"]
         calls:
             - [ setContainer, [ "@service_container" ] ]
